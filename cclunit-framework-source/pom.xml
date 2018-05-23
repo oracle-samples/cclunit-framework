@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.cerner.ccl</groupId>
+        <artifactId>cclunit-framework</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    
+    <artifactId>cclunit-framework-source</artifactId>
+    <name>CCL Testing Framework</name>
+    <description>A framework to facilitate the automated testing of CCL code.</description>
+    <packaging>ccl</packaging>
+    <properties>
+    </properties>
+    <scm>
+        <connection>scm:git:https://github.com/cerner/cclunit-framework.git</connection>
+        <developerConnection>scm:git:https://github.com/cerner/cclunit-framework.git</developerConnection>
+        <url>https://github.com/cerner/cclunit-framework/tree/master/cclunit-framework-source</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>feckertson</id>
+            <name>Fred Eckertson</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>jbarber</id>
+            <name>Josh Barber</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>jhyde</id>
+            <name>Joshua Hyde</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>dmurhpy</id>
+            <name>Dan Murphy</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>jwiedemann</id>
+            <name>Jeff Wiedemann</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.cerner.ccltesting</groupId>
+                <artifactId>cerner-maven-ccl-plugin</artifactId>
+                <version>3.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <logFile>${project.build.directory}/output.log</logFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <!-- There are no artifacts the deploy plugin would recognize for deployment -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>com.cerner.ccltesting</groupId>
+                <artifactId>cerner-maven-cerreal-plugin</artifactId>
+                <version>2.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>com.cerner.engineering</groupId>
+                <artifactId>cerner-maven-cdoc-plugin</artifactId>
+                <version>1.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>cdoc-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

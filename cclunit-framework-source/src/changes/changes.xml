@@ -1,0 +1,151 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
+    <properties>
+        <title>CCL Testing Framework Changes Report</title>
+    </properties>
+    <body>
+        <release version="2.0" date="TBD">
+            <action dev="fe2417" issue="" type="update" system="">
+              Add support for "operator asserts" using CCL's operator function.
+            </action>
+            <action dev="fe2417" issue="CCLTEST-74" type="update" system="JIRA">
+              Add support for setupOnce and teardownOnce functions.
+            </action>
+            <action dev="fe2417" issue="CCLTEST-171" type="update" system="">
+              Create the prompt programs cclut and cclut_ff for executing CCL unit tests directly from CCL or Discern Visual Developer.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Create CCL Unit unit tests for the CCL Unit Framework to test itself.
+            </action>
+            <action dev="fe2417" issue="CCLTEST-231" type="fix" system="JIRA">
+              Prevent the framework from failing to log the asserts called from a unit test that calls go to exit_script.
+            </action>
+            <action dev="fe2417" issue="174" type="fix" system="JIRA">
+              Escape CDATA tags within CDATA tags allowing the framework to test source code which contains a 
+              CDATA tag in a comment or a literal string. This also opens the door for the framework to test itself.
+            </action>
+            <action dev="fe2417" issue="CCLTEST-228" type="fix" system="JIRA">
+              Update the framework to be able to identify unit test subroutines defined using CCL's in-line subroutine declaration syntax.
+            </action>
+            <action dev="fe2417" issue="CCLTEST-73" type="fix" system="JIRA">
+              Prefix all framework subroutine parameter names with "cclut" in order to prevent conflicts with testing targets and unit tests.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Update the framework to use namespaces to better insulate testing targets from variables and subroutines defined by the framework.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Update the framework to support specifying the directory where the unit tests are located.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Update the framework to support changing the deprecated severity which is E (error) by default.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Update the framework to support changing the default behavior of producing an error if undeclared variables are used.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Update cclut_get_framework_state to display the framework version and required minimum CCL version if executed directly from CCL or Discern Visual Devleoper.
+            </action>
+            <action dev="fe2417" issue="" type="update" system="">
+              Refactor the framework to make it self-testable.
+            </action>
+        </release>
+        <release version="1.4" date="2011-11-14">
+            <action dev="jh016266" issue="CCLTEST-117" type="update" system="JIRA">
+                Create unit tests for cclut_execute_test_case.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-165" type="fix" system="JIRA">
+                %CCL-I-317-CCLUT_TRANSFORM_SOURCE(0,0)S0L4.2q1{CT_TAGNAME}The variable (CT_TAGNAME) has already been defined. CT_TAGNAME.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-170" type="add" system="JIRA">
+                Add PREDECLARE to compiled test.inc.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-183" type="add" system="JIRA">
+                Add ability to specify the exact test subroutine to be executed within the test INC file.
+            </action>
+        </release>
+        <release version="1.3" date="2011-07-12">
+            <action dev="jh016266" issue="CCLTEST-51" type="add" system="JIRA">
+                Provide an XSD against which the response XML from the CCL Testing Framework can be validated.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-102" type="fix" system="JIRA">
+                Parsing of CDATA tag doesn't account for correct CDATA syntax.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-118" type="update" system="JIRA">
+                Create unit tests for cclut_merge_cc.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-119" type="update" system="JIRA">
+                Create unit tests for cclut_parse_coverages.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-142" type="fix" system="JIRA">
+                cclut_merge_cc.prg returns malformed XML.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-153" type="add" system="JIRA">
+                Add snapshot repo deployment information to CCLTEST projects.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-162" type="fix" system="JIRA">
+                CCLUT_EXECUTE_TEST_CASE failure does not fail the test goal.
+            </action>
+        </release>
+        <release version="1.2" date="2011-03-09">
+            <action dev="jh016266" issue="CCLTEST-14" type="add" system="JIRA">
+                Hows about requiring an explicit version of the CCLUnit Frwk in the pom.
+            </action>
+            <action dev="jw9689" issue="CCLTEST-109" type="add" system="JIRA">
+                Display message to user when CCL version in domain is below minimum requirements.
+            </action>
+            <action dev="jw9689" issue="CCLTEST-114" type="add" system="JIRA">
+                Expose routine to get current test name.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-120" type="update" system="JIRA">
+                Create unit tests for cclut_transform_coverage.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-121" type="update" system="JIRA">
+                Create unit tests for cclut_transform_source.
+            </action>
+        </release>
+        <release version="1.1" date="2011-01-04">
+            <action dev="jb013981" issue="CCLTEST-30" type="update" system="JIRA">
+                Documentation of request for cclut_execute_test_case.prg is wrong.
+            </action>
+            <action dev="jb013981" issue="CCLTEST-64" type="add" system="JIRA">
+                Add timers around test execution.
+            </action>
+            <action dev="jb013981" issue="CCLTEST-71" type="add" system="JIRA">
+                Add ability to specify opimization mode in CCLUT-FRAMEWORK.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-88" type="update" system="JIRA">
+                Create JUnit-driven unit tests of CCL Testing Framework components.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-92" type="update" system="JIRA">
+                CCL Testing Framework needs a changelog.
+            </action>
+            <action dev="jh016266" issue="CCLTEST-105" type="update" system="JIRA">
+                Retrofit projects to use the maven-changes-plugin to track changes.
+            </action>
+        </release>
+        <release version="1.0" date="2010-07-20" description="Initial GA release">
+            <action dev="cerdym" issue="CCLTEST-45" type="update" system="JIRA">
+                Release CCL Testing Framework, v1.0.
+            </action>
+        </release>
+        <release version="1.0-alpha-2" date="2010-06-10">
+            <action dev="jw9689" issue="CCLTEST-2" type="fix" system="JIRA">
+                Conflicting variable and record names.
+            </action>
+            <action dev="cerdym" issue="CCLTEST-4" type="fix" system="JIRA">
+                Assert Date is named incorrectly.
+            </action>
+            <action dev="cerdym" issue="CCLTEST-21" type="fix" system="JIRA">
+                Indentation not preserved in non-include files.
+            </action>
+        </release>
+        <release version="1.0-alpha-1" date="2010-05-21" description="Initial alpha release">
+            <action dev="cerdym" issue="CCLTEST-5" type="fix" system="JIRA">
+                setup and teardown routines should not be required.
+            </action>
+            <action dev="cerdym" issue="CCLTEST-12" type="fix" system="JIRA">
+                Issue with trailing spaces and VC asserts.
+            </action>
+        </release>
+    </body>
+</document>

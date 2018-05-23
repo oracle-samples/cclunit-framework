@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:component-scan base-package="com.cerner.ccl.testing.framework.internal" />
+
+    <!-- ftp-util configuration -->
+    <bean factory-bean="ftpProductBuilder" factory-method="build" />
+    <bean id="ftpProductBuilder" class="com.cerner.ccl.testing.framework.internal.UserPassBuilderSpringProxy" p:password="#{systemProperties['ccl-hostPassword']}" p:username="#{systemProperties['ccl-hostUsername']}" p:serverAddress="${ccl-host}">
+        <constructor-arg>
+            <bean class="com.cerner.ftp.sftp.SftpDownloader" factory-method="getUserPassBuilder" />
+        </constructor-arg>
+    </bean>
+
+    <!-- j4ccl Subject -->
+    <bean class="javax.security.auth.Subject">
+        <constructor-arg index="0" value="true" />
+        <constructor-arg index="1">
+            <util:set>
+                <bean class="com.cerner.ccl.j4ccl.impl.jaas.BackendNodePrincipal">
+                    <constructor-arg index="0" value="#{systemProperties['ccl-hostUsername']}" />
+                    <constructor-arg index="1" value="${ccl-host}" />
+                    <constructor-arg index="2" value="${ccl-environment}" />
+                </bean>
+            </util:set>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <util:set />
+        </constructor-arg>
+        <constructor-arg index="3">
+            <util:set>
+                <bean class="com.cerner.ccl.j4ccl.impl.jaas.BackendNodePasswordCredential">
+                    <constructor-arg index="0" value="#{systemProperties['ccl-hostPassword']}" />
+                </bean>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <!-- Project descriptors -->
+    <bean id="projectVersion" class="java.lang.String">
+        <constructor-arg value="${project.version}" />
+    </bean>
+    <bean id="doDebug" class="java.lang.Boolean" factory-method="valueOf">
+        <constructor-arg value="${cclutDebug}" type="java.lang.String" />
+    </bean>
+    <bean id="xsdDirectory" class="java.lang.String">
+        <constructor-arg value="${cclut.schema.unpacked.location}" />
+    </bean>
+</beans>
