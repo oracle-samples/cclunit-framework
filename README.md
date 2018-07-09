@@ -2,7 +2,7 @@
 
 [The CCL Unit Framework][cclunit-framework-doc] is a collection of CCL source code for executing CCL Unit Tests and generating code coverage data.
 
-***cclunit-framework*** is a maven reactor project which uses the [cerner-maven-ccl-plugin][cerner-maven-ccl-plugin]
+***cclunit-framework*** is a maven reactor project which uses the [ccl-maven-plugin][ccl-maven-plugin]
  to install the CCL Unit Framework code into an HNAM environment and then test it. 
  For instructions on installing the framework code [look here][cclunit-framework-installation]. 
  
@@ -48,7 +48,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-[cerner-maven-ccl-plugin]:https://github.com/cerner/ccl-testing/tree/master/cerner-maven-ccl-plugin
+[ccl-maven-plugin]:https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin
 [cclunit-framework-installation]:cclunit-framework-source/doc/FRAMEWORKINSTALL.md
 [cclunit-framework-doc]:cclunit-framework-source/doc/FRAMEWORK.md
 [cclunit-framework-source]:cclunit-framework-source/README.md
