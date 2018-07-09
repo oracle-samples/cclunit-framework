@@ -7,4 +7,4 @@ files can be copied to cclsource and manually included. Be sure to copy all sour
 cclut.dpb and cclut_ff.dpb should also be imported using Discern Visual Developer if installing manually.
 
 [cclunit-framework]: ../README.md
-[mavenized CCL projects]: https://github.com/cerner/ccl-testing/tree/master/cerner-maven-ccl-plugin
+[mavenized CCL projects]: https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin

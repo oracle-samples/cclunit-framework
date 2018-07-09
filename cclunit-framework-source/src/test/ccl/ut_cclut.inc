@@ -126,7 +126,11 @@ subroutine testing::checkLines(lines)
       set startPos = 0
     endif
     if (textlen(trim(outputLineHead)) > 0)
-      set outputLine = concat(outputLineHead, substring(5, textlen(outputLine)-4, outputLine))
+      if (textlen(outputLineHead) < 116)
+        set outputLine = concat(outputLineHead, " ", substring(5, textlen(outputLine)-4, outputLine))
+      else
+        set outputLine = concat(outputLineHead, substring(5, textlen(outputLine)-4, outputLine))
+      endif
       set outputLineHead = ""
     endif
     set lineNumberN = lineNumberN + 1
@@ -599,7 +603,7 @@ subroutine testSetupError(null)
   set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[13].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[14].text = 
 ^^
@@ -610,7 +614,7 @@ subroutine testSetupError(null)
   set testing::outputLines->line[17].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[18].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[18].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[19].text = 
 ^^
@@ -621,7 +625,7 @@ subroutine testSetupError(null)
   set testing::outputLines->line[22].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[23].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[23].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[24].text = 
 ^^
@@ -720,7 +724,7 @@ subroutine testSetupOnceErrorFailTest(null)
   set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[13].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
 ^    EDERROR) to incompatible type.^
   set testing::outputLines->line[14].text = 
@@ -921,7 +925,7 @@ Test Case: cclsource:ut_cclut_suo_su_td_tdo
   set testing::outputLines->line[6].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[7].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[7].text = 
-    concat(^    Execution Failed: %CCL-E-260-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{NON_TESTCASERESULTS->RESULTIND\}^,
+    concat("    Execution Failed: %CCL-E-260-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{NON_TESTCASERESULTS->RESULTIND\}",;^
         ^Found an invalid record structure member in [eE]xpr.^)
   set testing::outputLines->line [8].text =     
 ^************************************************************************************************************************^
@@ -938,8 +942,8 @@ Test Case: cclsource:ut_cclut_suo_su_td_tdo
       replace("CCLUT1TESTCASEREQUEST", cclut_requestX), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReplyX)
 
-  set expectedErrorPattern = concat("%CCL-E-260-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)",
-      "[0-9]+:[0-9]+\{NON_TESTCASERESULTS->RESULTIND\}Found an invalid record structure member in [eE]xpr.")
+  set expectedErrorPattern = concat("%CCL-E-260-PRG_[0-9]+_[0-9]+\([^)]+\)",
+      "[0-9]+:[0-9]+\{NON_TESTCASERESULTS->RESULTIND\}Found an invalid record structure member in [eE]xpr.");^
 
   ;The error gets thrown multiple times.
   ;Need to flush the error queue so it does not get attributed to this unit test.
@@ -1193,7 +1197,7 @@ TEARDOWNONCE
   set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[13].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[14].text = 
 ^^
@@ -1204,14 +1208,14 @@ TEARDOWNONCE
   set testing::outputLines->line[17].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[18].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[18].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[19].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[20].type = testing::ASSERT_TYPE_MERGE_NEXT
   set testing::outputLines->line[21].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[21].text = concat(
-    ^    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}^,
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
     ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
   set testing::outputLines->line[22].text = 
 ^^
@@ -1274,7 +1278,7 @@ TESTCCLUTERRORS
 ^========================================================================================================================^
   set testing::outputLines->line[6].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[6].text = 
-^    %CCL-E-94-CCLUT\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{FORCED1\}Assignment of Report expression \(FORCED1\) to incompatible type.^
+"    %CCL-E-94-CCLUT\([^)]+\)[0-9]+:[0-9]+\{FORCED1\}Assignment of Report expression \(FORCED1\) to incompatible type.";^
   set testing::outputLines->line[7].text = 
 ^************************************************************************************************************************^
 
@@ -1327,7 +1331,7 @@ TESTCCLUTERRORS
 ^========================================================================================================================^
   set testing::outputLines->line[6].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[6].text = 
-^    %CCL-E-94-CCLUT\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{FORCED2\}Assignment of Report expression \(FORCED2\) to incompatible type.^
+"    %CCL-E-94-CCLUT\([^)]+\)[0-9]+:[0-9]+\{FORCED2\}Assignment of Report expression \(FORCED2\) to incompatible type.";^
   set testing::outputLines->line[7].text = 
 ^************************************************************************************************************************^
 
@@ -1380,7 +1384,7 @@ TESTCCLUTERRORS
 ^========================================================================================================================^
   set testing::outputLines->line[6].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[6].text = 
-^    %CCL-E-94-CCLUT\([0-9]+,[0-9]+\)[0-9]+:[0-9]+\{FORCED1\}Assignment of Report expression \(FORCED1\) to incompatible type.^
+"    %CCL-E-94-CCLUT\([^)]+\)[0-9]+:[0-9]+\{FORCED1\}Assignment of Report expression \(FORCED1\) to incompatible type.";^
   set testing::outputLines->line[7].text = 
 ^************************************************************************************************************************^
 
