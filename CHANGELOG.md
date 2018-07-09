@@ -1,6 +1,13 @@
-# cclunit-framework ChangeLog
+# cclunit-framework Change Log
 
-## 2.0 - dd MMM yyyy
+## 3.0 - 2018.07.09
+* Requires CCL version 8.12.0 or higher.
+
+### Enhancements
+* Update the framework to be 64-bit compatible.
+
+## 2.0 - 2018.07.09
+* Requires CCL version 8.9.3 or higher.
 
 ### Additions
 * Add support for "operator asserts" using CCL's operator function.
@@ -24,17 +31,3 @@
 * Update cclut_get_framework_state to display the framework version and required minimum CCL version if executed directly from CCL or Discern Visual Devleoper.
 * Refactor the framework to make it self-testable.
 
--------
-**Note**: Earlier versions are not available via Maven Central. Their entries are provided for historical purposes.
-
-## 1.4 - dd MMM yyyy
-
-### Additions
-* added xxx
-
-### Enhancements
-* support xxx
-* support yyy
-
-### Defect Corrections
-* fix abc
