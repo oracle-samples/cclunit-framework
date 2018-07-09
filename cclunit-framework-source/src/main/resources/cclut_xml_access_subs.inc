@@ -8,80 +8,81 @@
 
 ;------------------------------  XML Access Subs  ---------------------------------
 if (validate(uar_xml_readfile) = FALSE)
-  declare uar_xml_readfile(source=vc, fileHandle=i4(ref))=i4
+  declare uar_xml_readfile(source=vc, fileHandle=h(ref))=h
 endif
 if (validate(uar_xml_closefile) = FALSE)
-  declare uar_xml_closefile(fileHandle=i4(ref))=null
+  declare uar_xml_closefile(fileHandle=h(ref))=null
 endif
 if (validate(uar_xml_geterrormsg) = FALSE)
-  declare uar_xml_geterrormsg(errorCode=i4(ref))=vc
+  declare uar_xml_geterrormsg(errorCode=h(ref))=vc
 endif
 if (validate(uar_xml_listtree) = FALSE)
-  declare uar_xml_listtree(fileHandle=i4(ref))=vc
+  declare uar_xml_listtree(fileHandle=h(ref))=vc
 endif
 if (validate(uar_xml_getroot) = FALSE)
-  declare uar_xml_getroot(fileHandle=i4(ref), nodeHandle=i4(ref))=i4
+  declare uar_xml_getroot(fileHandle=h(ref), nodeHandle=h(ref))=h
 endif
 if (validate(uar_xml_findchildnode) = FALSE)
-  declare uar_xml_findchildnode(nodeHandle=i4(ref), nodeName=vc, childHandle=i4(ref))=i4
+  declare uar_xml_findchildnode(nodeHandle=h(ref), nodeName=vc, childHandle=h(ref))=h
 endif
 if (validate(uar_xml_getchildcount) = FALSE)
-  declare uar_xml_getchildcount(nodeHandle=i4(ref)) = i4
+  declare uar_xml_getchildcount(nodeHandle=h(ref)) = h
 endif
 if (validate(uar_xml_getchildnode) = FALSE)
-  declare uar_xml_getchildnode(nodeHandle=i4(ref), nodeNO=i4(ref), childNode=i4(ref))=i4
+  declare uar_xml_getchildnode(nodeHandle=h(ref), nodeNO=h(ref), childNode=h(ref))=h
 endif
 if (validate(uar_xml_getparentnode) = FALSE)
-  declare uar_xml_getparentnode(nodeHandle=i4(ref), parentNode=i4(ref))=i4
+  declare uar_xml_getparentnode(nodeHandle=h(ref), parentNode=h(ref))=h
 endif
 if (validate(uar_xml_getnodename) = FALSE)
-  declare uar_xml_getnodename(nodeHandle=i4(ref))=vc
+  declare uar_xml_getnodename(nodeHandle=h(ref))=vc
 endif
 if (validate(uar_xml_getnodecontent) = FALSE)
-  declare uar_xml_getnodecontent(nodeHandle=i4(ref))=vc
+  declare uar_xml_getnodecontent(nodeHandle=h(ref))=vc
 endif
 if (validate(uar_xml_getattrbyname) = FALSE)
-  declare uar_xml_getattrbyname(nodeHandle=i4(ref), attrName=vc, attributeHandle=i4(ref))=i4
+  declare uar_xml_getattrbyname(nodeHandle=h(ref), attrName=vc, attributeHandle=h(ref))=h
 endif
 if (validate(uar_xml_getattrbypos) = FALSE)
-  declare uar_xml_getattrbypos(nodeHandle=i4(ref), ndx=i4(ref), attributeHandle=i4(ref))=i4
+  declare uar_xml_getattrbypos(nodeHandle=h(ref), ndx=h(ref), attributeHandle=h(ref))=h
 endif
 if (validate(uar_xml_getattrname) = FALSE)
-  declare uar_xml_getattrname(attributeHandle=i4(ref))=vc
+  declare uar_xml_getattrname(attributeHandle=h(ref))=vc
 endif
 if (validate(uar_xml_getattrvalue) = FALSE)
-  declare uar_xml_getattrvalue(attributeHandle=i4(ref))=vc
+  declare uar_xml_getattrvalue(attributeHandle=h(ref))=vc
 endif
 if (validate(uar_xml_getattributevalue) = FALSE)
-  declare uar_xml_getattributevalue(nodeHandle=i4(ref), attrName=vc)=vc
+  declare uar_xml_getattributevalue(nodeHandle=h(ref), attrName=vc)=vc
 endif
 if (validate(uar_xml_getattrcount) = FALSE)
-  declare uar_xml_getattrcount(nodeHandle=i4(ref))=i4
+  declare uar_xml_getattrcount(nodeHandle=h(ref))=h
 endif
 if (validate(uar_xml_parsestring) = FALSE)
-  declare uar_xml_parsestring(xmlString=vc, fileHandle=i4(ref))=i4
+  declare uar_xml_parsestring(xmlString=vc, fileHandle=h(ref))=h
 endif
 
-declare cclut::parseXmlBuffer(cclutPXMLBuffer = vc, cclutPRXMLFileHandle = i4(ref)) = i4 with protect
-declare cclut::releaseXmlResources(cclutPRXMLFileHandle = i4(ref)) = i2 with protect
-declare cclut::getXmlChildNodeValue(cclutPParentHandle = i4, cclutPChildName = vc) = vc with protect
-declare cclut::getXmlAttributeValue(cclutPElementHandle = i4, cclutPAttrName = vc) = vc with protect
-declare cclut::getXmlChildNodeAttributeValue(cclutPParentHandle = i4, cclutPChildName = vc, cclutPAttrName = vc) = vc with protect
-declare cclut::writeXmlElement(cclutHElement = i4) = vc with protect
-declare cclut::getXmlListItemHandle(cclutPElementHandle = i4, cclutPChildName = vc, cclutPOccurrenceIndex = i4) = i4 with protect
-declare cclut::getXmlElementValue(cclutPElementHandle = i4) = vc with protect
-declare cclut::evaluateXmlXPath(cclutHXMLContext = i4, cclutXPathExpr = vc) = vc with protect
+declare cclut::writeXmlElement(cclutHElement = h) = vc with protect
+declare cclut::getXmlElementValue(cclutPElementHandle = h) = vc with protect
+declare cclut::releaseXmlResources(cclutPRXMLFileHandle = h(ref)) = i2 with protect
+declare cclut::evaluateXmlXPath(cclutHXMLContext = h, cclutXPathExpr = vc) = vc with protect
+declare cclut::getXmlChildNodeValue(cclutPParentHandle = h, cclutPChildName = vc) = vc with protect
+declare cclut::getXmlAttributeValue(cclutPElementHandle = h, cclutPAttrName = vc) = vc with protect
+declare cclut::parseXmlBuffer(cclutPXMLBuffer = vc, cclutPRXMLFileHandle = h(ref)) = h with protect
+declare cclut::getXmlListItemHandle(cclutPElementHandle = h, cclutPChildName = vc, cclutPOccurrenceIndex = h) = h with protect
+declare cclut::getXmlChildNodeAttributeValue(cclutPParentHandle = h, cclutPChildName = vc, cclutPAttrName = vc) = vc with protect
+
 
 ;------------------------------  XML Status Codes  ---------------------------------
-if (not(validate(CCLUT_XML_SC_UNKSTAT)))    declare CCLUT_XML_SC_UNKSTAT           = i4 with protect, constant(0)  endif
-if (not(validate(CCLUT_XML_SC_OK)))         declare CCLUT_XML_SC_OK                = i4 with protect, constant(1)  endif
-if (not(validate(CCLUT_XML_SC_PARSERROR)))  declare CCLUT_XML_SC_PARSERROR         = i4 with protect, constant(2)  endif
-if (not(validate(CCLUT_XML_SC_NOFILE)))     declare CCLUT_XML_SC_NOFILE            = i4 with protect, constant(3)  endif
-if (not(validate(CCLUT_XML_SC_NONODE)))     declare CCLUT_XML_SC_NONODE            = i4 with protect, constant(4)  endif
-if (not(validate(CCLUT_XML_SC_NOATTR)))     declare CCLUT_XML_SC_NOATTR            = i4 with protect, constant(5)  endif
-if (not(validate(CCLUT_XML_SC_BADOBJREF)))  declare CCLUT_XML_SC_BADOBJREF         = i4 with protect, constant(6)  endif
-if (not(validate(CCLUT_XML_SC_INVINDEX)))   declare CCLUT_XML_SC_INVINDEX          = i4 with protect, constant(7)  endif
-if (not(validate(CCLUT_XML_SC_NOTFOUND)))   declare CCLUT_XML_SC_NOTFOUND          = i4 with protect, constant(8)  endif
+if (not(validate(CCLUT_XML_SC_UNKSTAT)))    declare CCLUT_XML_SC_UNKSTAT           = h with protect, constant(0)  endif
+if (not(validate(CCLUT_XML_SC_OK)))         declare CCLUT_XML_SC_OK                = h with protect, constant(1)  endif
+if (not(validate(CCLUT_XML_SC_PARSERROR)))  declare CCLUT_XML_SC_PARSERROR         = h with protect, constant(2)  endif
+if (not(validate(CCLUT_XML_SC_NOFILE)))     declare CCLUT_XML_SC_NOFILE            = h with protect, constant(3)  endif
+if (not(validate(CCLUT_XML_SC_NONODE)))     declare CCLUT_XML_SC_NONODE            = h with protect, constant(4)  endif
+if (not(validate(CCLUT_XML_SC_NOATTR)))     declare CCLUT_XML_SC_NOATTR            = h with protect, constant(5)  endif
+if (not(validate(CCLUT_XML_SC_BADOBJREF)))  declare CCLUT_XML_SC_BADOBJREF         = h with protect, constant(6)  endif
+if (not(validate(CCLUT_XML_SC_INVINDEX)))   declare CCLUT_XML_SC_INVINDEX          = h with protect, constant(7)  endif
+if (not(validate(CCLUT_XML_SC_NOTFOUND)))   declare CCLUT_XML_SC_NOTFOUND          = h with protect, constant(8)  endif
 
  
 /**
@@ -95,14 +96,15 @@ if (not(validate(CCLUT_XML_SC_NOTFOUND)))   declare CCLUT_XML_SC_NOTFOUND       
     The XML handle to the root of the XML tree.
 */
 subroutine cclut::parseXmlBuffer(cclutPXMLBuffer, cclutPRXMLFileHandle)
+  declare zero = h with protect, constant(0)
   set cclutPRXMLFileHandle = 0
   if (uar_xml_parsestring(nullterm(cclutPXMLBuffer), cclutPRXMLFileHandle) != CCLUT_XML_SC_OK)
-    return (0)
+    return (zero)
   endif
 
-  declare cclutHXMLRoot  = i4 with protect, noconstant(0)
+  declare cclutHXMLRoot  = h with protect, noconstant(0)
   if (uar_xml_getroot(cclutPRXMLFileHandle, cclutHXMLRoot) != CCLUT_XML_SC_OK)
-    return (0)
+    return (cnvtlong(0))
   endif
 
   return (cclutHXMLRoot)
@@ -212,12 +214,12 @@ end ;;;cclut::getXmlChildNodeAttributeValue
     The string representation of the element.
 */
 subroutine cclut::writeXmlElement(cclutHElement)
-  declare cclutChildIdx          = i4 with protect, noconstant(0)
-  declare cclutChildCnt          = i4 with protect, noconstant(uar_xml_getchildcount(cclutHElement))
-  declare cclutAttrIdx           = i4 with protect, noconstant(0)
-  declare cclutAttrCnt           = i4 with protect, noconstant(uar_xml_getattrcount(cclutHElement))
+  declare cclutChildIdx          = h with protect, noconstant(0)
+  declare cclutChildCnt          = h with protect, noconstant(uar_xml_getchildcount(cclutHElement))
+  declare cclutAttrIdx           = h with protect, noconstant(0)
+  declare cclutAttrCnt           = h with protect, noconstant(uar_xml_getattrcount(cclutHElement))
   declare cclutMyContent         = vc with protect, noconstant(nullterm(uar_xml_getnodecontent(cclutHElement)))
-  declare cclutHAttr             = i4 with protect, noconstant(0)
+  declare cclutHAttr             = h with protect, noconstant(0)
   declare cclutAttrName          = vc with protect, noconstant("")
   declare cclutAttrValue         = vc with protect, noconstant("")
   declare cclutTheElementString  = vc with protect, 
@@ -243,7 +245,7 @@ subroutine cclut::writeXmlElement(cclutHElement)
 
   set cclutTheElementString = concat(cclutTheElementString, ">", cclutMyContent)
   for (cclutChildIdx = 1 to cclutChildCnt)
-    declare cclutHChildNode = i4 with protect, noconstant(0)
+    declare cclutHChildNode = h with protect, noconstant(0)
     call uar_xml_getchildnode(cclutHElement, cclutChildIdx - 1, cclutHChildNode)
     set cclutTheChildElementString = cclut::writeXmlElement(cclutHChildNode)
     set cclutTheElementString = concat(cclutTheElementString, cclutTheChildElementString)
@@ -265,17 +267,18 @@ end ;;;cclut::writeXmlElement
 */
 subroutine cclut::getXmlListItemHandle(cclutPElementHandle, cclutPChildName, cclutPOccurrenceIndex)
   if (cclutPElementHandle != 0)
-    declare cclutChIdx       = i4 with protect, noconstant(0)
-    declare cclutChCnt       = i4 with protect, noconstant(0)
-    declare cclutOsNumber    = i4 with protect, noconstant(0)
-    declare cclutTmpNode     = i4 with protect, noconstant(0)
+    declare zero             = h with protect, constant(0)
+    declare cclutChIdx       = h with protect, noconstant(0)
+    declare cclutChCnt       = h with protect, noconstant(0)
+    declare cclutOsNumber    = h with protect, noconstant(0)
+    declare cclutTmpNode     = h with protect, noconstant(0)
 
     set cclutChCnt = uar_xml_getchildcount(cclutPElementHandle)
 
     for (cclutChIdx = 1 to cclutChCnt)
       set cclutTmpNode = 0
       if (uar_xml_getchildnode(cclutPElementHandle, cclutChIdx - 1, cclutTmpNode) != CCLUT_XML_SC_OK)
-        return (0)
+        return (zero)
       endif
 
       if (uar_xml_getnodename(cclutTmpNode) = cclutPChildName)
@@ -286,7 +289,7 @@ subroutine cclut::getXmlListItemHandle(cclutPElementHandle, cclutPChildName, ccl
       endif
     endfor
   endif
-  return (0)
+  return (zero)
 end ;cclut::getXmlListItemHandle
  
 /**
@@ -328,8 +331,8 @@ end ;cclut::getXmlElementValue
 */
 subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
   declare cclutExpr          = vc with protect, noconstant(trim(cclutXPathExpr))
-  declare cclutExprLen       = i4 with protect, noconstant(size(cclutExpr))
-  declare cclutHXMLParent    = i4 with protect, noconstant(cclutHXMLContext)
+  declare cclutExprLen       = h with protect, noconstant(size(cclutExpr))
+  declare cclutHXMLParent    = h with protect, noconstant(cclutHXMLContext)
 
   ;hXMLElement is always the root of the XPath expression, so just add the root '/' if it doesn't exist
   if (substring(1, 1, cclutExpr) != "/")
@@ -337,11 +340,11 @@ subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
     set cclutExprLen = cclutExprLen + 1
   endif
 
-  declare cclutFirstSlashPos   = i4 with protect, noconstant(1)
-  declare cclutSecondSlashPos  = i4 with protect, noconstant(findstring("/", cclutExpr, 2))
+  declare cclutFirstSlashPos   = h with protect, noconstant(1)
+  declare cclutSecondSlashPos  = h with protect, noconstant(findstring("/", cclutExpr, 2))
   declare cclutBetweenSlashes  = vc with protect, noconstant("")
-  declare cclutOpenBracketPos  = i4 with protect, noconstant(0)
-  declare cclutCloseBracketPos = i4 with protect, noconstant(0)
+  declare cclutOpenBracketPos  = h with protect, noconstant(0)
+  declare cclutCloseBracketPos = h with protect, noconstant(0)
   declare cclutBetweenBrackets = vc with protect, noconstant("")
 
   while (cclutSecondSlashPos != 0)
