@@ -5,6 +5,6 @@
         <version>1.0</version> 
   	</skin> 
   	<body>
-        ${reports}
+        <menu ref="reports"/>
   	</body>
 </project> 
