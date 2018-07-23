@@ -29,7 +29,7 @@ public class CclutGetFrameworkStateTest extends AbstractCclutTest {
 
     /**
      * Test the retrieval of the version.
-     * <p />
+     * <p>
      * This test assumes that the project version of the testing framework matches this project's version.
      * 
      * @throws Exception

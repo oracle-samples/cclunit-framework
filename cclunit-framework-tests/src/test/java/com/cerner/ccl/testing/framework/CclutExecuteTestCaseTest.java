@@ -70,7 +70,7 @@ public class CclutExecuteTestCaseTest extends AbstractCclutTest {
     /**
      * If the provided include file has bad syntax that prevents a successful compilation, the testing framework should
      * explicitly fail out.
-     * <p />
+     * <p>
      * This test only passes on pre-8.7.2 due to changes made to call compile() to error out. As such, it will not
      * execute itself if the version of CCL against which it runs is 8.7.2 or higher.
      */
