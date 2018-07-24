@@ -25,7 +25,7 @@ declare testSetupErrors(null) = null with protect
 declare testLoadingErrors(null) = null with protect
 declare testTestCaseFileDoesNotExist(null) = null with protect
 declare testCclMinimumNotMet(null) = null with protect
-declare cclut::getOutdatedCclVersion(null) = null with protect
+declare cclut::getOutdatedCclVersion(null) = vc with protect
 declare testCompileProgramFailure(null) = null with protect
 declare cclut::compileProgramFailure(fileDir = vc, fileName = vc, listingDir = vc, listingName = vc, errMsg = vc(ref)) = i2
 declare testGenerateTestCaseProgramFailure(null) = null with protect
@@ -1322,7 +1322,7 @@ subroutine testCclMinimumNotMet(null)
       
   call cclutAssertVCEqual(CURREF, "execute success 1", ucets_reply->status_data.status, "F")
   call cclutAssertVCEqual(CURREF, "execute success 5", ucets_reply->status_data.subeventstatus[1].targetObjectValue, 
-  "The CCL version [1.0.0] does not meet the minimum version required [8.9.3] for this version of the CCL Unit Testing Framework")
+  "The CCL version [1.0.0] does not meet the minimum version required [8.12.0] for this version of the CCL Unit Testing Framework")
   call cclutAssertI2Equal(CURREF, "test case failure", ucets_testCaseResults->resultInd, FALSE)
 end
 subroutine cclut::getOutdatedCclVersion(null)

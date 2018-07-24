@@ -4,6 +4,7 @@
         <groupId>com.cerner.ccl</groupId>
         <artifactId>cclunit-framework-parent</artifactId>
         <version>2.0</version>
+        <relativePath>..</relativePath>
     </parent>
     <artifactId>cclunit-framework-tests</artifactId>
     <name>CCL Testing Framework Tests</name>
