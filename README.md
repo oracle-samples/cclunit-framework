@@ -9,7 +9,6 @@
  The following modules are included in the reactor build
 * [cclunit-framework-source][cclunit-framework-source] - The CCL Unit Framework source code.
 * [cclunit-framework-tests][cclunit-framework-tests] - A maven project which tests the CCL Unit Framework installation.
-* [cclunit-framework-schema-xml][cclunit-framework-schema-xml] - A maven project which defines xml schema need by cclunit-framework-tests.
 
 
 ## Current Version

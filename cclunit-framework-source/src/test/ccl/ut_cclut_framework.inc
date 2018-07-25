@@ -2,7 +2,7 @@
   A test case file for testing the CCL Unit framework. This test case contains tests using the different types of 
   subroutine declaration syntax.   If you are trying to install the framework into a domain that has an older version 
   of CCL which does not support some of these constructs, the build will fail. 
-  Remeove this test case file from the build or delete the specific tests which are causing problems.
+  Remove this test case file from the build or delete the specific tests which are causing problems.
 */
 declare setupOnce(null) = null with protect
 declare teardownOnce(null) = null with protect

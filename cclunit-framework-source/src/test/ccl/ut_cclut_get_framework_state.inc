@@ -76,12 +76,12 @@ subroutine setup(null)
   set stat = initRec(testing::expectedMessages)
 
   set stat = alterlist(testing::expectedMessages->message, 6)
-  set testing::expectedMessages->message[1].value = "*************************************************"
-  set testing::expectedMessages->message[2].value = "*                                               *"
-  set testing::expectedMessages->message[3].value = concat("*    ", expectedVersionDisplay, "    *")
-  set testing::expectedMessages->message[4].value = concat("*    ", expectedCclVersionDisplay, "         *")
-  set testing::expectedMessages->message[5].value = "*                                               *"
-  set testing::expectedMessages->message[6].value = "*************************************************"
+  set testing::expectedMessages->message[1].value = "*********************************************"
+  set testing::expectedMessages->message[2].value = "*                                           *"
+  set testing::expectedMessages->message[3].value = concat("*    ", expectedVersionDisplay, "         *")
+  set testing::expectedMessages->message[4].value = concat("*    ", expectedCclVersionDisplay, "    *")
+  set testing::expectedMessages->message[5].value = "*                                           *"
+  set testing::expectedMessages->message[6].value = "*********************************************"
 end ;;;setup
 
 
