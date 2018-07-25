@@ -2,5 +2,13 @@
 
 There currently is no packaging for CCL projects. Consequently the framework code is not released to a repository. 
 Updates to the framework are released by tagging this repository.
-The framework is installed into a Cerner Millennium domain by downloading the project and
-executing `mvn clean install -P<some profile id>`. The changelog and version documentation do need to be updated when pull requests are merged, however.
+When 'releasing' be sure to 
+* update the changelog.
+* update the version listed in readme.md.
+* update the version number in the pom files.
+* update the version number in cclut_framework_version.inc.
+* update the minimum required CCL vesion in cclut_framework_version.inc if changed.
+* correct any impacted tests.
+* push to a new branch.
+* execute `mvn clean test -P<profileId>` on the branch.
+* tag the branch with the release number and merge to master.
