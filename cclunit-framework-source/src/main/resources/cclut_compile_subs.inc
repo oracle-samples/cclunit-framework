@@ -88,6 +88,8 @@ subroutine cclut::generateTestCaseProgram(
     col 0 value row+1
     value = "%i cclsource:cclut_reflection_subs.inc"
     col 0 value row+1
+    value = "%i cclsource:cclutmock.inc"
+    col 0 value row+1
   detail
     col 0 ";;;CCLUT_START_TEST_INC_FILE" row+1
     value = concat("%i ", cclutDirectoryLogical, ":", cclutFileNameLower)
