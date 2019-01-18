@@ -102,7 +102,7 @@ subroutine cclut::parseXmlBuffer(cclutPXMLBuffer, cclutPRXMLFileHandle)
     return (cclutHZero)
   endif
 
-  declare cclutHXMLRoot  = h with protect, noconstant(0)
+  declare cclutHXMLRoot = h with protect, noconstant(0)
   if (uar_xml_getroot(cclutPRXMLFileHandle, cclutHXMLRoot) != CCLUT_XML_SC_OK)
     return (cclutHZero)
   endif
@@ -214,15 +214,15 @@ end ;;;cclut::getXmlChildNodeAttributeValue
     The string representation of the element.
 */
 subroutine cclut::writeXmlElement(cclutHElement)
-  declare cclutChildIdx          = h with protect, noconstant(0)
-  declare cclutChildCnt          = h with protect, noconstant(uar_xml_getchildcount(cclutHElement))
-  declare cclutAttrIdx           = h with protect, noconstant(0)
-  declare cclutAttrCnt           = h with protect, noconstant(uar_xml_getattrcount(cclutHElement))
-  declare cclutMyContent         = vc with protect, noconstant(nullterm(uar_xml_getnodecontent(cclutHElement)))
-  declare cclutHAttr             = h with protect, noconstant(0)
-  declare cclutAttrName          = vc with protect, noconstant("")
-  declare cclutAttrValue         = vc with protect, noconstant("")
-  declare cclutTheElementString  = vc with protect, 
+  declare cclutChildIdx = h with protect, noconstant(0)
+  declare cclutChildCnt = h with protect, noconstant(uar_xml_getchildcount(cclutHElement))
+  declare cclutAttrIdx = h with protect, noconstant(0)
+  declare cclutAttrCnt = h with protect, noconstant(uar_xml_getattrcount(cclutHElement))
+  declare cclutMyContent = vc with protect, noconstant(nullterm(uar_xml_getnodecontent(cclutHElement)))
+  declare cclutHAttr = h with protect, noconstant(0)
+  declare cclutAttrName = vc with protect, noconstant("")
+  declare cclutAttrValue = vc with protect, noconstant("")
+  declare cclutTheElementString = vc with protect, 
       noconstant(nullterm(concat(nullterm("<"), nullterm(uar_xml_getnodename(cclutHElement)))))
   declare cclutTheChildElementString = vc with protect, noconstant(nullterm(""))
 
@@ -266,12 +266,12 @@ end ;;;cclut::writeXmlElement
     A handle to the indicated XML element if found; 0 otherwise.
 */
 subroutine cclut::getXmlListItemHandle(cclutPElementHandle, cclutPChildName, cclutPOccurrenceIndex)
+  declare cclutHZero = h with protect, constant(0)
   if (cclutPElementHandle != 0)
-    declare cclutHZero       = h with protect, constant(0)
-    declare cclutChIdx       = i4 with protect, noconstant(0)
-    declare cclutChCnt       = i4 with protect, noconstant(0)
-    declare cclutOsNumber    = i4 with protect, noconstant(0)
-    declare cclutTmpNode     = h with protect, noconstant(0)
+    declare cclutChIdx = i4 with protect, noconstant(0)
+    declare cclutChCnt = i4 with protect, noconstant(0)
+    declare cclutOsNumber = i4 with protect, noconstant(0)
+    declare cclutTmpNode = h with protect, noconstant(0)
 
     set cclutChCnt = uar_xml_getchildcount(cclutPElementHandle)
 
@@ -329,9 +329,9 @@ end ;cclut::getXmlElementValue
     The evaluation of the XPath expression.
 */
 subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
-  declare cclutExpr          = vc with protect, noconstant(trim(cclutXPathExpr))
-  declare cclutExprLen       = i4 with protect, noconstant(size(cclutExpr))
-  declare cclutHXMLParent    = h with protect, noconstant(cclutHXMLContext)
+  declare cclutExpr = vc with protect, noconstant(trim(cclutXPathExpr))
+  declare cclutExprLen = i4 with protect, noconstant(size(cclutExpr))
+  declare cclutHXMLParent = h with protect, noconstant(cclutHXMLContext)
 
   ;hXMLElement is always the root of the XPath expression, so just add the root '/' if it doesn't exist
   if (substring(1, 1, cclutExpr) != "/")
@@ -339,10 +339,10 @@ subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
     set cclutExprLen = cclutExprLen + 1
   endif
 
-  declare cclutFirstSlashPos   = i4 with protect, noconstant(1)
-  declare cclutSecondSlashPos  = i4 with protect, noconstant(findstring("/", cclutExpr, 2))
-  declare cclutBetweenSlashes  = vc with protect, noconstant("")
-  declare cclutOpenBracketPos  = i4 with protect, noconstant(0)
+  declare cclutFirstSlashPos = i4 with protect, noconstant(1)
+  declare cclutSecondSlashPos = i4 with protect, noconstant(findstring("/", cclutExpr, 2))
+  declare cclutBetweenSlashes = vc with protect, noconstant("")
+  declare cclutOpenBracketPos = i4 with protect, noconstant(0)
   declare cclutCloseBracketPos = i4 with protect, noconstant(0)
   declare cclutBetweenBrackets = vc with protect, noconstant("")
 
