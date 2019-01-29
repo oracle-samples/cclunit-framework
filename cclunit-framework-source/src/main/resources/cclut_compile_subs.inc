@@ -80,6 +80,8 @@ subroutine cclut::generateTestCaseProgram(
     col 0 value row+1
     value = concat("create program ", cclutProgramName)
     col 0 value row+1
+    value = "%i cclsource:cclut_utils.inc"
+    col 0 value row+1
     value = "%i cclsource:cclutassert_impl_nff.inc"
     col 0 value row+1
     value = "%i cclsource:cclut_error_handling.inc"

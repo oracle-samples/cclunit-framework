@@ -8,7 +8,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <!-- ftp-util configuration -->
     <bean factory-bean="ftpProductBuilder" factory-method="build" />
-    <bean id="ftpProductBuilder" class="com.cerner.ccl.testing.framework.internal.UserPassBuilderSpringProxy" p:password="${ccl-hostPassword}" p:username="${ccl-hostUsername}" p:serverAddress="${ccl-host}">
+    <bean id="ftpProductBuilder" class="com.cerner.ccl.testing.framework.internal.UserPassBuilderSpringProxy" p:password="#{systemProperties['ccl-hostPassword']}" p:username="#{systemProperties['ccl-hostUsername']}" p:serverAddress="${ccl-host}">
         <constructor-arg>
             <bean class="com.cerner.ftp.sftp.SftpDownloader" factory-method="getUserPassBuilder" />
         </constructor-arg>
@@ -20,7 +20,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <constructor-arg index="1">
             <util:set>
                 <bean class="com.cerner.ccl.j4ccl.impl.jaas.BackendNodePrincipal">
-                    <constructor-arg index="0" value="${ccl-hostUsername}" />
+                    <constructor-arg index="0" value="#{systemProperties['ccl-hostUsername']}" />
                     <constructor-arg index="1" value="${ccl-host}" />
                     <constructor-arg index="2" value="${ccl-environment}" />
                 </bean>
@@ -32,7 +32,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <constructor-arg index="3">
             <util:set>
                 <bean class="com.cerner.ccl.j4ccl.impl.jaas.BackendNodePasswordCredential">
-                    <constructor-arg index="0" value="${ccl-hostPassword}" />
+                    <constructor-arg index="0" value="#{systemProperties['ccl-hostPassword']}" />
                 </bean>
             </util:set>
         </constructor-arg>

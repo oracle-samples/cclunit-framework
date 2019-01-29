@@ -9,11 +9,11 @@
 
 %i cclsource:cclutmock_table.inc
 
-declare cclutAddMockImplementation(originalName = vc(val), replaceName = vc(val)) = null with protect
-declare cclutRemoveMockImplementation(originalName = vc(val)) = null with protect
+declare cclutAddMockImplementation(cclutOriginalName = vc(val), cclutReplaceName = vc(val)) = null with protect
+declare cclutRemoveMockImplementation(cclutOriginalName = vc(val)) = null with protect
 declare cclutRemoveAllMockImplementations(null) = null with protect
-declare cclutExecuteProgramWithMocks(programName = vc(val), params = vc(val),
-    namespace = vc(val, "PUBLIC")) = null with protect
+declare cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val),
+    cclutNamespace = vc(val, "PUBLIC")) = null with protect
 declare cclutRemoveAllMocks(null) = null with protect
 
 record cclut_mockImplementations (
@@ -35,22 +35,22 @@ the mock will be overwritten with the new replaceName.
 Example:
 call cclutAddMockImplementation("uar_get_code_by", "mock_uar_get_code_by")
 **/
-subroutine cclutAddMockImplementation(originalName, replaceName)
-    ;Declare local variables
-    declare CCLUT_ORIGINAL_NAME = vc with protect, constant(trim(cnvtupper(originalName), 3))
-    declare CCLUT_REPLACE_NAME = vc with protect, constant(trim(cnvtupper(replaceName), 3))
+subroutine cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
+    declare CCLUT_ORIGINAL_NAME = vc with protect, constant(cnvtupper(cclutOriginalName))
+    declare CCLUT_REPLACE_NAME = vc with protect, constant(cnvtupper(cclutReplaceName))
     declare cclutMockImplementationLength =
         i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
     declare cclutMockImplementationPos = i4 with protect, noconstant(0)
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
-    if (CCLUT_ORIGINAL_NAME <= " ")
+    if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
         call cclexception(100, "E", "cclutAddMockImplementation() - originalName is a required field")
         return
     endif
-    if (CCLUT_REPLACE_NAME <= " ")
-        call cclexception(100, "E", "cclutAddMockImplementation() - replaceName is a required field")
+    if (cclut::cclutIsEmpty(CCLUT_REPLACE_NAME))
+        call cclexception(100, "E", concat("cclutAddMockImplementation(", CCLUT_ORIGINAL_NAME,
+            ") - replaceName is a required field"))
         return
     endif
 
@@ -76,16 +76,15 @@ Removes a mock implementation.
 Example:
 call cclutRemoveMockImplementation("uar_get_code_by")
 **/
-subroutine cclutRemoveMockImplementation(originalName)
-    ;Declare local variables
-    declare CCLUT_ORIGINAL_NAME = vc with protect, constant(trim(cnvtupper(originalName), 3))
+subroutine cclutRemoveMockImplementation(cclutOriginalName)
+    declare CCLUT_ORIGINAL_NAME = vc with protect, constant(cnvtupper(cclutOriginalName))
     declare cclutMockImplementationLength =
             i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
     declare cclutMockImplementationPos = i4 with protect, noconstant(0)
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
-    if (CCLUT_ORIGINAL_NAME <= " ")
+    if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
         call cclexception(100, "E", "cclutRemoveMockImplementation() - originalName is a required field")
         return
     endif
@@ -113,67 +112,62 @@ subroutine cclutRemoveAllMockImplementations(null)
 end ;cclutRemoveAllMockImplementations
 
 /**
-Executes a program with all mocks currently added through cclutAddMockImplementation() and cclutCreateMockTable().
-programName is required.  params is a string parameter to be sent directly to the program, so all commas and string
-delimiters must be specified.  If namespace is omitted, it will default to the PUBLIC namespace.
+Executes a CCL program applying an indicated namespace and all mocks that have been specified using the functions
+described below.  programName is required.  params is a stringified representation of the parameters to be passed to the
+program, so all commas and string delimiters must be specified.  If namespace is omitted, it will default to the PUBLIC
+namespace.
+
+@param programName
+    The program to be executed with mocks.
+@param params
+    The parameters to be sent to the program.
+@param namespace
+    The namespace under which to execute the program.
 
 Example:
 call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^", "MYNAMESPACE")
 **/
-subroutine cclutExecuteProgramWithMocks(programName, params, namespace)
-    ;Declare local variables
-    declare CCLUT_PROGRAM_NAME = vc with protect, constant(trim(cnvtupper(programName), 3))
-    declare CCLUT_PARAMS = vc with protect, constant(params)
-    declare CCLUT_NAMESPACE = vc with protect, constant(namespace)
+subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutNamespace)
+    declare CCLUT_PROGRAM_NAME = vc with protect, constant(cnvtupper(cclutProgramName))
+    declare CCLUT_PARAMS = vc with protect, constant(cclutParams)
+    declare CCLUT_NAMESPACE = vc with protect, constant(cclutNamespace)
     declare cclutMockImplementationLength =
             i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
     declare cclutMockTableLength = i4 with protect, noconstant(size(cclut_mockTables->tables, 5))
     declare cclutMockTableIndex = i4 with protect, noconstant(0)
-    declare cclutHasComma = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
 
     ;Validate inbound parameters
-    if (CCLUT_PROGRAM_NAME <= " ")
+    if (cclut::cclutIsEmpty(CCLUT_PROGRAM_NAME))
         call cclexception(100, "E", "cclutExecuteProgramWithMocks() - programName is a required field")
         return
     endif
 
-    set cclutParserText = concat(" execute ", CCLUT_PROGRAM_NAME, " ")
-    if (params > " ")
-        set cclutParserText = concat(cclutParserText, " ", params)
+    set cclutParserText = concat(" execute ", CCLUT_PROGRAM_NAME)
+    if (cclut::cclutIsEmpty(CCLUT_PARAMS) = FALSE)
+        set cclutParserText = concat(cclutParserText, " ", CCLUT_PARAMS)
     endif
-    set cclutParserText = concat(cclutParserText, " with ")
+    set cclutParserText = concat(cclutParserText, " with")
 
     ;Add mock implementations
     for (cclutMockImplementationIndex = 1 to cclutMockImplementationLength)
-        if (cclutHasComma)
-            set cclutParserText = concat(cclutParserText, ", ")
-        endif
         set cclutParserText = concat(cclutParserText, ^ replace("^,
             cclut_mockImplementations->implementations[cclutMockImplementationIndex].originalName, ^", ^,
-            cclut_mockImplementations->implementations[cclutMockImplementationIndex].replaceName, ^) ^)
-        set cclutHasComma = 1
+            cclut_mockImplementations->implementations[cclutMockImplementationIndex].replaceName, ^),^)
     endfor
 
     ;Add mock tables
     for (cclutMockTableIndex = 1 to cclutMockTableLength)
         if (cclut_mockTables->tables[cclutMockTableIndex].isFinalized = TRUE)
-            if (cclutHasComma)
-                set cclutParserText = concat(cclutParserText, ", ")
-            endif
             set cclutParserText =
                 concat(cclutParserText, ^ replace("^, cclut_mockTables->tables[cclutMockTableIndex].originalName, ^", ^,
-                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^) ^)
-            set cclutHasComma = 1
+                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^),^)
         endif
     endfor
 
     ;Add namespace
-    if (cclutHasComma)
-        set cclutParserText = concat(cclutParserText, ", ")
-    endif
-    set cclutParserText = concat(cclutParserText, ^ curnamespace = "^, CCLUT_NAMESPACE, ^" go ^)
+    set cclutParserText = concat(cclutParserText, ^ curnamespace = "^, CCLUT_NAMESPACE, ^" go^)
     call parser(cclutParserText)
 end ;cclutExecuteProgramWithMocks
 
