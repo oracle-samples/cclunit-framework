@@ -171,15 +171,27 @@ call cclutRemoveAllMocks(null)
 
 2. cclutRemoveAllMocks should be called as part of the teardown for all tests.  The framework will attempt to clean up any outstanding mocks, but it is good practice to explicitly remove any mocks to ensure that no mocked tables remain in the Oracle instance.
 
-3. Tables can be mocked even if the table does not exist in the domain where the test is run.  The mocked version will be used when executing programs with executeProgramWithMocks.  This can be useful to test tables that do not formally exist yet.
+3. Namespaces are not supported when using cclutAddMockImplementation.  An example of this would be:
 
-4. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to child scripts called from the script-under-test.  Some alternatives would be to mock the child script to return the appropriate data or to mock the child script to execute the real script applying the mocked tables and implementations.
+   ```
+   call cclutAddMockImplementation("public::testSubroutine", "myNamespace::mockSubroutine")
+   ```
 
-5. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to statements executed through "call parser()" commands.  One alternative would be to separate the parser string generation into separate subroutines and mock the subroutines to return parser strings using the mocked entity names.  Another alternative would be to mock the parser() call to validate the correct information is supplied, then perform the appropriate mock versions of the actions the statement would normally perform.
+   Alternatives will depend on the specifics of the script-under-test, but one alternative for the example above would be to define the mock implementation under the namespace that the program uses (i.e. public::mockSubroutine) and exclude the namespaces when adding the mock:
+   
+   ```
+   call cclutAddMockImplementation("testSubroutine", "mockSubroutine")
+   ```
 
-6. The table mocking APIs are not supported when called from within a reportwriter section.  It might be tempting to use a dummyt query to set up mock data from a record structure, but various mocking calls such as cclutCreateMockTable, cclutRemoveMockTable and cclutAddMockData cannot be executed within the context of a query (because the implementations execute queries). Use a for loop instead.
+4. Tables can be mocked even if the table does not exist in the domain where the test is run.  The mocked version will be used when executing programs with executeProgramWithMocks.  This can be useful to test tables that do not formally exist yet.
+
+5. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to child scripts called from the script-under-test.  Some alternatives would be to mock the child script to return the appropriate data or to mock the child script to execute the real script applying the mocked tables and implementations.
+
+6. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to statements executed through "call parser()" commands.  One alternative would be to separate the parser string generation into separate subroutines and mock the subroutines to return parser strings using the mocked entity names.  Another alternative would be to mock the parser() call to validate the correct information is supplied, then perform the appropriate mock versions of the actions the statement would normally perform.
+
+7. The table mocking APIs are not supported when called from within a reportwriter section.  It might be tempting to use a dummyt query to set up mock data from a record structure, but various mocking calls such as cclutCreateMockTable, cclutRemoveMockTable and cclutAddMockData cannot be executed within the context of a query (because the implementations execute queries). Use a for loop instead.
  
-7. Mocking the tdbexecute "reply_to" entity is unsupported under certain conditions, specifically if a call to free the "reply_to" entity is made just prior to calling tdbexecute.  If the scenario is truly necessary for a test, the best alternative is to define and use a subroutine for freeing the "reply_to" entity within the script and use a mock for that subroutine which does not actually perform the freeing of the "reply_to" entity.
+8. Mocking the tdbexecute "reply_to" entity is unsupported under certain conditions, specifically if a call to free the "reply_to" entity is made just prior to calling tdbexecute.  If the scenario is truly necessary for a test, the best alternative is to define and use a subroutine for freeing the "reply_to" entity within the script and use a mock for that subroutine which does not actually perform the freeing of the "reply_to" entity.
   
 ## Example
 Below is an example of some of the APIs available in the CCL Unit Mocking framework along with some simple notes.

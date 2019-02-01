@@ -78,4 +78,7 @@ end
 
 call internalSubroutine(null)
 
+set internalVariable = 1
+set internalRecord->item = 1
+
 end go

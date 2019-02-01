@@ -294,6 +294,7 @@ set cclutReply->status_data.status = "S"
 call cclut::executeTestLogic(null)
  
 #exit_script
+;Clean up any mocks that were not cleaned up by the tests.
 call cclutRemoveAllMocks(null)
 ;Record any dangling errors and asserts in case the last executed unit test called go to exit_script.
 set cclutReply->resultInd = band(cclutReply->resultInd, 
