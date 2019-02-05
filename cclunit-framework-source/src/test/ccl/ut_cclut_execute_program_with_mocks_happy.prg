@@ -22,6 +22,15 @@ record reply (
 )
 */
 
+record public::persistRecord (
+    1 item = i4
+) with persistscript
+
+declare public::internalVariable = i4 with protect, noconstant(0)
+record public::internalRecord (
+    1 item = i4
+) with protect
+
 declare public::internalSubroutine(null) = null with protect
 
 subroutine (public::internalSubroutine(null) = null with protect)
@@ -80,5 +89,7 @@ call internalSubroutine(null)
 
 set internalVariable = 1
 set internalRecord->item = 1
+
+set persistRecord->item = 1
 
 end go

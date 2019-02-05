@@ -22,7 +22,7 @@ In general, there are two ways to mock objects in CCL unit tests.  Generally spe
     
 The CCL Unit Testing framework provides an abstraction for creating mocks.  The purpose is to help make it easier to define mock tables and other mock objects to be used when executing a script.  Details on the API can be found at [CCLUTMOCKING.md](../CCLUTMOCKING.md)
 
-[These examples](./examples/mocking_api.inc) demonstrates the CCL Unit Testing framework's mocking API.  They assume the script under test is called "the_script" and executes a program called "other_script".  They test for scenarios where other_script returns 0 items, more than 5 items, and a failed ("F") status.
+[These unit tests](./examples/mocking_api.inc) demonstrate how to accomplish a basic "with replace" while using the CCL Unit Testing framework's mocking API.  They test a script named "the_script" and executes a program called "other_script".  They test for scenarios where other_script returns 0 items, more than 5 items, and a failed ("F") status.
 
 There are other variations on this.  For example, you could put asserts within mock_other_script itself.  Additionally, other_script might generate its own reply structure, so you would want to do the same in mock_other_script.
 

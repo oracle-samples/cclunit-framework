@@ -8,8 +8,10 @@ create program the_script
 end go
 
 
-;;; put this definition in a .prg file and compile it
-
+/**
+Mock implementation for other_script which calls validateOtherScriptParams to validate the two input parameters
+and increments a counter for the number of calls to other_script.
+*/
 drop program mock_other_script go
 create program mock_other_script
   prompt "param 1", "param 2" with param1, param2

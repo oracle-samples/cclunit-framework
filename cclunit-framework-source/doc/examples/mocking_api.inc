@@ -1,6 +1,8 @@
 ;;; put the following script definition in a .prg file and compile it
 
-
+/**
+Mock implementation for other_script which sets reply equal to a copy of mock_other_script_reply.
+*/
 drop program mock_other_script go
 create program mock_other_script
   free record reply
@@ -68,3 +70,12 @@ subroutine (testMyFunctionOtherScriptFail(null) = null)
 
   ;assert things here
 end ;;;testMyFunctionOtherScriptFail
+
+;; this is the script to be tested
+
+drop program the_script:dba go
+create program the_script:dba
+
+  execute other_script
+
+end go

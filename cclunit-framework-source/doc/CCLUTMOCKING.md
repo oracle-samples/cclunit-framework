@@ -1,6 +1,13 @@
 
 # CCL Unit Mocking
+The CCL Unit Test framework's mocking API is available for consumers to mock certain objects to better isolate unit tests from outside variability and provide more control over the scenarios under which unit tests are run.  The API provides ways to mock tables, variables, subroutines, scripts, etc.
+
 **\*CAUTION\*** **The CCL Unit Mocking framework should only be used in non-production environments.  Table mocking creates new tables against an Oracle instance for the lifetime of the test.  Because the DDL is generated in a dynamic way, it is possible through inappropriate use of the framework to affect the actual table.  Please only use the documented API.**
+
+## Table of Contents
+[API](#api)  
+[Implementation Notes](#implementation-notes)  
+[Example](#example)
 
 ## API
 

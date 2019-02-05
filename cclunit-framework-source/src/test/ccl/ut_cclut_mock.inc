@@ -233,10 +233,6 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     declare public_subroutine = i4 with protect, noconstant(0)
     declare mock_subroutine = i4 with protect, noconstant(0)
     declare test_subroutine = i4 with protect, noconstant(0)
-    declare public::internalVariable = i4 with protect, noconstant(0)
-    record public::internalRecord (
-        1 item = i4
-    ) with protect
 
     record executeReply (
         1 number_parameter = i4
@@ -276,40 +272,39 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 002", test_subroutine, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 003", mock_subroutine, 0)
 
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 004", public::internalVariable, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 005", public::internalRecord->item, 1)
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 004", public::persistRecord->item, 1)
 
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 006", executeReply->number_parameter, 10)
-    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 007", executeReply->string_parameter,
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 005", executeReply->number_parameter, 10)
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 006", executeReply->string_parameter,
         "test param")
 
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 008", size(executeReply->regular_join, 5),
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 007", size(executeReply->regular_join, 5),
         1)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 009", executeReply->regular_join[1].person_id,
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 008", executeReply->regular_join[1].person_id,
         1.0)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 010",
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 009",
         executeReply->regular_join[1].encounter_id, 4.0)
-    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 011",
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 010",
         executeReply->regular_join[1].encounter_alias, "test alias")
 
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 012", size(executeReply->left_join, 5), 3)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 013", executeReply->left_join[1].person_id,
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 011", size(executeReply->left_join, 5), 3)
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 012", executeReply->left_join[1].person_id,
         1.0)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 014",
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 013",
         executeReply->left_join[1].encounter_id, 4.0)
-    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 015",
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 014",
         executeReply->left_join[1].encounter_alias, "test alias")
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 016", executeReply->left_join[2].person_id,
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 015", executeReply->left_join[2].person_id,
         2.0)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 017",
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 016",
         executeReply->left_join[2].encounter_id, 5.0)
-    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 018",
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 017",
         executeReply->left_join[2].encounter_alias, "")
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 019", executeReply->left_join[3].person_id,
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 018", executeReply->left_join[3].person_id,
         3.0)
-    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 020",
+    call cclutAssertf8Equal(CURREF, "test_cclutExecuteProgramWithMocks_happy 019",
         executeReply->left_join[3].encounter_id, 0.0)
-    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 021",
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_happy 020",
         executeReply->left_join[3].encounter_alias, "")
 
     ;The program ut_cclut_execute_mocks_happy performs an inner join for the rdb test and writes the data to the
@@ -325,9 +320,9 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
         executeReply->rdb_join[1].data = r.line
     with nocounter
 
-    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 022", executeReply->rdb_join[1].columns,
+    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 021", executeReply->rdb_join[1].columns,
         "regexplike", "PERSON_ID.*ENCOUNTER_ID.*PERSON_ID.*ENCOUNTER_ID.*ENCOUNTER_ALIAS")
-    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 023", executeReply->rdb_join[1].data,
+    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 022", executeReply->rdb_join[1].data,
         "regexplike", "1.*4.*1.*4.*test alias")
 end ;test_cclutExecuteProgramWithMocks_happy
 
@@ -336,11 +331,6 @@ end ;test_cclutExecuteProgramWithMocks_happy
 ************************************************************************************************************/
 subroutine test_cclutExecuteProgramWithMocks_namespace(null)
     declare test_subroutine = i4 with protect, noconstant(0)
-    declare public::internalVariable = i4 with protect, noconstant(0)
-    record public::internalRecord (
-        1 item = i4
-    ) with protect
-
     declare cclut::internalSubroutine(null) = null with protect
     declare cclut::internalVariable = i4 with protect, noconstant(0)
     record cclut::internalRecord (
@@ -354,9 +344,7 @@ subroutine test_cclutExecuteProgramWithMocks_namespace(null)
     call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy", "", "CCLUT")
 
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 001", test_subroutine, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 002", public::internalVariable, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 003", cclut::internalVariable, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 004", public::internalRecord->item, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 005", cclut::internalRecord->item, 1)
 end ;test_cclutExecuteProgramWithMocks_namespace
 
@@ -367,10 +355,6 @@ subroutine test_cclutExecuteProgramWithMocks_mock_subroutine(null)
     declare public_subroutine = i4 with protect, noconstant(0)
     declare mock_subroutine = i4 with protect, noconstant(0)
     declare test_subroutine = i4 with protect, noconstant(0)
-    declare public::internalVariable = i4 with protect, noconstant(0)
-    record public::internalRecord (
-        1 item = i4
-    ) with protect
     declare cclut::internalVariable = i4 with protect, noconstant(0)
     record cclut::internalRecord (
         1 item = i4
@@ -389,11 +373,7 @@ subroutine test_cclutExecuteProgramWithMocks_mock_subroutine(null)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 001", public_subroutine, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 002", test_subroutine, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 003", mock_subroutine, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 004", public::internalVariable,
-        0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 005", cclut::internalVariable, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 006",
-        public::internalRecord->item, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 007",
         cclut::internalRecord->item, 1)
 end ;test_cclutExecuteProgramWithMocks_mock_subroutine

@@ -1,9 +1,9 @@
 ;; this is the test
-;;; public::mainForSubroutineB is the workhorse. It will be called instead of public::main because of "with replace"
 
 /**
 * Confirms that subroutineB returns "subroutineBTest" when it is passed "Test"
-* and "subroutineBSubroutine" when it is passed "Subroutine".
+* and "subroutineBSubroutine" when it is passed "Subroutine".  public::mainForSubroutineB is the workhorse. It will be
+* called instead of public::main because of "with replace"
 */
 subroutine (testSubroutineB(null) = null)
 
