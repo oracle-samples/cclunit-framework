@@ -191,67 +191,67 @@ subroutine validateListingXml(xml)
 
 ;  call echo(build2("listingXml = ", xml))
   call cclutAssertEndsWith(CURREF, "validate listingXml", 
-~</COMPILE_DATE><LINES><LINE><NBR>1879</NBR><TEXT><![CDATA[/**]]></TEXT></LINE><LINE><NBR>1880</NBR><TEXT><![CDATA[  A test c\
-ase file for testing the CCL Unit framework.]]></TEXT></LINE><LINE><NBR>1881</NBR><TEXT><![CDATA[  This test case file contai\
+~</COMPILE_DATE><LINES><LINE><NBR>1814</NBR><TEXT><![CDATA[/**]]></TEXT></LINE><LINE><NBR>1815</NBR><TEXT><![CDATA[  A test c\
+ase file for testing the CCL Unit framework.]]></TEXT></LINE><LINE><NBR>1816</NBR><TEXT><![CDATA[  This test case file contai\
 ns all of the testing support subroutines, setupOnce, setup, teardown and teardownOnce and three test]]></TEXT></LINE><LINE><\
-NBR>1882</NBR><TEXT><![CDATA[  subroutines. Each subroutine fires a successful assert to indicate it executed and based on co\
-nfiguration will then fire]]></TEXT></LINE><LINE><NBR>1883</NBR><TEXT><![CDATA[  a failed assert and/or cause an error based \
-on the value of the boolean variable]]></TEXT></LINE><LINE><NBR>1884</NBR><TEXT><![CDATA[  testing::{fail|error}{SetupOnce|Se\
-tup|Test|Teardown|TeardownOnce} which needs to be provided by the invoking test.]]></TEXT></LINE><LINE><NBR>1885</NBR><TEXT><\
-![CDATA[*/]]></TEXT></LINE><LINE><NBR>1886</NBR><TEXT><![CDATA[declare setupOnce(null) = null]]></TEXT></LINE><LINE><NBR>1887\
-</NBR><TEXT><![CDATA[declare teardownOnce(null) = null]]></TEXT></LINE><LINE><NBR>1888</NBR><TEXT><![CDATA[declare setup(null\
-) = null]]></TEXT></LINE><LINE><NBR>1889</NBR><TEXT><![CDATA[declare testOne(null) = null]]></TEXT></LINE><LINE><NBR>1890</NB\
-R><TEXT><![CDATA[declare testTwo(null) = null]]></TEXT></LINE><LINE><NBR>1891</NBR><TEXT><![CDATA[declare testThree(null) = n\
-ull]]></TEXT></LINE><LINE><NBR>1892</NBR><TEXT><![CDATA[declare teardown(null) = null]]></TEXT></LINE><LINE><NBR>1893</NBR><T\
-EXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1894</NBR><TEXT><![CDATA[declare guaranteedError = i4 with protect, noconstant(0)]]>\
-</TEXT></LINE><LINE><NBR>1895</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1896</NBR><TEXT><![CDATA[if (validate(testing::\
-errorLoading, FALSE) = TRUE)]]></TEXT></LINE><LINE><NBR>1897</NBR><TEXT><![CDATA[    set guaranteedError = "loading error"]]>\
-</TEXT></LINE><LINE><NBR>1898</NBR><TEXT><![CDATA[endif]]></TEXT></LINE><LINE><NBR>1899</NBR><TEXT><![CDATA[]]></TEXT></LINE>\
-<LINE><NBR>1900</NBR><TEXT><![CDATA[subroutine setupOnce(null)]]></TEXT></LINE><LINE><NBR>1901</NBR><TEXT><![CDATA[  call ccl\
-utAssertVCEqual(CURREF, "setupOnce executed", "SO", "SO")]]></TEXT></LINE><LINE><NBR>1902</NBR><TEXT><![CDATA[  if (testing::\
-failSetupOnce)]]></TEXT></LINE><LINE><NBR>1903</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "setupOnce failure", 0\
-, 1)]]></TEXT></LINE><LINE><NBR>1904</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1905</NBR><TEXT><![CDATA[  if (te\
-sting::errorSetupOnce)]]></TEXT></LINE><LINE><NBR>1906</NBR><TEXT><![CDATA[    set guaranteedError = "setupOnce error"]]></TE\
-XT></LINE><LINE><NBR>1907</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1908</NBR><TEXT><![CDATA[end ;setupOnce]]></\
-TEXT></LINE><LINE><NBR>1909</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1910</NBR><TEXT><![CDATA[subroutine teardownOnce(\
-null)]]></TEXT></LINE><LINE><NBR>1911</NBR><TEXT><![CDATA[  call cclutAssertVCEqual(CURREF, "teardownOnce executed", "TO", "T\
-O")]]></TEXT></LINE><LINE><NBR>1912</NBR><TEXT><![CDATA[  if (testing::failTeardownOnce)]]></TEXT></LINE><LINE><NBR>1913</NBR\
-><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "teardownOnce failure", 0, 1)]]></TEXT></LINE><LINE><NBR>1914</NBR><TEXT>\
-<![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1915</NBR><TEXT><![CDATA[  if (testing::errorTeardownOnce)]]></TEXT></LINE><LINE>\
-<NBR>1916</NBR><TEXT><![CDATA[    set guaranteedError = "teardownOnce error"]]></TEXT></LINE><LINE><NBR>1917</NBR><TEXT><![CD\
-ATA[  endif]]></TEXT></LINE><LINE><NBR>1918</NBR><TEXT><![CDATA[end ;teardownOnce]]></TEXT></LINE><LINE><NBR>1919</NBR><TEXT>\
-<![CDATA[]]></TEXT></LINE><LINE><NBR>1920</NBR><TEXT><![CDATA[subroutine setup(null)]]></TEXT></LINE><LINE><NBR>1921</NBR><TE\
-XT><![CDATA[  call cclutAssertI4Equal(CURREF, "setup executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1922</NBR><TEXT><![CDATA[  i\
-f (testing::failSetup)]]></TEXT></LINE><LINE><NBR>1923</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "setup failure\
-", 0, 1)]]></TEXT></LINE><LINE><NBR>1924</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1925</NBR><TEXT><![CDATA[  if\
- (testing::errorSetup)]]></TEXT></LINE><LINE><NBR>1926</NBR><TEXT><![CDATA[    set guaranteedError = "setup error"]]></TEXT><\
-/LINE><LINE><NBR>1927</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1928</NBR><TEXT><![CDATA[end ;;;setup]]></TEXT><\
-/LINE><LINE><NBR>1929</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1930</NBR><TEXT><![CDATA[subroutine teardown (null)]]><\
-/TEXT></LINE><LINE><NBR>1931</NBR><TEXT><![CDATA[  call cclutAssertI4Equal(CURREF, "teardown executed", 0, 0)]]></TEXT></LINE\
-><LINE><NBR>1932</NBR><TEXT><![CDATA[  if (testing::failTeardown)]]></TEXT></LINE><LINE><NBR>1933</NBR><TEXT><![CDATA[    cal\
-l cclutAssertI4Equal(CURREF, "teardown failure", 0, 1)]]></TEXT></LINE><LINE><NBR>1934</NBR><TEXT><![CDATA[  endif]]></TEXT><\
-/LINE><LINE><NBR>1935</NBR><TEXT><![CDATA[  if (testing::errorTeardown)]]></TEXT></LINE><LINE><NBR>1936</NBR><TEXT><![CDATA[ \
-   set guaranteedError = "teardown error"]]></TEXT></LINE><LINE><NBR>1937</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><\
-NBR>1938</NBR><TEXT><![CDATA[end ;;;setup]]></TEXT></LINE><LINE><NBR>1939</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>194\
-0</NBR><TEXT><![CDATA[subroutine testOne(null)]]></TEXT></LINE><LINE><NBR>1941</NBR><TEXT><![CDATA[  call cclutAssertI4Equal(\
-CURREF, "testOne executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1942</NBR><TEXT><![CDATA[  if (testing::failTest)]]></TEXT></LIN\
-E><LINE><NBR>1943</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "testOne failure", 0, 1)]]></TEXT></LINE><LINE><NBR\
->1944</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1945</NBR><TEXT><![CDATA[  if (testing::errorTest)]]></TEXT></LI\
-NE><LINE><NBR>1946</NBR><TEXT><![CDATA[    set guaranteedError = "testOne error"]]></TEXT></LINE><LINE><NBR>1947</NBR><TEXT><\
-![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1948</NBR><TEXT><![CDATA[end ;;;testOne]]></TEXT></LINE><LINE><NBR>1949</NBR><TEXT\
-><![CDATA[]]></TEXT></LINE><LINE><NBR>1950</NBR><TEXT><![CDATA[subroutine testTwo(null)]]></TEXT></LINE><LINE><NBR>1951</NBR>\
-<TEXT><![CDATA[  call cclutAssertI4Equal(CURREF, "testTwo executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1952</NBR><TEXT><![CDAT\
-A[  call cclutAssertVCEqual(CURREF, "testTwo executed", "A", "A")]]></TEXT></LINE><LINE><NBR>1953</NBR><TEXT><![CDATA[end ;;;\
-testTwo]]></TEXT></LINE><LINE><NBR>1954</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1955</NBR><TEXT><![CDATA[;; like test\
-One, but two failures and two errors and errors come before failures when both are specified.]]></TEXT></LINE><LINE><NBR>1956\
-</NBR><TEXT><![CDATA[subroutine testThree(null)]]></TEXT></LINE><LINE><NBR>1957</NBR><TEXT><![CDATA[  call cclutAssertI4Equal\
-(CURREF, "testThree executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1958</NBR><TEXT><![CDATA[  if (testing::errorTest)]]></TEXT><\
-/LINE><LINE><NBR>1959</NBR><TEXT><![CDATA[    set guaranteedError = "testThree error"]]></TEXT></LINE><LINE><NBR>1960</NBR><T\
-EXT><![CDATA[    set guaranteedError = "testThree error 2"]]></TEXT></LINE><LINE><NBR>1961</NBR><TEXT><![CDATA[  endif]]></TE\
-XT></LINE><LINE><NBR>1962</NBR><TEXT><![CDATA[  if (testing::failTest)]]></TEXT></LINE><LINE><NBR>1963</NBR><TEXT><![CDATA[  \
-  call cclutAssertI4Equal(CURREF, "testThree failure A", 0, 1)]]></TEXT></LINE><LINE><NBR>1964</NBR><TEXT><![CDATA[    call c\
-clutAssertI4Equal(CURREF, "testThree failure B", 0, 1)]]></TEXT></LINE><LINE><NBR>1965</NBR><TEXT><![CDATA[  endif]]></TEXT><\
-/LINE><LINE><NBR>1966</NBR><TEXT><![CDATA[end ;;;testThree]]></TEXT></LINE></LINES></LISTING>~, xml)
+NBR>1817</NBR><TEXT><![CDATA[  subroutines. Each subroutine fires a successful assert to indicate it executed and based on co\
+nfiguration will then fire]]></TEXT></LINE><LINE><NBR>1818</NBR><TEXT><![CDATA[  a failed assert and/or cause an error based \
+on the value of the boolean variable]]></TEXT></LINE><LINE><NBR>1819</NBR><TEXT><![CDATA[  testing::{fail|error}{SetupOnce|Se\
+tup|Test|Teardown|TeardownOnce} which needs to be provided by the invoking test.]]></TEXT></LINE><LINE><NBR>1820</NBR><TEXT><\
+![CDATA[*/]]></TEXT></LINE><LINE><NBR>1821</NBR><TEXT><![CDATA[declare setupOnce(null) = null]]></TEXT></LINE><LINE><NBR>1822\
+</NBR><TEXT><![CDATA[declare teardownOnce(null) = null]]></TEXT></LINE><LINE><NBR>1823</NBR><TEXT><![CDATA[declare setup(null\
+) = null]]></TEXT></LINE><LINE><NBR>1824</NBR><TEXT><![CDATA[declare testOne(null) = null]]></TEXT></LINE><LINE><NBR>1825</NB\
+R><TEXT><![CDATA[declare testTwo(null) = null]]></TEXT></LINE><LINE><NBR>1826</NBR><TEXT><![CDATA[declare testThree(null) = n\
+ull]]></TEXT></LINE><LINE><NBR>1827</NBR><TEXT><![CDATA[declare teardown(null) = null]]></TEXT></LINE><LINE><NBR>1828</NBR><T\
+EXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1829</NBR><TEXT><![CDATA[declare guaranteedError = i4 with protect, noconstant(0)]]>\
+</TEXT></LINE><LINE><NBR>1830</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1831</NBR><TEXT><![CDATA[if (validate(testing::\
+errorLoading, FALSE) = TRUE)]]></TEXT></LINE><LINE><NBR>1832</NBR><TEXT><![CDATA[    set guaranteedError = "loading error"]]>\
+</TEXT></LINE><LINE><NBR>1833</NBR><TEXT><![CDATA[endif]]></TEXT></LINE><LINE><NBR>1834</NBR><TEXT><![CDATA[]]></TEXT></LINE>\
+<LINE><NBR>1835</NBR><TEXT><![CDATA[subroutine setupOnce(null)]]></TEXT></LINE><LINE><NBR>1836</NBR><TEXT><![CDATA[  call ccl\
+utAssertVCEqual(CURREF, "setupOnce executed", "SO", "SO")]]></TEXT></LINE><LINE><NBR>1837</NBR><TEXT><![CDATA[  if (testing::\
+failSetupOnce)]]></TEXT></LINE><LINE><NBR>1838</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "setupOnce failure", 0\
+, 1)]]></TEXT></LINE><LINE><NBR>1839</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1840</NBR><TEXT><![CDATA[  if (te\
+sting::errorSetupOnce)]]></TEXT></LINE><LINE><NBR>1841</NBR><TEXT><![CDATA[    set guaranteedError = "setupOnce error"]]></TE\
+XT></LINE><LINE><NBR>1842</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1843</NBR><TEXT><![CDATA[end ;setupOnce]]></\
+TEXT></LINE><LINE><NBR>1844</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1845</NBR><TEXT><![CDATA[subroutine teardownOnce(\
+null)]]></TEXT></LINE><LINE><NBR>1846</NBR><TEXT><![CDATA[  call cclutAssertVCEqual(CURREF, "teardownOnce executed", "TO", "T\
+O")]]></TEXT></LINE><LINE><NBR>1847</NBR><TEXT><![CDATA[  if (testing::failTeardownOnce)]]></TEXT></LINE><LINE><NBR>1848</NBR\
+><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "teardownOnce failure", 0, 1)]]></TEXT></LINE><LINE><NBR>1849</NBR><TEXT>\
+<![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1850</NBR><TEXT><![CDATA[  if (testing::errorTeardownOnce)]]></TEXT></LINE><LINE>\
+<NBR>1851</NBR><TEXT><![CDATA[    set guaranteedError = "teardownOnce error"]]></TEXT></LINE><LINE><NBR>1852</NBR><TEXT><![CD\
+ATA[  endif]]></TEXT></LINE><LINE><NBR>1853</NBR><TEXT><![CDATA[end ;teardownOnce]]></TEXT></LINE><LINE><NBR>1854</NBR><TEXT>\
+<![CDATA[]]></TEXT></LINE><LINE><NBR>1855</NBR><TEXT><![CDATA[subroutine setup(null)]]></TEXT></LINE><LINE><NBR>1856</NBR><TE\
+XT><![CDATA[  call cclutAssertI4Equal(CURREF, "setup executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1857</NBR><TEXT><![CDATA[  i\
+f (testing::failSetup)]]></TEXT></LINE><LINE><NBR>1858</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "setup failure\
+", 0, 1)]]></TEXT></LINE><LINE><NBR>1859</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1860</NBR><TEXT><![CDATA[  if\
+ (testing::errorSetup)]]></TEXT></LINE><LINE><NBR>1861</NBR><TEXT><![CDATA[    set guaranteedError = "setup error"]]></TEXT><\
+/LINE><LINE><NBR>1862</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1863</NBR><TEXT><![CDATA[end ;;;setup]]></TEXT><\
+/LINE><LINE><NBR>1864</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1865</NBR><TEXT><![CDATA[subroutine teardown (null)]]><\
+/TEXT></LINE><LINE><NBR>1866</NBR><TEXT><![CDATA[  call cclutAssertI4Equal(CURREF, "teardown executed", 0, 0)]]></TEXT></LINE\
+><LINE><NBR>1867</NBR><TEXT><![CDATA[  if (testing::failTeardown)]]></TEXT></LINE><LINE><NBR>1868</NBR><TEXT><![CDATA[    cal\
+l cclutAssertI4Equal(CURREF, "teardown failure", 0, 1)]]></TEXT></LINE><LINE><NBR>1869</NBR><TEXT><![CDATA[  endif]]></TEXT><\
+/LINE><LINE><NBR>1870</NBR><TEXT><![CDATA[  if (testing::errorTeardown)]]></TEXT></LINE><LINE><NBR>1871</NBR><TEXT><![CDATA[ \
+   set guaranteedError = "teardown error"]]></TEXT></LINE><LINE><NBR>1872</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><\
+NBR>1873</NBR><TEXT><![CDATA[end ;;;setup]]></TEXT></LINE><LINE><NBR>1874</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>187\
+5</NBR><TEXT><![CDATA[subroutine testOne(null)]]></TEXT></LINE><LINE><NBR>1876</NBR><TEXT><![CDATA[  call cclutAssertI4Equal(\
+CURREF, "testOne executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1877</NBR><TEXT><![CDATA[  if (testing::failTest)]]></TEXT></LIN\
+E><LINE><NBR>1878</NBR><TEXT><![CDATA[    call cclutAssertI4Equal(CURREF, "testOne failure", 0, 1)]]></TEXT></LINE><LINE><NBR\
+>1879</NBR><TEXT><![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1880</NBR><TEXT><![CDATA[  if (testing::errorTest)]]></TEXT></LI\
+NE><LINE><NBR>1881</NBR><TEXT><![CDATA[    set guaranteedError = "testOne error"]]></TEXT></LINE><LINE><NBR>1882</NBR><TEXT><\
+![CDATA[  endif]]></TEXT></LINE><LINE><NBR>1883</NBR><TEXT><![CDATA[end ;;;testOne]]></TEXT></LINE><LINE><NBR>1884</NBR><TEXT\
+><![CDATA[]]></TEXT></LINE><LINE><NBR>1885</NBR><TEXT><![CDATA[subroutine testTwo(null)]]></TEXT></LINE><LINE><NBR>1886</NBR>\
+<TEXT><![CDATA[  call cclutAssertI4Equal(CURREF, "testTwo executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1887</NBR><TEXT><![CDAT\
+A[  call cclutAssertVCEqual(CURREF, "testTwo executed", "A", "A")]]></TEXT></LINE><LINE><NBR>1888</NBR><TEXT><![CDATA[end ;;;\
+testTwo]]></TEXT></LINE><LINE><NBR>1889</NBR><TEXT><![CDATA[]]></TEXT></LINE><LINE><NBR>1890</NBR><TEXT><![CDATA[;; like test\
+One, but two failures and two errors and errors come before failures when both are specified.]]></TEXT></LINE><LINE><NBR>1891\
+</NBR><TEXT><![CDATA[subroutine testThree(null)]]></TEXT></LINE><LINE><NBR>1892</NBR><TEXT><![CDATA[  call cclutAssertI4Equal\
+(CURREF, "testThree executed", 0, 0)]]></TEXT></LINE><LINE><NBR>1893</NBR><TEXT><![CDATA[  if (testing::errorTest)]]></TEXT><\
+/LINE><LINE><NBR>1894</NBR><TEXT><![CDATA[    set guaranteedError = "testThree error"]]></TEXT></LINE><LINE><NBR>1895</NBR><T\
+EXT><![CDATA[    set guaranteedError = "testThree error 2"]]></TEXT></LINE><LINE><NBR>1896</NBR><TEXT><![CDATA[  endif]]></TE\
+XT></LINE><LINE><NBR>1897</NBR><TEXT><![CDATA[  if (testing::failTest)]]></TEXT></LINE><LINE><NBR>1898</NBR><TEXT><![CDATA[  \
+  call cclutAssertI4Equal(CURREF, "testThree failure A", 0, 1)]]></TEXT></LINE><LINE><NBR>1899</NBR><TEXT><![CDATA[    call c\
+clutAssertI4Equal(CURREF, "testThree failure B", 0, 1)]]></TEXT></LINE><LINE><NBR>1900</NBR><TEXT><![CDATA[  endif]]></TEXT><\
+/LINE><LINE><NBR>1901</NBR><TEXT><![CDATA[end ;;;testThree]]></TEXT></LINE></LINES></LISTING>~, xml)
 end ;;;validateListingXml
 
 
@@ -299,7 +299,7 @@ subroutine validateResultsXml(xml)
   call cclutAssertI4Equal(CURREF, "validate assert found 1.1", foundInd, TRUE)
   set lineNbr = cclut::retrieveXmlContent(xmlAssert, "lineNumber", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate line number found 1.1", foundInd, TRUE)
-  call cclutAssertVCEqual(CURREF, "validate line number 1.1", lineNbr, "1901")
+  call cclutAssertVCEqual(CURREF, "validate line number 1.1", lineNbr, "1836")
   set assertContext = cclut::retrieveXmlContent(xmlAssert, "context", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate assert context found 1.1", foundInd, TRUE)
   call cclutAssertVCEqual(CURREF, "validate assert context 1.1", assertContext, "setupOnce executed")
@@ -328,7 +328,7 @@ subroutine validateResultsXml(xml)
   call cclutAssertI4Equal(CURREF, "validate assert found 2.1", foundInd, TRUE)
   set lineNbr = cclut::retrieveXmlContent(xmlAssert, "lineNumber", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate line number found 2.1", foundInd, TRUE)
-  call cclutAssertVCEqual(CURREF, "validate line number 2.1", lineNbr, "1921")
+  call cclutAssertVCEqual(CURREF, "validate line number 2.1", lineNbr, "1856")
   set assertContext = cclut::retrieveXmlContent(xmlAssert, "context", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate assert context found 2.1", foundInd, TRUE)
   call cclutAssertVCEqual(CURREF, "validate assert context 2.1", assertContext, "setup executed")
@@ -344,7 +344,7 @@ subroutine validateResultsXml(xml)
   call cclutAssertI4Equal(CURREF, "validate assert found 2.2", foundInd, TRUE)
   set lineNbr = cclut::retrieveXmlContent(xmlAssert, "lineNumber", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate line number found 2.2", foundInd, TRUE)
-  call cclutAssertVCEqual(CURREF, "validate line number 2.2", lineNbr, "1941")
+  call cclutAssertVCEqual(CURREF, "validate line number 2.2", lineNbr, "1876")
   set assertContext = cclut::retrieveXmlContent(xmlAssert, "context", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate assert context found 2.2", foundInd, TRUE)
   call cclutAssertVCEqual(CURREF, "validate assert context 2.2", assertContext, "testOne executed")
@@ -361,7 +361,7 @@ subroutine validateResultsXml(xml)
   call cclutAssertI4Equal(CURREF, "validate assert found 2.3", foundInd, TRUE)
   set lineNbr = cclut::retrieveXmlContent(xmlAssert, "lineNumber", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate line number found 2.3", foundInd, TRUE)
-  call cclutAssertVCEqual(CURREF, "validate line number 2.3", lineNbr, "1931")
+  call cclutAssertVCEqual(CURREF, "validate line number 2.3", lineNbr, "1866")
   set assertContext = cclut::retrieveXmlContent(xmlAssert, "context", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate assert context found 2.3", foundInd, TRUE)
   call cclutAssertVCEqual(CURREF, "validate assert context 2.3", assertContext, "teardown executed")
@@ -407,7 +407,7 @@ subroutine validateResultsXml(xml)
   call cclutAssertI4Equal(CURREF, "validate assert found 5.1", foundInd, TRUE)
   set lineNbr = cclut::retrieveXmlContent(xmlAssert, "lineNumber", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate line number found 5.1", foundInd, TRUE)
-  call cclutAssertVCEqual(CURREF, "validate line number 5.1", lineNbr, "1911")
+  call cclutAssertVCEqual(CURREF, "validate line number 5.1", lineNbr, "1846")
   set assertContext = cclut::retrieveXmlContent(xmlAssert, "context", 1, foundInd)
   call cclutAssertI4Equal(CURREF, "validate assert context found 5.1", foundInd, TRUE)
   call cclutAssertVCEqual(CURREF, "validate assert context 5.1", assertContext, "teardownOnce executed")

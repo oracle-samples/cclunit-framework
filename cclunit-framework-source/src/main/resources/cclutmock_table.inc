@@ -15,8 +15,6 @@ declare CCLUT_ESCAPED_NULL = vc with protect, constant("\null")
 
 declare cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames = vc(val),
     cclutFieldTypes = vc(val)) = vc with protect
-declare cclutAddMockConstraint(cclutTableName = vc(val), cclutColumnName = vc(val),
-    cclutColumnConstraint = vc(val)) = null with protect
 declare cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
     cclutIsUnique = i4(val)) = null with protect
 declare cclutCreateMockTable(cclutTableName = vc(val)) = null with protect
@@ -47,7 +45,6 @@ record cclut_mockTables (
 		2 columns[*]
 		    3 columnName = vc
 		    3 columnType = vc
-		    3 columnConstraint = vc
 		2 indexes[*]
 		    3 indexColumns = vc
 		    3 isUnique = i2
@@ -58,11 +55,10 @@ set cclut_mockTables->markerTime = cnvtint(curtime3)
 
 /**
 Defines a mock table structure that can be created for use within a program.  This is the first function to be called in
-the process of mocking a table.  It must be called before cclutAddMockIndex(), cclutAddMockConstraint(), and
-cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless
-cclutCreateMockTable() is called.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes
-are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same
-order.
+the process of mocking a table.  It must be called before cclutAddMockIndex() and cclutCreateMockTable() can be called.
+The table will not be mocked in cclutExecuteProgramWithMocks() unless cclutCreateMockTable() is called.  tableName,
+columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The
+columnTypes should have the same count as columnNames and be in the same order.
 
 @param tableName
     The table to be mocked.
@@ -176,57 +172,6 @@ subroutine cclut::cclutValidateParameterIsNotEmpty(cclutParameter, cclutParamete
     endif
     return(TRUE)
 end ;cclut::cclutValidateParameterIsNotEmpty
-
-/**
-Adds a constraint to a mock table.  The table must already be defined through cclutDefineMockTable(), otherwise an error
-will be thrown.  This function may not be called after cclutCreateMockTable().  tableName and columnName are required.
-If the columnName is not valid for the table specified, an error will be thrown.  All constraints for a column should be
-present in the columnConstraint field.  If a constraint already exists, this function will overwrite it with the new
-value.  If columnConstraint is blank, the constraint will be removed for the column.  The supported constraints can be
-seen here:
-https://wiki.cerner.com/display/public/1101discernHP/SELECT+INTO+TABLE+Table_Name+Using+Discern+Explorer
-
-@param tableName
-    The name of the source table for the mock table to which the constraint will be added.
-@param columnName
-    The column to which the constraint will be applied.
-@param columnConstraint
-    A string of all constraints to be applied to the column.
-
-Example:
-call cclutAddMockConstraint("person", "name_last", "not null unique")
-**/
-subroutine cclutAddMockConstraint(cclutTableName, cclutColumnName, cclutColumnConstraint)
-    declare CCLUT_TABLE_NAME = vc with protect, constant(cnvtupper(cclutTableName))
-    declare CCLUT_COLUMN_NAME = vc with protect, constant(cnvtupper(cclutColumnName))
-    declare CCLUT_COLUMN_CONSTRAINT = vc with protect, constant(cnvtupper(cclutColumnConstraint))
-    declare cclutMockTablePos = i4 with protect, noconstant(0)
-    declare cclutMockColumnPos = i4 with protect, noconstant(0)
-
-    ;Validate inbound parameters
-    if (cclut::cclutValidateParameterIsNotEmpty(CCLUT_TABLE_NAME, "tableName") = FALSE)
-        return
-    endif
-    if (cclut::cclutValidateParameterIsNotEmpty(CCLUT_COLUMN_NAME, "columnName") = FALSE)
-        return
-    endif
-
-    ;Validate that the table exists and has not been created
-    set cclutMockTablePos = cclut::cclutValidateMockTableIsDefined(CCLUT_TABLE_NAME)
-    if (cclutMockTablePos > 0 and cclut::cclutValidateMockTableIsNotCreated(CCLUT_TABLE_NAME))
-        ;Validate that the column exists on the table.
-        set cclutMockColumnPos = cclut::cclutGetMockColumnIndex(CCLUT_TABLE_NAME, CCLUT_COLUMN_NAME)
-        if (cclutMockColumnPos < 1)
-            call cclexception(100, "E", concat("cclutAddMockConstraint(", CCLUT_TABLE_NAME, ") - ", CCLUT_COLUMN_NAME,
-                " is not mocked on table."))
-            return
-        endif
-
-        ;Set the constraint
-        set cclut_mockTables->tables[cclutMockTablePos].columns[cclutMockColumnPos].columnConstraint =
-            CCLUT_COLUMN_CONSTRAINT
-    endif
-end ;cclutAddMockConstraint
 
 /**
 Helper function to validate if the supplied cclutTableName has been defined as a mock in cclut_mockTables.
@@ -412,8 +357,6 @@ subroutine cclutCreateMockTable(cclutTableName)
     declare cclutMockIndexIndex = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
     declare cclutColumnName = vc with protect, noconstant("")
-    declare cclutConstraint = vc with protect, noconstant("")
-    declare cclutParserConstraint = vc with protect, noconstant(" ")
 
     ;Validate inbound parameter
     if (cclut::cclutValidateParameterIsNotEmpty(CCLUT_TABLE_NAME, "tableName") = FALSE)
@@ -436,19 +379,11 @@ subroutine cclutCreateMockTable(cclutTableName)
             set cclutParserText = concat(cclutParserText, " ,")
         endif
         set cclutColumnName = cclut_mockTables->tables[cclutMockTablePos].columns[cclutMockColumnIndex].columnName
-        set cclutConstraint = cclut_mockTables->tables[cclutMockTablePos].columns[cclutMockColumnIndex].columnConstraint
         set cclutParserText =
             concat(cclutParserText, ^ ^, cclutColumnName,
             ^ = type("^, cclut_mockTables->tables[cclutMockTablePos].columns[cclutMockColumnIndex].columnType, ^")^)
-        if (cclut::cclutIsEmpty(cclutConstraint) = FALSE)
-            set cclutParserConstraint =
-                concat(cclutParserConstraint, ^ , constraint(^, cclutColumnName, ^,"^, cclutConstraint, ^")^)
-        endif
     endfor
     set cclutParserText = concat(cclutParserText, ^ with organization="P"^)
-    if (cclutParserConstraint > " ")
-        set cclutParserText = concat(cclutParserText, cclutParserConstraint)
-    endif
     for (cclutMockIndexIndex = 1 to size(cclut_mockTables->tables[cclutMockTablePos].indexes, 5))
         set cclutParserText = concat(cclutParserText,
             evaluate(cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexIndex].isUnique, TRUE,

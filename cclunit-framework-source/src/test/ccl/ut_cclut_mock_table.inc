@@ -31,22 +31,16 @@ subroutine test_cclutDefineMockTable_happy(null)
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 007",
         cclut_mockTables->tables[1].columns[1].columnType, "F8")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 008",
-        cclut_mockTables->tables[1].columns[1].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 009",
         cclut_mockTables->tables[1].columns[2].columnName, "SAMPLE_TABLE_TEXT")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 010",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 009",
         cclut_mockTables->tables[1].columns[2].columnType, "VC")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 011",
-        cclut_mockTables->tables[1].columns[2].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 012",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 010",
         cclut_mockTables->tables[1].columns[3].columnName, "SAMPLE_TABLE_DATE")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 013",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 011",
         cclut_mockTables->tables[1].columns[3].columnType, "DQ8")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_happy 014",
-        cclut_mockTables->tables[1].columns[3].columnConstraint, "")
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_happy 015", size(cclut_mockTables->tables[1].indexes, 5),
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_happy 012", size(cclut_mockTables->tables[1].indexes, 5),
         0)
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_happy 016", cclut_mockTables->tables[1].isFinalized, FALSE)
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_happy 013", cclut_mockTables->tables[1].isFinalized, FALSE)
 end ;test_cclutDefineMockTable_happy
 
 /* test_cclutDefineMockTable_different_cases ****************************************************************
@@ -72,22 +66,16 @@ subroutine test_cclutDefineMockTable_different_cases(null)
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 007",
         cclut_mockTables->tables[1].columns[1].columnType, "F8")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 008",
-        cclut_mockTables->tables[1].columns[1].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 009",
         cclut_mockTables->tables[1].columns[2].columnName, "SAMPLE_TABLE_TEXT")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 010",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 009",
         cclut_mockTables->tables[1].columns[2].columnType, "VC")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 011",
-        cclut_mockTables->tables[1].columns[2].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 012",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 010",
         cclut_mockTables->tables[1].columns[3].columnName, "SAMPLE_TABLE_DATE")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 013",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 011",
         cclut_mockTables->tables[1].columns[3].columnType, "DQ8")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_different_cases 014",
-        cclut_mockTables->tables[1].columns[3].columnConstraint, "")
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_different_cases 015",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_different_cases 012",
         size(cclut_mockTables->tables[1].indexes, 5), 0)
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_different_cases 016",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_different_cases 013",
         cclut_mockTables->tables[1].isFinalized, FALSE)
 end ;test_cclutDefineMockTable_different_cases
 
@@ -114,22 +102,16 @@ subroutine test_cclutDefineMockTable_existing_mock(null)
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 007",
         cclut_mockTables->tables[1].columns[1].columnType, "I4")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 008",
-        cclut_mockTables->tables[1].columns[1].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 009",
         cclut_mockTables->tables[1].columns[2].columnName, "NEW_TABLE_TEXT")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 010",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 009",
         cclut_mockTables->tables[1].columns[2].columnType, "C100")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 011",
-        cclut_mockTables->tables[1].columns[2].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 012",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 010",
         cclut_mockTables->tables[1].columns[3].columnName, "NEW_TABLE_DATE")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 013",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 011",
         cclut_mockTables->tables[1].columns[3].columnType, "DM12")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_mock 014",
-        cclut_mockTables->tables[1].columns[3].columnConstraint, "")
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_mock 015",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_mock 012",
         size(cclut_mockTables->tables[1].indexes, 5), 0)
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_mock 016",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_mock 013",
         cclut_mockTables->tables[1].isFinalized, FALSE)
 end ;test_cclutDefineMockTable_existing_mock
 
@@ -192,22 +174,16 @@ subroutine test_cclutDefineMockTable_existing_created_mock(null)
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 011",
         cclut_mockTables->tables[1].columns[1].columnType, "I4")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 012",
-        cclut_mockTables->tables[1].columns[1].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 013",
         cclut_mockTables->tables[1].columns[2].columnName, "NEW_TABLE_TEXT")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 014",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 013",
         cclut_mockTables->tables[1].columns[2].columnType, "C100")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 015",
-        cclut_mockTables->tables[1].columns[2].columnConstraint, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 016",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 014",
         cclut_mockTables->tables[1].columns[3].columnName, "NEW_TABLE_DATE")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 017",
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 015",
         cclut_mockTables->tables[1].columns[3].columnType, "DM12")
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_existing_created_mock 018",
-        cclut_mockTables->tables[1].columns[3].columnConstraint, "")
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_created_mock 019",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_created_mock 016",
         size(cclut_mockTables->tables[1].indexes, 5), 0)
-    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_created_mock 020",
+    call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_existing_created_mock 017",
         cclut_mockTables->tables[1].isFinalized, FALSE)
 end ;test_cclutDefineMockTable_existing_created_mock
 
@@ -346,105 +322,6 @@ subroutine test_cclutDefineMockTable_duplicate_column_name(null)
 
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_duplicate_column_name 002", mockTable, "")
 end ;test_cclutDefineMockTable_duplicate_column_name
-
-;**********************************************************************************************************************************
-;** cclutAddMockConstraint
-;**********************************************************************************************************************************
-/* test_cclutAddMockConstraint_happy ************************************************************************
-*  Scenario: Adds a mock constraint to a table that has already been defined with cclutDefineMockTable      *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_happy(null)
-    call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-    call cclutDefineMockTable("sample_table_2", "sample_table_2_id|sample_table_2_text|sample_table_2_date",
-        "f8|vc|dq8")
-    call cclutDefineMockTable("sample_table_3", "sample_table_3_id|sample_table_3_text|sample_table_3_date",
-        "f8|vc|dq8")
-
-    call cclutAddMockConstraint("sample_table_2", "sample_table_2_text", "not null unique")
-
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockConstraint_happy 001",
-        cclut_mockTables->tables[2].columns[2].columnConstraint, "NOT NULL UNIQUE")
-end ;test_cclutAddMockConstraint_happy
-
-/* test_cclutAddMockConstraint_missing_tableName ************************************************************
-*  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
-    call cclutAddMockConstraint("     ", "sample_table_text", "not null unique")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockConstraint_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
-end ;test_cclutAddMockConstraint_missing_tableName
-
-/* test_cclutAddMockConstraint_missing_columnName ***********************************************************
-*  Scenario: Throws an error when an empty columnName is supplied to the function (after trimming)          *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_missing_columnName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
-    call cclutAddMockConstraint("sample_table", "     ", "not null unique")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockConstraint_missing_columnName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - columnName is a required field."))
-end ;test_cclutAddMockConstraint_missing_columnName
-
-/* test_cclutAddMockConstraint_unmocked_table ***************************************************************
-*  Scenario: Throws an error when the tableName specified has not been mocked through cclutDefineMockTable  *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_unmocked_table(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
-    call cclutAddMockConstraint("sample_table", "sample_table_text", "not null unique")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockConstraint_unmocked_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsDefined\(SAMPLE_TABLE\) - Table has not been mocked."))
-end ;test_cclutAddMockConstraint_unmocked_table
-
-/* test_cclutAddMockConstraint_created_table ****************************************************************
-*  Scenario: Throws an error when the tableName specified has already been created                          *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_created_table(null)
-    call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-    call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
-    call cclutAddMockConstraint("sample_table", "sample_table_text", "not null unique")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockConstraint_created_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\): ",
-            "cclutValidateMockTableIsNotCreated\(SAMPLE_TABLE\) - Table has already been created."))
-end ;test_cclutAddMockConstraint_created_table
-
-/* test_cclutAddMockConstraint_invalid_column ***************************************************************
-*  Scenario: Throws an error when the column is not a valid column on the mocked table                      *
-************************************************************************************************************/
-subroutine test_cclutAddMockConstraint_invalid_column(null)
-    call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
-    call cclutAddMockConstraint("sample_table", "wrong_column", "not null unique")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockConstraint_invalid_column 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockConstraint\(SAMPLE_TABLE\) - WRONG_COLUMN is not mocked on table."))
-end ;test_cclutAddMockConstraint_invalid_column
 
 ;**********************************************************************************************************************************
 ;** cclutAddMockIndex

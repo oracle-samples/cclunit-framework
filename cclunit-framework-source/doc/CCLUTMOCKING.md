@@ -32,7 +32,7 @@ call cclutExecuteProgramWithMocks("ccl_my_program", "\^MINE^, 1.0, ^string param
 
 **cclutDefineMockTable(tableName = vc, fieldNames = vc, fieldTypes = vc)**
 
-Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex(), cclutAddMockConstraint(), and cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless cclutCreateMockTable() is called.  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  
+Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() and cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless cclutCreateMockTable() is called.  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The table to be mocked.  
@@ -45,21 +45,6 @@ Defines a mock table structure that can be created for use within a program.  Th
   
 Example:  
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8") 
-
-**cclutAddMockConstraint(tableName = vc, columnName = vc, columnConstraint = vc)**
-
-Adds a constraint to a mock table.  The table must already be defined through cclutDefineMockTable(), otherwise an error will be thrown.  This function may not be called after cclutCreateMockTable().  tableName and columnName are required. If the columnName is not valid for the table specified, an error will be thrown.  All constraints for a column should be present in the columnConstraint field.  If a constraint already exists, this function will overwrite it with the new value.  If columnConstraint is blank, the constraint will be removed for the column.  The supported constraints can be seen here:  
-https://wiki.cerner.com/display/public/1101discernHP/SELECT+INTO+TABLE+Table_Name+Using+Discern+Explorer  
-  
-@param tableName  
-&nbsp;&nbsp;&nbsp;&nbsp;The name of the source table for the mock table to which the constraint will be added.  
-@param columnName  
-&nbsp;&nbsp;&nbsp;&nbsp;The column to which the constraint will be applied.  
-@param columnConstraint  
-&nbsp;&nbsp;&nbsp;&nbsp;A string of all constraints to be applied to the column.  
-  
-Example:  
-call cclutAddMockConstraint("person", "name_last", "not null unique")
 
 **cclutAddMockIndex(tableName = vc, columnNames = vc, isUnique = i4)**
 
@@ -235,9 +220,6 @@ Test Code:
     ; to verify (among other things) that an insert or a delete worked correctly.
     set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm",
 	    "f8|vc|vc|dq8")
-	
-	; Add a constraint that the person_id cannot be null
-	call cclutAddMockConstraint("person", "person_id", "not null")
 	
 	; Add a non-unique index to name_last
 	call cclutAddMockIndex("person", "name_last", FALSE)
