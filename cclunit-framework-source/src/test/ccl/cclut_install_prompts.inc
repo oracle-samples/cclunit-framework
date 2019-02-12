@@ -18,7 +18,7 @@ subroutine testInstallPrompts(null)
     1 params = vc) with protect
 
   set promptRequest->program_name = "cclut_install_prompt_wrapper"
-  set promptRequest->output_device = "nl:"
+  set promptRequest->output_device = "noforms"
   
   set promptFileLocation = concat(cer_install, "cclut.dpb")
   set promptRequest->params = build2(^"MINE", "^, promptFileLocation, ^"^)
