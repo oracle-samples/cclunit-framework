@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.cerner.ccl</groupId>
         <artifactId>cclunit-framework-parent</artifactId>
-        <version>3.0</version>
+        <version>3.0.1</version>
         <relativePath>..</relativePath>
     </parent>
     

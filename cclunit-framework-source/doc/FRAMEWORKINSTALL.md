@@ -28,14 +28,14 @@ Write access in CCLSOURCE and DBA-level CCL access are required to install or up
 but it can be installed manually if necessary. If a manual installation is performed, be sure to copy all source files and compile all program files to
 avoid problems with missing or mismatched dependencies. 
 
-Here are instructions for installing the framework using maven.
+Here are instructions for installing the framework **using maven**.
 - [Configure maven][configure-maven] for CCL Unit testing in the environment
 - Download and unzip the [cclunit-framework][cclunit-framework] project.
 - Open a command prompt and navigate the current directory to the top level folder of the downloaded cclunit-framework project.
 - Execute `mvn clean install -P<profile id>` using the profile id created in the configure maven step
 
 
-Here are instructions for installing the framework manually.
+Here are instructions for installing the framework **manually**.
 - Download and unzip the [cclunit-framework][cclunit-framework] project.
 - Copy all of the source code (.prg and .inc files) from cclunit-framework/source/main/ccl and cclunit-framework/source/main/resources to $CCLSOURCE.
 - Compile each program file (.prg).
