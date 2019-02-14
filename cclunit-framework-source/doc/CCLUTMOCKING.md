@@ -30,7 +30,7 @@ cclutExecuteProgramWithMocks.
 &nbsp;&nbsp;&nbsp;&nbsp;The namespace under which to execute the program.
   
 Example:  
-```
+```javascript
 call cclutExecuteProgramWithMocks("ccl_my_program")
 call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^")
 call cclutExecuteProgramWithMocks("ccl_my_program", "", "MYNAMESPACE")
@@ -42,7 +42,7 @@ call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parame
 Removes all mock implementations and mock tables that have been added through the mocking APIs.  This should be called at the completion of a test case to clean up all mocks.  
   
 Example:  
-```
+```javascript
 call cclutRemoveAllMocks(null)
 ```
 
@@ -60,7 +60,7 @@ Defines a mock table structure that can be created for use within a program.  Th
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the mock table (This can be used to select data for testing)  
   
 Example:  
-```
+```javascript
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8") 
 ```
 
@@ -76,7 +76,7 @@ Adds an index to a mock table.  The table must already be defined through cclutD
 &nbsp;&nbsp;&nbsp;&nbsp;TRUE to create a unique index; FALSE to create a non-unique index  
   
 Example:  
-```
+```javascript
 call cclutAddMockIndex("person", "person_id", TRUE)  
 call cclutAddMockIndex("person", "name_last|name_first", FALSE)
 ```
@@ -89,7 +89,7 @@ Creates a mock table.  The table must already be defined through cclutDefineMock
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table to be mocked.  
   
 Example:  
-```
+```javascript
 call cclutCreateMockTable("person")
 ```
 
@@ -102,7 +102,7 @@ mocked, it will return silently.  tableName is required.
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table that is mocked.  
   
 Example:  
-```
+```javascript
 call cclutRemoveMockTable("person")
 ```
 
@@ -111,7 +111,7 @@ call cclutRemoveMockTable("person")
 Removes all mock tables.  Any tables that have already been created will also be dropped.  
   
 Example:  
-```
+```javascript
 call cclutRemoveAllMockTables(null)
 ```
 
@@ -130,7 +130,7 @@ Supported escape values
 &nbsp;&nbsp;&nbsp;&nbsp;A pipe-delimited string of data to be inserted into the mock table.  
   
 Example:  
-```
+```javascript
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")  
 call cclutCreateMockTable("person")  
 call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington  
@@ -147,7 +147,7 @@ Clears all data from a specified mock table.  This is functionally similar to a 
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table for the mock table to be cleared.  
   
 Example:  
-```
+```javascript
 call cclutClearMockData("person")
 ```
 
@@ -161,7 +161,7 @@ Adds a mock implementation to be utilized by cclutExecuteProgramWithMocks.  This
 &nbsp;&nbsp;&nbsp;&nbsp;The mocked object.  
   
 Example:  
-```
+```javascript
 call cclutAddMockImplementation("uar_get_code_by", "mock_uar_get_code_by")
 ```
 
@@ -173,7 +173,7 @@ Removes a mock implementation.
 &nbsp;&nbsp;&nbsp;&nbsp;The object that is mocked.  
   
 Example:  
-```
+```javascript
 call cclutRemoveMockImplementation("uar_get_code_by")
 ```
 
@@ -182,7 +182,7 @@ call cclutRemoveMockImplementation("uar_get_code_by")
 Removes all mock implementations.  
   
 Example:  
-```
+```javascript
 call cclutRemoveAllMockImplementations(null)
 ```
 
@@ -193,13 +193,13 @@ call cclutRemoveAllMockImplementations(null)
 
 3. Namespaces are not supported when using cclutAddMockImplementation.  An example of this would be:
 
-   ```
+   ```javascript
    call cclutAddMockImplementation("public::testSubroutine", "myNamespace::mockSubroutine")
    ```
 
    Alternatives will depend on the specifics of the script-under-test, but one alternative for the example above would be to define the mock implementation under the namespace that the program uses (i.e. public::mockSubroutine) and exclude the namespaces when adding the mock:
    
-   ```
+   ```javascript
    call cclutAddMockImplementation("testSubroutine", "mockSubroutine")
    ```
 
@@ -218,103 +218,106 @@ Below is an example of some of the APIs available in the CCL Unit Mocking framew
 
 Script-under-test:
 
-    drop program 1abc_mo_get_persons:dba go
-    create program 1abc_mo_get_persons:dba    
-    
-    declare newSize = i4 with protect, noconstant(0)
-    
-    select into "nl:"
-    from person p
-    plan p
-	order by p.person_id
-	detail
-		newSize = newSize + 1
-		stat = alterlist(reply->persons, newSize)
-		reply->persons[newSize].person_id = p.person_id
-		reply->persons[newSize].name_last = p.name_last
-		reply->persons[newSize].name_first = p.name_first
-		reply->persons[newSize].birth_dt_tm = p.birth_dt_tm
-	with nocounter
-    
-    end
-    go
+```javascript
+drop program 1abc_mo_get_persons:dba go
+create program 1abc_mo_get_persons:dba    
+
+declare newSize = i4 with protect, noconstant(0)
+
+select into "nl:"
+from person p
+plan p
+order by p.person_id
+detail
+    newSize = newSize + 1
+    stat = alterlist(reply->persons, newSize)
+    reply->persons[newSize].person_id = p.person_id
+    reply->persons[newSize].name_last = p.name_last
+    reply->persons[newSize].name_first = p.name_first
+    reply->persons[newSize].birth_dt_tm = p.birth_dt_tm
+with nocounter
+
+end
+go
+```
 
 Test Code:
 
-    declare mock_table_person = vc with protect, noconstant("")
+```javascript
+declare mock_table_person = vc with protect, noconstant("")
+
+; Defining a mock person table.  The return value is the name of the mocked table.  
+; This can be useful to perform a select on the table after the script-under-test is complete
+; to verify (among other things) that an insert or a delete worked correctly.
+set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm",
+    "f8|vc|vc|dq8")
+
+; Add a non-unique index to name_last
+call cclutAddMockIndex("person", "name_last", FALSE)
+
+; Creates the mock table.  After this, it is available for DML statements.
+call cclutCreateMockTable("person")
+
+; Create data for the table.
+call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington 
+call cclutAddMockData("person", "2.0|Adams|John|02-FEB-1971 11:11") ;Will add John Adams 
+call cclutAddMockData("person", "3.0|Jefferson|\null|03-MAR-1972 22:22") ;Will add Jefferson (no first name) 
+call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
+
+record agp_reply (
+    1 persons[*]
+        2 person_id = f8
+        2 name_last = vc
+        2 name_first = vc
+        2 birth_dt_tm = dq8
+) with protect
+
+; Have with replace("REPLY", AGP_REPLY) be applied when executing 1abc_mo_get_persons.
+call cclutAddMockImplementation("REPLY", "AGP_REPLY")
+
+; Execute the script-under-test
+call cclutExecuteProgramWithMocks("1abc_mo_get_persons", "")
+
+; Do validation
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 001", agp_reply->persons[1].person_id, 1.0)  
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 002", agp_reply->persons[1].name_last,
+    "Washington") 
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 003", agp_reply->persons[1].name_first,
+    "George") 
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 004", agp_reply->persons[1].birth_dt_tm,
+    cnvtdatetime("01-JAN-1970 00:00"))
+
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 005", agp_reply->persons[2].person_id, 2.0)  
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 006", agp_reply->persons[2].name_last,
+    "Adams") 
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 007", agp_reply->persons[2].name_first,
+    "John") 
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 008", agp_reply->persons[2].birth_dt_tm,
+    cnvtdatetime("02-FEB-1971 11:11"))
     
-    ; Defining a mock person table.  The return value is the name of the mocked table.  
-    ; This can be useful to perform a select on the table after the script-under-test is complete
-    ; to verify (among other things) that an insert or a delete worked correctly.
-    set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm",
-	    "f8|vc|vc|dq8")
-	
-	; Add a non-unique index to name_last
-	call cclutAddMockIndex("person", "name_last", FALSE)
-	
-	; Creates the mock table.  After this, it is available for DML statements.
-	call cclutCreateMockTable("person")
-	
-	; Create data for the table.
-	call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington 
-	call cclutAddMockData("person", "2.0|Adams|John|02-FEB-1971 11:11") ;Will add John Adams 
-	call cclutAddMockData("person", "3.0|Jefferson|\null|03-MAR-1972 22:22") ;Will add Jefferson (no first name) 
-	call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
-	
-	record agp_reply (
-		1 persons[*]
-			2 person_id = f8
-			2 name_last = vc
-			2 name_first = vc
-			2 birth_dt_tm = dq8
-	) with protect
-	
-	; Have with replace("REPLY", AGP_REPLY) be applied when executing 1abc_mo_get_persons.
-	call cclutAddMockImplementation("REPLY", "AGP_REPLY")
-	
-	; Execute the script-under-test
-	call cclutExecuteProgramWithMocks("1abc_mo_get_persons", "")
-	
-	; Do validation
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 001", agp_reply->persons[1].person_id, 1.0)  
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 002", agp_reply->persons[1].name_last,
-		"Washington") 
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 003", agp_reply->persons[1].name_first,
-		"George") 
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 004", agp_reply->persons[1].birth_dt_tm,
-		cnvtdatetime("01-JAN-1970 00:00"))
-	
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 005", agp_reply->persons[2].person_id, 2.0)  
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 006", agp_reply->persons[2].name_last,
-		"Adams") 
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 007", agp_reply->persons[2].name_first,
-		"John") 
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 008", agp_reply->persons[2].birth_dt_tm,
-		cnvtdatetime("02-FEB-1971 11:11"))
-		
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 009", agp_reply->persons[3].person_id, 3.0)  
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 010", agp_reply->persons[3].name_last,
-		"Jefferson") 
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 011", agp_reply->persons[3].name_first,
-		"") 
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 012", agp_reply->persons[3].birth_dt_tm,
-		cnvtdatetime("03-MAR-1972 22:22"))
-	
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 013", agp_reply->persons[4].person_id, 4.0)  
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 014", agp_reply->persons[4].name_last,
-		"Madison") 
-	call cclutAssertvcEqual(CURREF, "test_get_people_happy 015", agp_reply->persons[4].name_first,
-		"") 
-	call cclutAssertf8Equal(CURREF, "test_get_people_happy 016", agp_reply->persons[4].birth_dt_tm,
-		cnvtdatetime("04-APR-1973 10:33"))
-		
-	; A contrived example to demonstrate a potential use for the return value from cclutDefineMockTable
-    select into "nl:"
-        personCount = count(*)
-    from (value(mock_table_person) mtp)
-    head report
-        call cclutAsserti4Equal(CURREF, "test_get_people_happy 017", cnvtint(personCount), 4)
-    with nocounter
-	
-	call cclutRemoveAllMocks(null)
-	
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 009", agp_reply->persons[3].person_id, 3.0)  
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 010", agp_reply->persons[3].name_last,
+    "Jefferson") 
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 011", agp_reply->persons[3].name_first,
+    "") 
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 012", agp_reply->persons[3].birth_dt_tm,
+    cnvtdatetime("03-MAR-1972 22:22"))
+
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 013", agp_reply->persons[4].person_id, 4.0)  
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 014", agp_reply->persons[4].name_last,
+    "Madison") 
+call cclutAssertvcEqual(CURREF, "test_get_people_happy 015", agp_reply->persons[4].name_first,
+    "") 
+call cclutAssertf8Equal(CURREF, "test_get_people_happy 016", agp_reply->persons[4].birth_dt_tm,
+    cnvtdatetime("04-APR-1973 10:33"))
+    
+; A contrived example to demonstrate a potential use for the return value from cclutDefineMockTable
+select into "nl:"
+    personCount = count(*)
+from (value(mock_table_person) mtp)
+head report
+    call cclutAsserti4Equal(CURREF, "test_get_people_happy 017", cnvtint(personCount), 4)
+with nocounter
+
+call cclutRemoveAllMocks(null)
+```
