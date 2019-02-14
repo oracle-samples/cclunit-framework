@@ -12,11 +12,12 @@
 
 
 ## Current Version
-3.0
+3.0.1
 
 ## Update Schedule
 
-The update schedule is driven by requests for and contributions of enhancements and corrections.
+The update schedule is driven by requests for and contributions of enhancements and corrections.  
+See the [change log](CHANGELOG.md) for the contents of previous releases.
 
 ## Contribute
 
