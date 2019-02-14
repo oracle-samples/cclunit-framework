@@ -25,9 +25,9 @@ declare cclut::listingHasErrors(cclutProgramFileName = vc, cclutListingLocation 
   @param cclutListingName
     The name to use for the listing file
   @param cclutProgramName
-    The name that will be given to the compiled prorgram object
+    The name that will be given to the compiled program object
   @param cclutFailureMessage
-    A explaining what went wrong if the return value is false.
+    A explaination of what went wrong if the return value is false.
   @returns
     A boolean flag indicating whether the compile was successful.
     @value TRUE 

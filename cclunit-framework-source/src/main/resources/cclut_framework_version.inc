@@ -4,5 +4,5 @@
   If newer CCL functionality is leveraged during an update, this value must be updated to the be the oldest version of CCL 
   which supports that functionality.
 */
-declare cclut::FRAMEWORK_VERSION = vc with protect, constant("3.0")
+declare cclut::FRAMEWORK_VERSION = vc with protect, constant("3.0.1")
 declare cclut::MINIMUM_REQUIRED_CCL_VERSION = vc with protect, constant("8.12.0")
