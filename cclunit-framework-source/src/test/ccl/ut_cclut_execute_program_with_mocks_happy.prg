@@ -36,8 +36,12 @@ declare public::internalSubroutine(null) = null with protect
 subroutine (public::internalSubroutine(null) = null with protect)
     set public_subroutine = 1
 
-    set reply->number_parameter = $1
-    set reply->string_parameter = $2
+    if (reflect(parameter(1, 0)) > " ")
+        set reply->number_parameter = $1
+    endif
+    if (reflect(parameter(2, 0)) > " ")
+        set reply->string_parameter = $2
+    endif
 
     declare newSize = i4 with protect, noconstant(0)
 

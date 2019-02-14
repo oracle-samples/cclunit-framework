@@ -2,7 +2,9 @@
 # CCL Unit Mocking
 The CCL Unit Test framework's mocking API is available for consumers to mock certain objects to better isolate unit tests from outside variability and provide more control over the scenarios under which unit tests are run.  The API provides ways to mock tables, variables, subroutines, scripts, etc.
 
-**\*CAUTION\*** **The CCL Unit Mocking framework should only be used in non-production environments.  Table mocking creates new tables against an Oracle instance for the lifetime of the test.  Because the DDL is generated in a dynamic way, it is possible through inappropriate use of the framework to affect the actual table.  Please only use the documented API.**
+**\*CAUTION\*** **The CCL Unit Mocking framework should only be used in non-production environments.  Table mocking creates new tables against an Oracle instance for the lifetime of the test.  Because the DDL is generated in a dynamic way, it is possible through inappropriate use of the framework to affect an actual table.  Please only use the documented API.**
+
+In the rare event that CCL crashes midway through a test or another abnormal abort occurs (e.g. as the result of an infinite loop in a test), it may be necessary to clean up any tables that the framework could not.  All tables created by the CCL Unit Test framework will be prepended with "CUST_CCLUT_".
 
 ## Table of Contents
 [API](#api)  
@@ -28,11 +30,25 @@ cclutExecuteProgramWithMocks.
 &nbsp;&nbsp;&nbsp;&nbsp;The namespace under which to execute the program.
   
 Example:  
-call cclutExecuteProgramWithMocks("ccl_my_program", "\^MINE^, 1.0, ^string parameter^", "MYNAMESPACE")
+```
+call cclutExecuteProgramWithMocks("ccl_my_program")
+call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^")
+call cclutExecuteProgramWithMocks("ccl_my_program", "", "MYNAMESPACE")
+call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^", "MYNAMESPACE")
+```
+
+**cclutRemoveAllMocks**
+
+Removes all mock implementations and mock tables that have been added through the mocking APIs.  This should be called at the completion of a test case to clean up all mocks.  
+  
+Example:  
+```
+call cclutRemoveAllMocks(null)
+```
 
 **cclutDefineMockTable(tableName = vc, fieldNames = vc, fieldTypes = vc)**
 
-Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() and cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless cclutCreateMockTable() is called.  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  
+Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The table to be mocked.  
@@ -44,7 +60,9 @@ Defines a mock table structure that can be created for use within a program.  Th
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the mock table (This can be used to select data for testing)  
   
 Example:  
+```
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8") 
+```
 
 **cclutAddMockIndex(tableName = vc, columnNames = vc, isUnique = i4)**
 
@@ -58,8 +76,10 @@ Adds an index to a mock table.  The table must already be defined through cclutD
 &nbsp;&nbsp;&nbsp;&nbsp;TRUE to create a unique index; FALSE to create a non-unique index  
   
 Example:  
+```
 call cclutAddMockIndex("person", "person_id", TRUE)  
 call cclutAddMockIndex("person", "name_last|name_first", FALSE)
+```
 
 **cclutCreateMockTable(tableName = vc)**
 
@@ -69,7 +89,9 @@ Creates a mock table.  The table must already be defined through cclutDefineMock
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table to be mocked.  
   
 Example:  
+```
 call cclutCreateMockTable("person")
+```
 
 **cclutRemoveMockTable(tableName = vc)**
 
@@ -80,14 +102,18 @@ mocked, it will return silently.  tableName is required.
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table that is mocked.  
   
 Example:  
+```
 call cclutRemoveMockTable("person")
+```
 
 **cclutRemoveAllMockTables(null)**
 
 Removes all mock tables.  Any tables that have already been created will also be dropped.  
   
 Example:  
+```
 call cclutRemoveAllMockTables(null)
+```
 
 **cclutAddMockData(tableName = vc, rowData = vc)**
 
@@ -104,23 +130,26 @@ Supported escape values
 &nbsp;&nbsp;&nbsp;&nbsp;A pipe-delimited string of data to be inserted into the mock table.  
   
 Example:  
+```
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")  
 call cclutCreateMockTable("person")  
 call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington  
-call cclutAddMockData("person", "2.0|A\\|d\\\\ams|John|02-FEB-1971 11:11") ;Will add John A|d\ams  
+call cclutAddMockData("person", "2.0|A\|d\\ams|John|02-FEB-1971 11:11") ;Will add John A|d\ams  
 call cclutAddMockData("person", "3.0|Jefferson|\null|03-MAR-1972 22:22") ;Will add Jefferson (no first name)  
 call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
+```
 
 **cclutClearMockData(tableName = vc)**
 
-Clears all data from the mock table.  This is functionally similar to a truncate.  tableName is required.  The table  
-must have been created through cclutCreateMockTable() or else an error will be thrown.  
+Clears all data from a specified mock table.  This is functionally similar to a truncate.  tableName is required.  The table must have been created through cclutCreateMockTable() or else an error will be thrown.  
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table for the mock table to be cleared.  
   
 Example:  
+```
 call cclutClearMockData("person")
+```
 
 **cclutAddMockImplementation(originalName = vc, replaceName = vc)**
 
@@ -132,7 +161,9 @@ Adds a mock implementation to be utilized by cclutExecuteProgramWithMocks.  This
 &nbsp;&nbsp;&nbsp;&nbsp;The mocked object.  
   
 Example:  
+```
 call cclutAddMockImplementation("uar_get_code_by", "mock_uar_get_code_by")
+```
 
 **cclutRemoveMockImplementation(originalName = vc)**
 
@@ -142,21 +173,18 @@ Removes a mock implementation.
 &nbsp;&nbsp;&nbsp;&nbsp;The object that is mocked.  
   
 Example:  
+```
 call cclutRemoveMockImplementation("uar_get_code_by")
+```
 
 **cclutRemoveAllMockImplementations(null)**
 
 Removes all mock implementations.  
   
 Example:  
+```
 call cclutRemoveAllMockImplementations(null)
-
-**cclutRemoveAllMocks**
-
-Removes all mock implementations and mock tables that have been added through the cclutAddMockImplementation() and cclutCreateMockTable() APIs.  This should be called at the completion of a test suite to clean up all mocks.  
-  
-Example:  
-call cclutRemoveAllMocks(null)
+```
 
 ## Implementation Notes
 1. For consistency, all mocking functions normalize names (tables, subroutines, records, etc.) to be uppercase.  This matches with CCL and Oracle.
@@ -279,6 +307,14 @@ Test Code:
 		"") 
 	call cclutAssertf8Equal(CURREF, "test_get_people_happy 016", agp_reply->persons[4].birth_dt_tm,
 		cnvtdatetime("04-APR-1973 10:33"))
+		
+	; A contrived example to demonstrate a potential use for the return value from cclutDefineMockTable
+    select into "nl:"
+        personCount = count(*)
+    from (value(mock_table_person) mtp)
+    head report
+        call cclutAsserti4Equal(CURREF, "test_get_people_happy 017", cnvtint(personCount), 4)
+    with nocounter
 	
 	call cclutRemoveAllMocks(null)
 	

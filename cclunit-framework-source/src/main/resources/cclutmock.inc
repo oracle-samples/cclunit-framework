@@ -12,7 +12,7 @@
 declare cclutAddMockImplementation(cclutOriginalName = vc(val), cclutReplaceName = vc(val)) = null with protect
 declare cclutRemoveMockImplementation(cclutOriginalName = vc(val)) = null with protect
 declare cclutRemoveAllMockImplementations(null) = null with protect
-declare cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val),
+declare cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val, " "),
     cclutNamespace = vc(val, "PUBLIC")) = null with protect
 declare cclutRemoveAllMocks(null) = null with protect
 
@@ -125,6 +125,9 @@ namespace.
     The namespace under which to execute the program.
 
 Example:
+call cclutExecuteProgramWithMocks("ccl_my_program")
+call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^")
+call cclutExecuteProgramWithMocks("ccl_my_program", "", "MYNAMESPACE")
 call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^", "MYNAMESPACE")
 **/
 subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutNamespace)
@@ -172,8 +175,8 @@ subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutName
 end ;cclutExecuteProgramWithMocks
 
 /**
-Removes all mock implementations and mock tables that have been added through the cclutAddMockImplementation() and
-cclutCreateMockTable() APIs.  This should be called at the completion of a test suite to clean up all mocks.
+Removes all mock implementations and mock tables that have been added through the mocking APIs.  This should be called
+at the completion of a test case to clean up all mocks.
 
 Example:
 call cclutRemoveAllMocks(null)

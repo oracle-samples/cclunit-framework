@@ -55,10 +55,10 @@ set cclut_mockTables->markerTime = cnvtint(curtime3)
 
 /**
 Defines a mock table structure that can be created for use within a program.  This is the first function to be called in
-the process of mocking a table.  It must be called before cclutAddMockIndex() and cclutCreateMockTable() can be called.
-The table will not be mocked in cclutExecuteProgramWithMocks() unless cclutCreateMockTable() is called.  tableName,
-columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The
-columnTypes should have the same count as columnNames and be in the same order.
+the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.
+The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().
+tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited
+strings.  The columnTypes should have the same count as columnNames and be in the same order.
 
 @param tableName
     The table to be mocked.

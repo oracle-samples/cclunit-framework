@@ -326,6 +326,46 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
         "regexplike", "1.*4.*1.*4.*test alias")
 end ;test_cclutExecuteProgramWithMocks_happy
 
+/* test_cclutExecuteProgramWithMocks_no_parameters **********************************************************
+*  Scenario: Executes the program with no parameters and no namespace                                       *
+************************************************************************************************************/
+subroutine test_cclutExecuteProgramWithMocks_no_parameters(null)
+    declare public_subroutine = i4 with protect, noconstant(0)
+
+    record executeReply (
+        1 number_parameter = i4
+        1 string_parameter = vc
+        1 regular_join[*]
+            2 person_id = f8
+            2 encounter_id = f8
+            2 encounter_alias = vc
+        1 left_join[*]
+            2 person_id = f8
+            2 encounter_id = f8
+            2 encounter_alias = vc
+        1 rdb_join[*]
+            2 columns = vc
+            2 data = vc
+    ) with protect
+
+    call cclutDefineMockTable("sample_person", "person_id", "f8")
+    call cclutDefineMockTable("sample_encounter", "encounter_id|person_id", "f8|f8")
+    call cclutDefineMockTable("sample_encounter_alias", "encounter_id|encounter_alias", "f8|vc")
+    call cclutCreateMockTable("sample_person")
+    call cclutCreateMockTable("sample_encounter")
+    call cclutCreateMockTable("sample_encounter_alias")
+
+    call cclutAddMockImplementation("REPLY", "EXECUTEREPLY")
+
+    call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy")
+
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_no_parameters 001", public_subroutine, 1)
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_no_parameters 002",
+        executeReply->number_parameter, 0)
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_no_parameters 003",
+        executeReply->string_parameter, "")
+end ;test_cclutExecuteProgramWithMocks_no_parameters
+
 /* test_cclutExecuteProgramWithMocks_namespace **************************************************************
 *  Scenario: Executes the program using the supplied namespace                                              *
 ************************************************************************************************************/
@@ -344,8 +384,8 @@ subroutine test_cclutExecuteProgramWithMocks_namespace(null)
     call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy", "", "CCLUT")
 
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 001", test_subroutine, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 003", cclut::internalVariable, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 005", cclut::internalRecord->item, 1)
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 002", cclut::internalVariable, 1)
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_namespace 003", cclut::internalRecord->item, 1)
 end ;test_cclutExecuteProgramWithMocks_namespace
 
 /* test_cclutExecuteProgramWithMocks_mock_subroutine ********************************************************
@@ -373,8 +413,8 @@ subroutine test_cclutExecuteProgramWithMocks_mock_subroutine(null)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 001", public_subroutine, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 002", test_subroutine, 0)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 003", mock_subroutine, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 005", cclut::internalVariable, 1)
-    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 007",
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 004", cclut::internalVariable, 1)
+    call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 005",
         cclut::internalRecord->item, 1)
 end ;test_cclutExecuteProgramWithMocks_mock_subroutine
 
