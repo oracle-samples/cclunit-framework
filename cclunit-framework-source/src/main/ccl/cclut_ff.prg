@@ -110,6 +110,8 @@ with outdev, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode
     cclut_ff::outputLine row+1
     cclut_ff::outputLine = "%i cclsource:cclut_test_runner.inc"
     cclut_ff::outputLine row+1
+    cclut_ff::outputLine = "%i cclsource:cclutmock.inc"
+    cclut_ff::outputLine row+1
     cclut_ff::outputLine = concat("%i ", cclut_ff::testCaseFileLocation)
     cclut_ff::outputLine row+1
     cclut_ff::outputLine = \

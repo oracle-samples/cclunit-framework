@@ -48,6 +48,9 @@ if (checkfun("TEARDOWNONCE") = cclut_test_runner::FUN_TYPE_SUBROUTINE)
   endif
 endif
 
+;Clean up any mocks that were not cleaned up by the tests.
+call cclutRemoveAllMocks(null)
+
 call parser(concat("drop program ", cclut_ff::testProgramName, " go"))
 
 if (cclut_test_runner::assertSuccess = TRUE AND cclut_test_runner::testRunnerSuccessInd = TRUE)

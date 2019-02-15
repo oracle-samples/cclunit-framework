@@ -718,3 +718,33 @@ subroutine testFailedCompile(null)
   call testing::checkMessages(null)
   call testing::checkMRS(_memory_reply_string)
 end ;;;testFailedCompile
+
+/**
+  Test that the framework removes any mock tables that test cases fail to do when calling cclut_ff.
+*/
+subroutine testMockTableCleanup(null)
+  declare cclutMockTableName = vc with protect, noconstant("")
+
+  execute cclut_ff "ut_cclut_output", "cclsource", "ut_cclut_mock_table_misbehaving_cleanup"
+
+  call cclutAssertStartsWith(CURREF, "testMockTableCleanup 001", "CUST_CCLUT", cclutMockTableName)
+
+  declare mockId = f8 with protect, noconstant(0.0)
+  declare mockText = vc with protect, noconstant("")
+  declare mockDate = dq8 with protect, noconstant(0)
+  select into "nl:"
+  from (value(cclutMockTableName) m)
+  detail
+      mockId = m.SAMPLE_TABLE_ID
+      mockText = m.SAMPLE_TABLE_TEXT
+      mockDate = m.SAMPLE_TABLE_DATE
+  with nocounter
+
+  declare errorMessage = vc with protect, noconstant("")
+  declare errorCode = i4 with protect, noconstant(0)
+  set errorCode = error(errorMessage, 0)
+
+  call cclutAssertVcOperator(CURREF, "testMockTableCleanup 002", trim(errorMessage, 3),
+      "regexplike", concat("%CCL-E-18-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{\}Unable to add range, definition for",
+          " table \(CUST_CCLUT_[^)]*\) not found in dictionary."))
+end ;;;testMockTableCleanup
