@@ -120,6 +120,7 @@ subroutine cclut::generateTestCaseProgram(
   if (not cclut::errorOccurred(cclutFailureMessage))
     return (TRUE)
   endif
+  return (FALSE)
 end ;;;generateTestCaseProgram
  
  

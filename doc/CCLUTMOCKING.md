@@ -6,7 +6,7 @@ The CCL Unit Test framework's mocking API is available for consumers to mock cer
 
 In the rare event that CCL crashes midway through a test or another abnormal abort occurs (e.g. as the result of an infinite loop in a test), it may be necessary to clean up any tables that the framework could not.  All tables created by the CCL Unit Test framework will be prepended with "CUST_CCLUT_".
 
-## Table of Contents
+## Contents
 [API](#api)  
 [Implementation Notes](#implementation-notes)  
 [Example](#example)

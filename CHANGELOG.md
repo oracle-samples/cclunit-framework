@@ -1,5 +1,8 @@
 # cclunit-framework Change Log
 
+## 3.1 - 2019.02.15
+* Incorporate the mocking framework.
+
 ## 3.0.1 - 2019.02.10
 * Fix [#8](https://github.com/cerner/cclunit-framework/issues/8): cclut_find_unit_tests fails to find any unit tests if the OS is aix64.
 

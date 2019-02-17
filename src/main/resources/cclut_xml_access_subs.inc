@@ -137,7 +137,7 @@ subroutine cclut::getXmlChildNodeValue(cclutPParentHandle, cclutPChildName)
     return (nullterm(""))
   endif
 
-  set hItem = 0
+  declare hItem = h with protect, noconstant(0)
   if (uar_xml_findchildnode(cclutPParentHandle, nullterm(cclutPChildName), hItem) != CCLUT_XML_SC_OK)
     return (nullterm(""))
   endif
@@ -191,7 +191,7 @@ subroutine cclut::getXmlChildNodeAttributeValue(cclutPParentHandle, cclutPChildN
     return (nullterm(""))
   endif
 
-  set hItem = 0
+  declare hItem = h with protect, noconstant(0)
   if (uar_xml_findchildnode(cclutPParentHandle, nullterm(cclutPChildName), hItem) != CCLUT_XML_SC_OK)
     return (nullterm(""))
   endif
@@ -330,7 +330,7 @@ end ;cclut::getXmlElementValue
 */
 subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
   declare cclutExpr = vc with protect, noconstant(trim(cclutXPathExpr))
-  declare cclutExprLen = i4 with protect, noconstant(size(cclutExpr))
+  declare cclutExprLen = i4 with protect, noconstant(textlen(cclutExpr))
   declare cclutHXMLParent = h with protect, noconstant(cclutHXMLContext)
 
   ;hXMLElement is always the root of the XPath expression, so just add the root '/' if it doesn't exist
@@ -372,7 +372,7 @@ subroutine cclut::evaluateXmlXPath(cclutHXMLContext, cclutXPathExpr)
     endif
 
     set cclutExpr            = substring(cclutSecondSlashPos, cclutExprLen, cclutExpr)
-    set cclutExprLen         = size(cclutExpr)
+    set cclutExprLen         = textlen(cclutExpr)
     set cclutFirstSlashPos   = 1
     set cclutSecondSlashPos  = findstring("/", cclutExpr, cclutFirstSlashPos + 1)
   endwhile

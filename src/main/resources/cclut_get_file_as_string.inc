@@ -9,7 +9,7 @@
  
 if (validate(CCLUT_GET_FILE_AS_STRING_INC) = FALSE)
   declare CCLUT_GET_FILE_AS_STRING_INC = i2 with protect, constant(TRUE)
-  declare uar_fopen(p1=vc(ref), p2=vc(ref)) = i4
+  declare uar_fopen(p1=vc(ref), p2=vc(ref)) = h
     with image_axp="decc$shr", uar_axp="decc$fopen", image_aix="libc.a(shr.o)",  uar_aix="fopen"
   declare uar_fread(p1=vc(ref), p2=i4(value), p3=i4(value), p4=i4(value)) = i4
     with image_axp="decc$shr", uar_axp="decc$fread", image_aix="libc.a(shr.o)", uar_aix="fread"
@@ -43,7 +43,8 @@ subroutine cclut::getFileAsString(cclutFullyQualifiedFileName )
   declare cclutAdditionalSize = i4 with protect, noconstant(1)
   declare cclutDone = i2 with protect, noconstant(FALSE)
   declare cclutStat = i4 with protect, noconstant(0)
-
+  declare vcMore = c10000 with protect
+  
   set cclutFileHandle = uar_fopen(nullterm(cclutFullyQualifiedFileName ), "r")
 
   if (cclutFileHandle != 0)

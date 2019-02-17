@@ -110,7 +110,7 @@ subroutine cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTyp
 
     if (cclutColumnCount != cclutTypeCount)
         call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME, ") - Size mismatch. ",
-            trim(cnvtstring(cclutColumnCount)), " columnNames vs. ", trim(cnvtstring(cclutTypeCount)), " columnTypes"))
+            trim(cnvtstring(cclutColumnCount, 25)), " columnNames vs. ", trim(cnvtstring(cclutTypeCount)), " columnTypes"))
         return("")
     endif
 
@@ -145,7 +145,7 @@ subroutine cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTyp
     ;Create the mock name and fill out the columns
     set cclut_mockTables->tables[cclutMockTablePos].originalName = CCLUT_TABLE_NAME
     set cclut_mockTables->tables[cclutMockTablePos].replaceName = cnvtupper(trim(substring(1, 30, concat("CUST_CCLUT_",
-        trim(cnvtstring(cclutMockTablePos), 3), trim(cnvtstring(cclut_mockTables->markerTime), 3), curuser)), 3))
+        trim(cnvtstring(cclutMockTablePos, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
     set cclut_mockTables->tables[cclutMockTablePos].isFinalized = FALSE
 
     set stat = alterlist(cclut_mockTables->tables[cclutMockTablePos].columns, cclutColumnCount)
@@ -647,7 +647,7 @@ subroutine cclut::cclutConstructDBSetStatement(cclutTableIndex, cclutColumnIndex
             return(concat(cclutMockColumnName, ' = trim("")'))
         endif
         return(concat(cclutMockColumnName, " = @",
-            trim(cnvtstring(textlen(cclutDataBuffer)), 3), ":", cclutDataBuffer, "@"))
+            trim(cnvtstring(textlen(cclutDataBuffer), 25), 3), ":", cclutDataBuffer, "@"))
     ;Use cnvtdatetime for date columns
     elseif (findstring("D", cclutMockColumnType) > 0)
         return(concat(cclutMockColumnName, ^ = cnvtdatetime("^, cclutDataBuffer, ^")^))

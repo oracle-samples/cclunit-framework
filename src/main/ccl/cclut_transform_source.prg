@@ -93,7 +93,7 @@ subroutine public::main(null)
       set cclutTextXml = cclut::createXmlElement("TEXT", concat("<![CDATA[", cclutEscapedLine, "]]>"))
     endif
   
-    set cclutNbrXml = cclut::createXmlElement("NBR", trim(cnvtstring(cclutLineNumber), 3))
+    set cclutNbrXml = cclut::createXmlElement("NBR", trim(cnvtstring(cclutLineNumber, 25), 3))
     set cclutLineXml = cclut::createXmlElement("LINE", trim(concat(trim(cclutNbrXml), trim(cclutTextXml), trim(cclutExtra))))
     set cclutSourceXml = concat(cclutSourceXml, cclutLineXml)
   endfor

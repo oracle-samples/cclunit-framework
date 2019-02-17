@@ -21,6 +21,9 @@ subroutine (public::mainForSubroutineB(null) = null)
   set stat = cclutAssertVCEqual(CURREF, "testSubroutineB Subroutine", b_string, "subroutineBSubroutine")
 end;;;mainForSubroutineB
 
+
+
+
 ;; this is the script to be tested
 
 drop program the_script:dba go

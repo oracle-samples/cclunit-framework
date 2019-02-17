@@ -1,23 +1,28 @@
 # cclunit-framework
 
-[The CCL Unit Framework][cclunit-framework-doc] is a collection of CCL source code for executing CCL Unit Tests and generating code coverage data.
+The CCL Unit Framework is a collection of CCL programs for executing [CCL Unit Tests][ccl-unit-tests] and generating test results and code coverage data.  
 
-***cclunit-framework*** is a maven reactor project which uses the [ccl-maven-plugin][ccl-maven-plugin]
- to install the CCL Unit Framework code into an HNAM environment and then test it. 
- For instructions on installing the framework code [look here][cclunit-framework-installation]. 
- 
- The following modules are included in the reactor build
-* [cclunit-framework-source][cclunit-framework-source] - The CCL Unit Framework source code.
-* [cclunit-framework-tests][cclunit-framework-tests] - A maven project which tests the CCL Unit Framework installation.
-
+It must be installed into a Cerner Millennium environment before it can be used. Find step-by-step instructions [here][step-by-step-installation-instructions].
 
 ## Current Version
-3.0.1
+
+3.1
+
+## Usage
+
+See [CCL Unit Tests][ccl-unit-tests] for the structure of a CCL Unit test case, instructions for executing one, and a rudimentary example.
+
+See [CCL Unit Asserts][ccl-unit-asserts] for a list of all available asserts.
+
+See [CCL Unit Mocking][ccl-unit-mocking] for details about the mocking API and a basic example using it.
+
+See [CCL Unit Guidance][ccl-unit-guidance] for suggestions how to structure a program for testability and how to structure unit tests.
+Short examples are provided to illustrate the techniques.
 
 ## Update Schedule
 
-The update schedule is driven by requests for and contributions of enhancements and corrections.  
-See the [change log](CHANGELOG.md) for the contents of previous releases.
+The update schedule is driven by [requests for][issues] and contributions of enhancements and corrections.  
+See the [change log](CHANGELOG.md) for the contents of previous releases. Visit the [issues list][issues] to log a new request.
 
 ## Contribute
 
@@ -49,10 +54,16 @@ limitations under the License.
 ```
 
 [ccl-maven-plugin]:https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin
-[cclunit-framework-installation]:cclunit-framework-source/doc/FRAMEWORKINSTALL.md
-[cclunit-framework-doc]:cclunit-framework-source/doc/FRAMEWORK.md
+[cclunit-framework-installation]:./doc/FRAMEWORKINSTALL.md
+[ccl-unit-tests]:./doc/CCLUNITTESTS.md
 [cclunit-framework-source]:cclunit-framework-source/README.md
 [cclunit-framework-tests]:cclunit-framework-tests
 [cclunit-framework-schema-xml]:cclunit-framework-schema-xml
 [contibution_guidelines]: CONTRIBUTING.md#contributing
 [release_guidelines]: RELEASING.md
+[mavenized CCL projects]: https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin
+[step-by-step-installation-instructions]: ./doc/FRAMEWORKINSTALL.md
+[ccl-unit-mocking]: ./doc/CCLUTMOCKING.md
+[ccl-unit-guidance]: ./doc/CCLUTGUIDANCE.md
+[ccl-unit-asserts]: ./doc/CCLUTASSERTS.md
+[issues]: https://github.com/cerner/cclunit-framework/issues

@@ -13,7 +13,7 @@ Please review the below guidelines before contributing to help ensure a smooth p
 * Open an issue with a descriptive title and a summary.
 * Please be as clear and explicit as you can in your description of the problem.
 * Please state the version in the description.
-* Include any relevant code in the issue summary.
+* Include any relevant example code in the issue summary.
 
 ## Pull requests
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exclusions xmlns="urn:cerner:ccl:whitenoise-exclusions">
+  <exclusion>
+    <violationId>CORE.INFINITE_WHILE_LOOP</violationId>
+    <explanation>This rule is somewhat useless</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_get_framework_state</scriptName>
+    <iterator>cclutidx</iterator>
+    <violationId>CORE.UNREFERENCED_FOR_LOOP_ITERATOR</violationId>
+    <explanation>The for loop is used to execute a set of commands a fixed number of times</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_execute_test_case_file</scriptName>
+    <variableName>stat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_ff</scriptName>
+    <variableName>cclut_ff::stat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_execute_test_case_file</scriptName>
+    <subroutineName>cclut::getCoverageExclusions</subroutineName>
+    <variableName>stat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <variableName>cclutstat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <variableName>cclstat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <variableName>cclut::stat</variableName>
+    <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
+    <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut</scriptName>
+    <subroutineName>cclut1::generateResultsReport</subroutineName>
+    <violationId>CORE.HEAD_FOOT_SECTION_NO_ORDER</violationId>
+    <explanation>False Positive</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_get_framework_state</scriptName>
+    <variableName>_memory_reply_string</variableName>
+    <violationId>CORE.MISSING_VARIABLE_DECLARATION</violationId>
+    <explanation>The calling process should provide this. If not, the usage is protected with a validate.</explanation>
+  </exclusion>
+  <exclusion>
+    <violationId>CORE.SUBROUTINE_RETURN_MISSING</violationId>
+    <scriptName>cclut_execute_test_case_file</scriptName>
+    <subroutineName>cclut::compareCclVersion</subroutineName>
+    <explanation>False positive</explanation>
+  </exclusion>
+</exclusions>
