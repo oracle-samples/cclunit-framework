@@ -1,1 +1,0 @@
-call echo("I am a test include file")

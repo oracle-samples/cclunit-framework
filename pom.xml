@@ -1,36 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cerner.ccl</groupId>
-    <artifactId>cclunit-framework-parent</artifactId>
-    <version>3.1-SNAPSHOT</version>
-    <name>CCL Testing Framework Reactor Build</name>
-    <description>Reactor build for the CCL Testing Framework</description>
-    <packaging>pom</packaging>
+    <artifactId>cclunit-framework-source</artifactId>
+    <version>3.1</version>
+    <name>CCL Testing Framework</name>
+    <description>A framework to facilitate the automated testing of CCL code.</description>
+    <packaging>ccl</packaging>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <changes.plugin.version>2.12.1</changes.plugin.version>
-        <surefire.version>2.20.1</surefire.version>
-
-        <site.path>${project.groupId}/${project.artifactId}/${project.version}</site.path>
-        <cobertura.maxmem>1024m</cobertura.maxmem>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/cerner/cclunit-framework.git</connection>
         <developerConnection>scm:git:https://github.com/cerner/cclunit-framework.git</developerConnection>
-        <url>https://github.com/cerner/cclunit-framework/tree/master/cclunit-framework-reactor</url>
+        <url>https://github.com/cerner/cclunit-framework/tree/master/cclunit-framework-source</url>
     </scm>
-    <distributionManagement>
-      <!--
-        <repository>
-        </repository>
-        <site> 
-        </site>
-        <snapshotRepository>
-        </snapshotRepository>
-      -->        
-    </distributionManagement>
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -47,38 +29,51 @@
             </roles>
         </developer>
         <developer>
+            <id>jbarber</id>
+            <name>Josh Barber</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
             <id>jhyde</id>
             <name>Joshua Hyde</name>
             <roles>
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>dmurhpy</id>
+            <name>Dan Murphy</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>jwiedemann</id>
+            <name>Jeff Wiedemann</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
     <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav-jackrabbit</artifactId>
-                <version>2.12</version>
-            </extension>
-        </extensions>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <version>${changes.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>validate-changes</id>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>changes-validate</goal>
-                        </goals>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>com.cerner.ccl.testing</groupId>
+                <artifactId>ccl-maven-plugin</artifactId>
+                <version>3.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <logFile>${project.build.directory}/output.log</logFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <!-- There are no artifacts the deploy plugin would recognize for deployment -->
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -169,26 +164,32 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <version>${changes.plugin.version}</version>
-                <configuration>
-                    <issueLinkTemplatePerSystem>
-                        <JIRA>%URL%/%ISSUE%</JIRA>
-                    </issueLinkTemplatePerSystem>
-                </configuration>
+                <groupId>com.cerner.ccl.testing</groupId>
+                <artifactId>cerreal-maven-plugin</artifactId>
+                <version>2.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>com.cerner.ccl.cdoc</groupId>
+                <artifactId>cdoc-maven-plugin</artifactId>
+                <version>1.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>changes-report</report>
+                            <report>cdoc-report</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+            </plugin>
         </plugins>
     </reporting>
-    <modules>
-        <module>cclunit-framework-source</module>
-        <module>cclunit-framework-tests</module>
-    </modules>
 </project>
