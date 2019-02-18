@@ -8,6 +8,8 @@ create program the_script
 end go
 
 
+
+
 /**
 Mock implementation for other_script which calls validateOtherScriptParams to validate the two input parameters
 and increments a counter for the number of calls to other_script.
@@ -19,6 +21,9 @@ create program mock_other_script
   set otherScriptCallCount = otherScriptCallCount + 1
   call validateOtherScriptParams($param1, $param2)
 end go
+
+
+
 
 ;;; put this functions in a test case (.inc)
 

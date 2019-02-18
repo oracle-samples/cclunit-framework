@@ -53,9 +53,8 @@ subroutine cclut::compareCclVersion(lhs, rhs)
     return (cclutRet)
   elseif (cclutLhsNumber < cclutRhsNumber)
     return (TRUE)
-  else
-    return (FALSE)
   endif
+  return (FALSE)
 end ;;;compareCclVersion()
 
 /**
@@ -64,7 +63,7 @@ end ;;;compareCclVersion()
     The current CCL version.
 */
 subroutine cclut::getCclVersion(null)
-  return (concat(trim(cnvtstring(currev)), ".", trim(cnvtstring(currevminor)), ".", trim(cnvtstring(currevminor2))))
+  return (concat(trim(cnvtstring(currev,25)), ".", trim(cnvtstring(currevminor,25)), ".", trim(cnvtstring(currevminor2,25))))
 end ;;;getCclVersion()
 
 %#endif CCLUT_ENV_UTILS_INC

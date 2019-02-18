@@ -8,9 +8,11 @@ A couple "almost equal" asserts for F8 values have the form
 A group of "operator asserts" have the form  
 &nbsp;&nbsp;&nbsp;   `set status = cclutAssert{Type}[Not]Operator(number, context, value1, operator, value2)`   
 
-The value of the lineNumber parameter should be <b>CURREF</b> which translates to the current line number in CCL code that is compiled with debug. 
-The cerreal plugin needs the value to be the actual line number in order to obtain the actual line of code from the compile listing file in order to display it
-in the details for the assert.
+The `status` value will be TRUE if the assert passes and FALSE otherwise. The return value does not have to be captured.   
+`call cclutAssert...` works fine.
+
+The value of the lineNumber parameter should be <b>CURREF</b> which CCL translates as the current line number for code compiled with debug. 
+The [cerreal-maven-plugin][cerreal-maven-plugin] needs this line number to display assert statements correctly.
 
 There are a handful of string-only asserts which do not explicitly call out the data type. For all other asserts, 
 the data types of the provided values must match the type identified in the name of the assert function. 
@@ -20,7 +22,7 @@ is true. The almost equal [not equal] asserts pass if and only if the provided v
 The family of operator asserts invoke CCL's operator [notoperator] function passing the provided values and operator. These asserts pass and return TRUE if and only if the
 operator [notoperator] function returns TRUE.
 
-The context can be any string. If selected uniquely, it can help identify which assert failed in case an assert failure occurs.
+The context can be any string but using unique contexts will help identify which assert failed if an assert failure occurs.
 
 ## List of Asserts
 
@@ -92,3 +94,4 @@ Not Operator
 - cclutAssertVCNotOperator
 - cclutAssertDatetTimeNotOperator
 
+[cerreal-maven-plugin]: https://engineering.cerner.com/ccl-testing

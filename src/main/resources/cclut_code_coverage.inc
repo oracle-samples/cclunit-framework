@@ -38,7 +38,7 @@ subroutine cclut::getCoverageXml(null)
    
   ;Record to hold file descriptor information
   record frec (
-    1 file_desc   = i4
+    1 file_desc   = h
     1 file_offset = i4
     1 file_dir    = i4
     1 file_name   = vc
@@ -323,6 +323,7 @@ subroutine cclut::getTestCaseCoverageXml(cclutCoverageXml, cclutTestCaseProgramN
   declare cclutCoverageEndPosition = i4 with protect, noconstant(0)
   declare cclutLineNumberPosition = i4 with protect, noconstant(0)
   declare cclutLineNumberLength = i4 with protect, noconstant(0)
+  declare cclutStat = i4 with protect, noconstant(0)
 
   record coverageFilter
   (
@@ -461,7 +462,7 @@ subroutine cclut::excludeCoverage(cclutCoverageXml, cclutExclusions)
   set blockCount = size(cclutExclusions->block, 5)
   for (blockIndex = 1 to blockCount)
     for (lineNumber = cclutExclusions->block[blockIndex].startLine to cclutExclusions->block[blockIndex].endLine)
-      set lineNumberString = concat("<NBR>", trim(cnvtstring(lineNumber), 3), "</NBR>")
+      set lineNumberString = concat("<NBR>", trim(cnvtstring(lineNumber, 25), 3), "</NBR>")
       set lineNumberPosition = findstring(lineNumberString, cclutCoverageXml, lineNumberPosition)
       if (lineNumberPosition > 0)
         set typePosition = findstring("<TYPE>", cclutCoverageXml, lineNumberPosition + textlen(lineNumberString)) + 6

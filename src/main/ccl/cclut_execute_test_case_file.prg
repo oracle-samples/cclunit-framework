@@ -32,7 +32,6 @@ declare cclut::testCaseId               = vc with protect, noconstant("")
 declare cclut::testCaseObjectName       = vc with protect, noconstant("")
 declare cclut::testCaseListingName      = vc with protect, noconstant("")
 declare cclut::listingName              = vc with protect, noconstant("")
-declare cclut::programIndex             = i4 with protect, noconstant(0)
 declare cclut::programCount             = i4 with protect, noconstant(0)
 declare cclut::coverageXml              = vc with protect, noconstant("")
 declare cclut::xmlBeginPos              = i4 with protect, noconstant(0)
@@ -410,7 +409,7 @@ subroutine cclut::writeFileData(cclutDirectory, cclutFileName, cclutData)
   declare bytesWritten = i4 with protect, noconstant(0)
   
   record frec(
-    1 file_desc = i4
+    1 file_desc = h
     1 file_offset = i4
     1 file_dir = i4
     1 file_name = vc
@@ -481,7 +480,7 @@ endif
 
 set cclutReply->environmentXml = cclut::getEnvironmentDataXml(null)
 
-set cclut::testCaseId = concat(trim(currdbhandle, 3), "_", trim(cnvtstring(cnvtint(curtime3)), 3))
+set cclut::testCaseId = concat(trim(currdbhandle, 3), "_", trim(cnvtstring(cnvtint(curtime3), 10), 3))
 set cclut::testCaseObjectName = concat("prg_", cclut::testCaseId)
 set cclut::testCaseListingName = concat("cclut_inc_", cclut::testCaseId, ".lis")
 
@@ -496,7 +495,7 @@ for (cclut::programCount = 1 to size(cclutRequest->programs, 5))
         cclutReply->programs[cclut::programCount].programName)
     set cclut::tempProgramName = cnvtlower(cclut::tempProgramName)
  
-    set cclut::listingName = concat("cclut_prg_", cclut::testCaseId, trim(cnvtstring(cclut::programCount), 3), ".lis")
+    set cclut::listingName = concat("cclut_prg_", cclut::testCaseId, trim(cnvtstring(cclut::programCount, 100), 3), ".lis")
     ;;prevent error mis-interpretation by compileProgram
     call cclut::exitOnError("pre-compile", cclutReply->programs[cclut::programCount].programName, cclutReply)
     if (cclut::compileProgram(

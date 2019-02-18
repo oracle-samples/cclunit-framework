@@ -308,7 +308,7 @@ subroutine cclut1::generateResultsReport(cclutDestination, cclutReq, cclutResult
   if (size(cclutResults->test, 5) > 0)
     select into value(cclutDestination) statusFlag = cclutResults->test[d.seq].statusFlag
     from (dummyt d with seq = size(cclutResults->test, 5))
-    order by cclutResults->test[d.seq].statusFlag desc
+    order by statusFlag desc
     head report
       col 0 CCLUT_LINE_OF_EQUALS row+1
 
@@ -327,23 +327,23 @@ subroutine cclut1::generateResultsReport(cclutDestination, cclutReq, cclutResult
       col 0 cclutOutputLine row+1
  
       if (cclutResults->passedCount > 0)
-        cclutOutputLine = concat("PASSED: ", cnvtstring(cclutResults->passedCount))
+        cclutOutputLine = concat("PASSED: ", trim(cnvtstring(cclutResults->passedCount, 100)))
       else
-        cclutOutputLine = concat("passed: ", cnvtstring(cclutResults->passedCount))
+        cclutOutputLine = concat("passed: ", trim(cnvtstring(cclutResults->passedCount, 100)))
       endif
       col 0 cclutOutputLine
  
       if (cclutResults->failedCount > 0)
-        cclutOutputLine = concat("FAILED: ", cnvtstring(cclutResults->failedCount))
+        cclutOutputLine = concat("FAILED: ", trim(cnvtstring(cclutResults->failedCount, 100)))
       else
-        cclutOutputLine = concat("failed: ", cnvtstring(cclutResults->failedCount))
+        cclutOutputLine = concat("failed: ", trim(cnvtstring(cclutResults->failedCount, 100)))
       endif
       col 20 cclutOutputLine
  
       if (cclutResults->erroredCount > 0)
-        cclutOutputLine = concat("ERRORED: ", cnvtstring(cclutResults->erroredCount))
+        cclutOutputLine = concat("ERRORED: ", trim(cnvtstring(cclutResults->erroredCount, 100)))
       else
-        cclutOutputLine = concat("errored: ", cnvtstring(cclutResults->erroredCount))
+        cclutOutputLine = concat("errored: ", trim(cnvtstring(cclutResults->erroredCount, 100)))
       endif
       col 40 cclutOutputLine row+1 
       row+1

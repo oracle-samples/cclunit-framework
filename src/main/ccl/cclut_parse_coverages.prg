@@ -51,7 +51,7 @@ declare public::parseCoverage(
   @returns
     The identified COVERAGE tag, if one is found.  Otherwise, a blank string is returned.
 */
-subroutine parseCoverage(cclutProgramName, cclutXml, cclutStartPos, cclutResumePos)
+subroutine public::parseCoverage(cclutProgramName, cclutXml, cclutStartPos, cclutResumePos)
   declare cclutCoverageXML     = vc with protect, noconstant("")
   declare cclutCoveragePos     = i4 with protect, noconstant(0)
   declare cclutFoundInd        = i2 with protect, noconstant(0)
@@ -74,7 +74,7 @@ end ;;;parseCoverage
 /**
   The main subroutine.
 */
-subroutine main(null)
+subroutine public::main(null)
   declare CCLUT_PARSE_LIMIT     = i4 with protect, constant(textlen(cclutRequest->coverageXml) + 1)
   declare cclutStartPos        = i4 with protect, noconstant(1)
   declare cclutResumePos       = i4 with protect, noconstant(0)

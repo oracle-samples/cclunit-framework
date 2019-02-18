@@ -12,3 +12,4 @@ When 'releasing' be sure to
 * push to a new branch.
 * execute `mvn clean test -P<profileId>` on the branch.
 * tag the branch with the release number and merge to master.
+* create features to add the release to Cerner's development pipelines.

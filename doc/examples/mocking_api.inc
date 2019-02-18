@@ -9,6 +9,9 @@ create program mock_other_script
   set stat = copyrec(mock_other_script_reply, reply, 1)
 end go
 
+
+
+
 ;;; put the following functions in a test case (.inc)
 
 /**
@@ -70,6 +73,9 @@ subroutine (testMyFunctionOtherScriptFail(null) = null)
 
   ;assert things here
 end ;;;testMyFunctionOtherScriptFail
+
+
+
 
 ;; this is the script to be tested
 
