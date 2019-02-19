@@ -37,7 +37,7 @@ subroutine cclut::getFileAsString(cclutFullyQualifiedFileName )
   declare CCLUT_SEEK_END = i4 with protect, constant(2)
 
   declare cclutReturnValue = vc with protect, noconstant(nullterm(""))
-  declare cclutFileHandle = i4 with protect, noconstant(0)
+  declare cclutFileHandle = h with protect, noconstant(0)
   declare cclutSize = i4 with protect, noconstant(0)
   declare cclutOriginalSize = i4 with protect, noconstant(0)
   declare cclutAdditionalSize = i4 with protect, noconstant(1)
