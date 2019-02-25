@@ -37,6 +37,7 @@
 <property name = 'TEXT-ATTRIB:00'><![CDATA[AUTO-VAL-DELAY='0' FORMAT-CODE='0' CHAR-TYPE='any' MASK='' TX-DEFAULT='' CHAR-CASE='any' PSW='false'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ]]></property>
 </component>
 </control>
+
 <control name = 'optimizerMode' control = '2' height = '25' width = '250' position = '4' result-type = '1' exclude = 'false'><display align = 'left'>Optimizer Mode</display>
 <description>Select the optimizer mode to use when executing the tests. The system default is used if empty.</description>
 <default>System Default</default>
@@ -56,6 +57,7 @@
 </component>
 <component name = 'GENERAL'><property name = 'PROMPT'><![CDATA[BOTTOM='25' LABEL-POS-LEFT='10' LABEL-POS-TOP='156' LEFT='154' EXCLUDE-RUNTIME='false' RIGHT='250' LABEL-POS-HEIGHT='16' LABEL-LEFT='true' TOP='156' LABEL-POS-WIDTH='124' ]]></property>
 </component>
+</control>
 <control name = 'failFast' control = '1' height = '18' width = '14' position = '6' result-type = '3' exclude = 'false'><display align = 'left'>Fail Fast</display>
 <description>Inidcate whether to fail fast or keep on trudging when errors or assert failures occur.</description>
 <default>1</default>
