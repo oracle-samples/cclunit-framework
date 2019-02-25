@@ -107,6 +107,7 @@ end ;;;evaluateCondition
 */
 subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cclutVal1, cclutVal2)
   declare cclutReturnValue = i2 with protect
+  declare cclutCondition = vc with protect
  
   if (validate(cclut_test_runner::assertSuccess, TRUE) = FALSE)
     ;;;an assert already failed without failing fast
@@ -115,6 +116,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
   endif
 
   set cclutReturnValue = FALSE
+  set cclutCondition = build2('"', cclutVal1, '" ', cclutComparison, ' "', cclutVal2, '"')
   if (cclutComparison = "=")
     if (cclutVal1 = cclutVal2)
       set cclutReturnValue = TRUE
@@ -140,34 +142,41 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "contains")
+    set cclutCondition = concat('findstring("', cclutVal1, '","', cclutVal2, '") > 0')
     if (findstring(cclutVal1, cclutVal2) > 0)
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not contains")
+    set cclutCondition = concat('findstring("', cclutVal1, '","', cclutVal2, '") = 0')
     if (findstring(cclutVal1, cclutVal2) = 0)
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "starts with")
+    set cclutCondition = concat('"', cclutVal2, '" starts with "', cclutVal1, '"')
     if (cclutVal2 = patstring(concat(cclutVal1, "*")))
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not starts with")
+    set cclutCondition = concat('"', cclutVal2, '" does not start with "', cclutVal1, '"')
     if (cclutVal2 != patstring(concat(cclutVal1, "*")))
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "ends with")
+    set cclutCondition = concat('"', cclutVal2, '" ends with "', cclutVal1, '"')
     if (cclutVal2 = patstring(concat("*", cclutVal1)))
       set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not ends with")
+    set cclutCondition = concat('"', cclutVal2, '" does not end with "', cclutVal1, '"')
     if (cclutVal2 != patstring(concat("*", cclutVal1)))
       set cclutReturnValue = TRUE
     endif
   endif
+  set cclutCondition = replace(cclutCondition, char(0), char(128))
  
   if ( cclutReturnValue = FALSE ) 
     call cclut::doOutput(build2(
-      "FAILURE: line number [", trim(build(cclutLineNum),3), "]; context [", cclutCtx, "];, condition [", cclutDisp, "]"))
+      "FAILURE: line number [", trim(build(cclutLineNum),3), "]; context [", cclutCtx, "];, condition [", cclutCondition, "]"))
     if (validate(cclut_test_runner::assertSuccess) = TRUE) 
       set cclut_test_runner::assertSuccess = FALSE 
     endif 

@@ -25,6 +25,7 @@ subroutine setupOnce(null)
     call cclutAssertI4Equal(CURREF, "setupOnce failure", 0, 1)
   endif
   if (testing::errorSetupOnce)
+    call cclutAssertI4Equal(CURREF, "setupOnce error", 1, 1)
     set guaranteedError = "setupOnce error"
   endif
 end ;setupOnce
@@ -35,6 +36,7 @@ subroutine teardownOnce(null)
     call cclutAssertI4Equal(CURREF, "teardownOnce failure", 0, 1)
   endif
   if (testing::errorTeardownOnce)
+    call cclutAssertI4Equal(CURREF, "teardownOnce error", 1, 1)
     set guaranteedError = "teardownOnce error"
   endif
 end ;teardownOnce
@@ -45,6 +47,7 @@ subroutine setup(null)
     call cclutAssertI4Equal(CURREF, "setup failure", 0, 1)
   endif
   if (testing::errorSetup)
+    call cclutAssertI4Equal(CURREF, "setup error", 1, 1)
     set guaranteedError = "setup error"
   endif
 end ;;;setup
@@ -55,6 +58,7 @@ subroutine teardown (null)
     call cclutAssertI4Equal(CURREF, "teardown failure", 0, 1)
   endif
   if (testing::errorTeardown)
+    call cclutAssertI4Equal(CURREF, "teardown error", 1, 1)
     set guaranteedError = "teardown error"
   endif
 end ;;;setup
@@ -65,6 +69,7 @@ subroutine testOne(null)
     call cclutAssertI4Equal(CURREF, "testOne failure", 0, 1)
   endif
   if (testing::errorTest)
+    call cclutAssertI4Equal(CURREF, "testOne error", 1, 1)
     set guaranteedError = "testOne error"
   endif
 end ;;;testOne

@@ -4,9 +4,11 @@
 ;** ut_cclut_execute_test_case(_file) to confirm that the framework removes the mock tables afterward.
 ;**********************************************************************************************************************************
 
-if (validate(cclutMockTableName) = 0)
-    declare cclutMockTableName = vc with protect, noconstant("")
+if (not validate(cclutMockTableName))
+    declare cclutMockTableName = vc with protect, noconstant("masking cclutMockTableName ")
+    call echo(cclutMockTableName)
 endif
+    call echo("cclutMockTableName being initialized")
 
 declare tearDown(dummyVar = i2) = null
 declare tearDownOnce(dummyVar = i2) = null
@@ -53,6 +55,7 @@ end ;tearDownOnce
 subroutine test_cclut_mock_table_misbehaving_cleanup(null)
     set cclutMockTableName =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
+call echo(build2("cclutMockTableName: ", cclutMockTableName))        
     call cclutCreateMockTable("sample_table")
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00")
     call cclutAddMockImplementation("sample_subroutine", "mock_subroutine")

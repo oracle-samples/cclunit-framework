@@ -200,11 +200,12 @@ end ;;;evaluateTestResults
 subroutine cclut::executeTestLogic(null)
   declare CCLUT_FUN_TYPE_SUBROUTINE   = i4 with protect, constant(7)
   declare cclutRegistryTestIndex      = i4 with protect, noconstant(0)
+  declare cclutRegistryTestCount      = i4 with protect, noconstant(0)
   declare cclutReplyTestCount         = i4 with protect, noconstant(0)
   declare cclutErrorCount             = i4 with protect, noconstant(0)
   declare ccutTestNamePattern         = vc with protect, noconstant("")
   declare cclut::testName             = vc with protect, noconstant("")
-  declare cclutStat                   = i4 with protect, noconstant(0) 
+  declare cclutStat                   = i4 with protect, noconstant(0)
   
   record cclut_testRegistryRequest
   (
@@ -226,8 +227,9 @@ subroutine cclut::executeTestLogic(null)
   execute cclut_find_unit_tests with replace("CCLUTREQUEST", cclut_testRegistryRequest), 
       replace("CCLUTREPLY", cclut_testRegistryReply)
   set ccutTestNamePattern = trim(cnvtupper(cclutRequest->testNamePattern), 3)
+  set cclutRegistryTestCount = size(cclut_testRegistryReply->tests, 5)
    
-  if (size(cclut_testRegistryReply->tests, 5) > 0)
+  if (cclutRegistryTestCount > 0)
     call echo("Starting Test Case execution...")
    
     if (checkfun("SETUPONCE") = CCLUT_FUN_TYPE_SUBROUTINE)
@@ -239,9 +241,12 @@ subroutine cclut::executeTestLogic(null)
       call setupOnce(null)
       set cclutReply->resultInd = band(cclutReply->resultInd, 
           cclut::evaluateTestResults(cclutReplyTestCount, cclutReply, cclut_runResult, cclut_timerList))
+      if (cclutReply->resultInd = FALSE and cclutRequest->failFast = TRUE)
+        set cclutRegistryTestCount = 0
+      endif
     endif
   
-    for (cclutRegistryTestIndex = 1 to size(cclut_testRegistryReply->tests, 5))
+    for (cclutRegistryTestIndex = 1 to cclutRegistryTestCount)
       set cclut::testName = cclut_testRegistryReply->tests[cclutRegistryTestIndex].testName
       if (textlen(trim(ccutTestNamePattern)) = 0 
             or operator(cnvtlower(cclut::testName), "regexplike", cnvtlower(ccutTestNamePattern)))
@@ -267,13 +272,15 @@ subroutine cclut::executeTestLogic(null)
         call parser(concat("call ", cclut::testName, "(null) go"))
         set cclutReply->resultInd = band(cclutReply->resultInd, 
             cclut::evaluateTestResults(cclutReplyTestCount, cclutReply, cclut_runResult, cclut_timerList))
-       
         if (checkfun("TEARDOWN") = CCLUT_FUN_TYPE_SUBROUTINE)
           call echo("Executing teardown...")
           call teardown(null)
         endif
         set cclutReply->resultInd = band(cclutReply->resultInd, 
             cclut::evaluateTestResults(cclutReplyTestCount, cclutReply, cclut_runResult, cclut_timerList) )
+        if (cclutReply->resultInd = FALSE and cclutRequest->failFast = TRUE)
+          set cclutRegistryTestIndex = cclutRegistryTestCount
+        endif
       endif
     endfor
       

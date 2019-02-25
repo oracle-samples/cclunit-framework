@@ -279,7 +279,7 @@ subroutine testFailTest(null)
   set testing::expectedMessages->message[4].value = "Executing TESTONE..."
   set testing::expectedMessages->message[5].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[5].value = 
-      "FAILURE: line number \[[0-9]+\]; context \[testOne failure\]; condition \[0=1.*"
+      "FAILURE: line number \[[0-9]+\]; context \[testOne failure\]; condition \[0 = 1"
   set testing::expectedMessages->message[6].value = "Executing teardown..."
   set testing::expectedMessages->message[7].value = "Executing teardownOnce..."
   set testing::expectedMessages->message[8].value = "**********************************"
@@ -483,7 +483,7 @@ subroutine testTeardownAndTeardownOnceFail(null)
   set testing::expectedMessages->message[5].value = "Executing teardown..."
   set testing::expectedMessages->message[6].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[6].value = 
-      "FAILURE: line number \[[0-9]+\]; context \[teardown failure\]; condition \[0=1.*"
+      "FAILURE: line number \[[0-9]+\]; context \[teardown failure\]; condition \[0 = 1.*"
   set testing::expectedMessages->message[7].value = "Executing teardownOnce..."
   set testing::expectedMessages->message[8].value = "**********************************"
   set testing::expectedMessages->message[9].value = "*                                *"
@@ -594,7 +594,7 @@ subroutine testErroredAndFailedTestsA(null)
 
   set testing::expectedMessages->message[5].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[5].value = 
-      "FAILURE: line number \[[0-9]+\]; context \[testOne failure\]; condition \[0=1.*"
+      "FAILURE: line number \[[0-9]+\]; context \[testOne failure\]; condition \[0 = 1.*"
   set testing::expectedMessages->message[6].value = "Executing teardown..."
   set testing::expectedMessages->message[7].value = "Executing teardownOnce..."
   set testing::expectedMessages->message[8].value = "**********************************"
@@ -631,7 +631,7 @@ subroutine testErroredAndFailedTestsB(null)
   set testing::expectedMessages->message[8].value = "Executing TESTTHREE..."
   set testing::expectedMessages->message[9].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[9].value = 
-      "FAILURE: line number \[[0-9]+\]; context \[testThree failure A\]; condition \[0=1.*"
+      "FAILURE: line number \[[0-9]+\]; context \[testThree failure A\]; condition \[0 = 1.*"
   set testing::expectedMessages->message[10].value = "CCL error in TESTTHREE"    
   set testing::expectedMessages->message[11].value = concat(
     "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
@@ -723,9 +723,10 @@ end ;;;testFailedCompile
   Test that the framework removes any mock tables that test cases fail to do when calling cclut_ff.
 */
 subroutine testMockTableCleanup(null)
-  declare cclutMockTableName = vc with protect, noconstant("")
+  declare cclutMockTableName = vc with protect, noconstant("uninitialized")
 
   execute cclut_ff "ut_cclut_output", "cclsource", "ut_cclut_mock_table_misbehaving_cleanup"
+call echo(build2("cclutMockTableName after: ", cclutMockTableName))        
 
   call cclutAssertStartsWith(CURREF, "testMockTableCleanup 001", "CUST_CCLUT", cclutMockTableName)
 

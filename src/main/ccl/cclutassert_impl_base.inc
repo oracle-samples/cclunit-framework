@@ -64,15 +64,15 @@ declare cclut::evaluateComparison(cclutLineNum = i4, cclutCtx = vc, cclutCompari
 ;** Equal
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8Equal(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " = ", build(cclutCompVal))))
 end ;;;clutAssertf8Equal
  
 subroutine cclutAsserti4Equal(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " = ", build(cclutCompVal))))
 end ;;;clutAsserti4Equal
  
 subroutine cclutAsserti2Equal(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " = ", build(cclutCompVal))))
 end ;;;clutAsserti2Equal
  
 subroutine cclutAssertVCEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -80,8 +80,8 @@ subroutine cclutAssertVCEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
 end; cclutAssertVCEqual
  
 subroutine cclutAssertdatetimeEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'",
-                                        "=", "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' = '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeEqual
  
 ;**********************************************************************************************************************************
@@ -89,27 +89,27 @@ end; cclutAssertdatetimeEqual
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8AlmostEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal, cclutTolerance)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build("abs(", cclutVal, "-", cclutCompVal, ") <= ", cclutTolerance)))
+      build2("abs(", build(cclutVal), "-", build(cclutCompVal), ") <= ", build(cclutTolerance))))
 end ;;;clutAssertf8AlmostEqual
  
 subroutine cclutAssertf8NotAlmostEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal, cclutTolerance)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build("abs(", cclutVal, "-", cclutCompVal, ") > ", cclutTolerance)))
+      build2("abs(", build(cclutVal), "-", build(cclutCompVal), ") > ", build(cclutTolerance))))
 end ;;;clutAssertf8NotAlmostEqual
 
 ;**********************************************************************************************************************************
 ;** NotEqual
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8NotEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "!=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " != ", build(cclutCompVal))))
 end ;;;clutAssertf8NotEqual
  
 subroutine cclutAsserti4NotEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "!=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " != ", build(cclutCompVal))))
 end ;;;clutAsserti4NotEqual
  
 subroutine cclutAsserti2NotEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "!=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " != ", build(cclutCompVal))))
 end ;;;clutAsserti2NotEqual
  
 subroutine cclutAssertVCNotEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -118,23 +118,22 @@ end; cclutAssertNotEqual
  
 subroutine cclutAssertdatetimeNotEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'", "!=", 
-          "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' != '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeNotEqual
  
 ;**********************************************************************************************************************************
 ;** LessThan
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8LessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " < ", build(cclutCompVal))))
 end ;;;clutAssertf8LessThan
  
 subroutine cclutAsserti4LessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " < ", build(cclutCompVal))))
 end ;;;clutAsserti4LessThan
  
 subroutine cclutAsserti2LessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " < ", build(cclutCompVal))))
 end ;;;clutAsserti2LessThan
  
 subroutine cclutAssertVCLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -143,23 +142,22 @@ end; cclutAssertVCLessThan
  
 subroutine cclutAssertDateTimeLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'", "<", 
-          "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' < '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeLessThan
  
 ;**********************************************************************************************************************************
 ;** NotLessThan
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8NotLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " >= ", build(cclutCompVal))))
 end ;;;clutAssertf8NotLessThan
  
 subroutine cclutAsserti4NotLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " >= ", build(cclutCompVal))))
 end ;;;clutAsserti4NotLessThan
  
 subroutine cclutAsserti2NotLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " >= ", build(cclutCompVal))))
 end ;;;clutAsserti2NotLessThan
  
 subroutine cclutAssertVCNotLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -168,23 +166,22 @@ end; cclutAssertVCNotLessThan
  
 subroutine cclutAssertdatetimeNotLessThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'", ">=", 
-          "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' >= '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeNotLessThan
  
 ;**********************************************************************************************************************************
 ;** GreaterThan
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8GreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " > ", build(cclutCompVal))))
 end ;;;clutAssertf8GreaterThan
  
 subroutine cclutAsserti4GreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " > ", build(cclutCompVal))))
 end ;;;clutAsserti4GreaterThan
  
 subroutine cclutAsserti2GreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, ">", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " > ", build(cclutCompVal))))
 end ;;;clutAsserti2GreaterThan
  
 subroutine cclutAssertVCGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -193,23 +190,22 @@ end; cclutAssertVCGreaterThan
  
 subroutine cclutAssertdatetimeGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'", ">", 
-          "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' > '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeGreaterThan
  
 ;**********************************************************************************************************************************
 ;** NotGreaterThan
 ;**********************************************************************************************************************************
 subroutine cclutAssertf8NotGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " <= ", build(cclutCompVal))))
 end ;;;clutAssertf8NotGreaterThan
  
 subroutine cclutAsserti4NotGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " <= ", build(cclutCompVal))))
 end ;;;clutAsserti4NotGreaterThan
  
 subroutine cclutAsserti2NotGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
-  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build(cclutVal, "<=", cclutCompVal)))
+  return (cclut::evaluateCondition(cclutLineNum, cclutCtx, build2(build(cclutVal), " <= ", build(cclutCompVal))))
 end ;;;clutAsserti2NotGreaterThan
  
 subroutine cclutAssertVCNotGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
@@ -218,8 +214,7 @@ end; cclutAssertVCNotGreaterThan
  
 subroutine cclutAssertdatetimeNotGreaterThan(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
-      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "'", "<=", 
-          "'", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
+      build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' <= '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
 end; cclutAssertdatetimeNotGreaterThan
  
 ;**********************************************************************************************************************************
@@ -259,9 +254,9 @@ end; cclutAssertNotEndsWith
 ;** Operartor
 ;**********************************************************************************************************************************
 subroutine cclutAssertF8Operator(cclutLineNum, cclutCtx, cclutExp1, cclutOp, cclutExp2)
-  declare cclutCnd = vc with protect, 
+  declare cclutCnd = vc with protect,
       noconstant(build2(trim(build(operator(cclutExp1, cclutOp, cclutExp2)),3), "=1"))
-  declare cclutCndDisp = vc with protect, 
+  declare cclutCndDisp = vc with protect,
       noconstant(build2("operator(", trim(build(cclutExp1),3), ", '", cclutOp, "', ", trim(build(cclutExp2),3) , ")"))
   return (cclut::evaluateCondition2(cclutLineNum, cclutCtx, cclutCnd, cclutCndDisp))
 end ;;;cclutAssertF8Operator

@@ -15,6 +15,8 @@ create program cclut:dba
     @default current
   @arg (vc) The deprecated severity to apply.
     @default E
+  @arg (i2) A boolean flag indicating whether to fail fast.
+    @default FALSE
 */
 prompt 
   "Ouput Destination [MINE]: " = "MINE",
@@ -22,8 +24,10 @@ prompt
   "Test Case File Name: " = "",
   "Test Name Pattern [.*]: " = ".*",
   "Optimizer Mode (CBO, RBO) [current]: " = "",
-  "Deprecated Flag (E, W, L, I, D) [E]: " = ""
-with outputDestination, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode, deprecatedFlag
+  "Deprecated Flag (E, W, L, I, D) [E]: " = "",
+  "FailFast [TRUE]: " = TRUE
+with outputDestination, testCaseDirectory,
+    testCaseFileName, testNamePattern, optimizerMode, deprecatedFlag, failFast
 
 declare cclut1::main(null) = null with protect
 declare cclut1::errorCheck(null) = null with protect
@@ -47,10 +51,11 @@ declare cclut1::testCaseFileName = vc with protect, noconstant(trim($testCaseFil
 declare cclut1::testNamePattern = vc with protect, noconstant(trim($testNamePattern, 3))
 declare cclut1::optimizerMode = vc with protect, noconstant(trim(cnvtupper($optimizerMode), 3))
 declare cclut1::deprecatedFlag = vc with protect, noconstant(trim($deprecatedFlag, 3))
+declare cclut1::failFast = i2 with protect, noconstant($failFast)
 
 
 ;allow the calling program to supply this
-if (validate(cclut1TestCaseRequest) = FALSE)  
+if (validate(cclut1TestCaseRequest) = FALSE)
   record cclut1TestCaseRequest (
     1 testCaseDirectory = vc
     1 testCaseFileName = vc
@@ -60,11 +65,12 @@ if (validate(cclut1TestCaseRequest) = FALSE)
       2 compile = i2
     1 optimizerMode = vc
     1 deprecatedFlag = vc
+    1 failFast = i2
   ) with protect
 endif
 
 ;allow the calling program to supply this
-if (validate(cclut1TestCaseReply) = FALSE)  
+if (validate(cclut1TestCaseReply) = FALSE)
   record cclut1TestCaseReply (
     1 environmentXml = vc
     1 listingXml = vc
@@ -79,7 +85,7 @@ if (validate(cclut1TestCaseReply) = FALSE)
 endif
 
 ;allow the calling program to supply this
-if (validate(cclut1TestCaseResults) = FALSE)  
+if (validate(cclut1TestCaseResults) = FALSE)
   record cclut1TestCaseResults (
     1 resultInd = i2
     1 tests[*]
@@ -127,7 +133,8 @@ subroutine cclut1::main(null)
   set cclut1TestCaseRequest->testNamePattern = cclut1::testNamePattern
   set cclut1TestCaseRequest->optimizerMode = cclut1::optimizerMode
   set cclut1TestCaseRequest->deprecatedFlag = cclut1::deprecatedFlag
-    
+  set cclut1TestCaseRequest->failFast = cclut1::failFast
+
   call cclut1::executeTestCase(null)
     
   call cclut1::processTestCaseResponse(

@@ -42,6 +42,7 @@ subroutine cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
         i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
     declare cclutMockImplementationPos = i4 with protect, noconstant(0)
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
+    declare cclutStat = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
     if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
@@ -60,7 +61,7 @@ subroutine cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
         CCLUT_ORIGINAL_NAME, cclut_mockImplementations->implementations[cclutMockImplementationIndex].originalName)
     if (cclutMockImplementationPos < 1)
         set cclutMockImplementationPos = cclutMockImplementationLength + 1
-        set stat = alterlist(cclut_mockImplementations->implementations, cclutMockImplementationPos)
+        set cclutStat = alterlist(cclut_mockImplementations->implementations, cclutMockImplementationPos)
         set cclut_mockImplementations->implementations[cclutMockImplementationPos].originalName = CCLUT_ORIGINAL_NAME
     endif
 
@@ -82,6 +83,7 @@ subroutine cclutRemoveMockImplementation(cclutOriginalName)
             i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
     declare cclutMockImplementationPos = i4 with protect, noconstant(0)
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
+    declare cclutStat = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
     if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
@@ -94,7 +96,7 @@ subroutine cclutRemoveMockImplementation(cclutOriginalName)
         locateval(cclutMockImplementationIndex, 1, cclutMockImplementationLength,
         CCLUT_ORIGINAL_NAME, cclut_mockImplementations->implementations[cclutMockImplementationIndex].originalName)
     if (cclutMockImplementationPos > 0)
-        set stat = alterlist(cclut_mockImplementations->implementations, cclutMockImplementationLength - 1,
+        set cclutStat = alterlist(cclut_mockImplementations->implementations, cclutMockImplementationLength - 1,
             cclutMockImplementationPos - 1)
     endif
 end ;cclutRemoveMockImplementation

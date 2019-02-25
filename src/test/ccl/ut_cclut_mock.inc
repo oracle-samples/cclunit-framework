@@ -199,7 +199,7 @@ subroutine test_cclutRemoveMockImplementation_missing_originalName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutRemoveMockImplementation_missing_originalName 001",
         trim(errorMessage, 3), "regexplike",
-        concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
+        concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):", ;^
             " cclutRemoveMockImplementation\(\) - originalName is a required field."))
 end ;test_cclutRemoveMockImplementation_missing_originalName
 
@@ -233,6 +233,7 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     declare public_subroutine = i4 with protect, noconstant(0)
     declare mock_subroutine = i4 with protect, noconstant(0)
     declare test_subroutine = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
 
     record executeReply (
         1 number_parameter = i4

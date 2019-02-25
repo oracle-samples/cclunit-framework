@@ -1,5 +1,8 @@
 # cclunit-framework Change Log
 
+## 3.2 - 2019.02.25
+* Add first class fail fast support in the framework and the cclut prompt program.
+
 ## 3.1 - 2019.02.15
 * Incorporate the mocking framework.
 

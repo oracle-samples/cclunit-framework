@@ -85,6 +85,8 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
     @value D Debug
   @field legacyResultsFormat
     (optional) A boolean flag indidcating whether the results should be returned using the legacy format.
+  @field failFast
+    (optional) A boolean flag indidcating whether to stop executing tests once a test failure or error has been encountered.
 
   record cclutRequest (
     1 testCaseDirectory = vc
@@ -97,8 +99,10 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
     1 enforcePredeclare = i2
     1 deprecatedFlag = vc
     1 legacyResultsFormat = i2
+    1 failFast = i2
   ) with protect
 */
+
 
 /**
   The primary output for the CCL Testing Framework.
@@ -135,14 +139,17 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
 */
 
 /**
- The request structure for executing a test program generated from a test case file.
- 
- @field testNamePattern
-   A case-insensitive regular expression for filtering which tests within the test case file to execute. 
-   Only tests with a matching name will be executed.
+  The request structure for executing a test program generated from a test case file.
+
+  @field testNamePattern
+    A case-insensitive regular expression for filtering which tests within the test case file to execute. 
+    Only tests with a matching name will be executed.
+  @field failFast
+    A boolean flag indicating whether to stop running additional tests after a single test has failed or produced an error.
 */
 record cclutTestCaseRequest (
   1 testNamePattern = vc
+  1 failFast = i2
 ) with protect
 
 /**
@@ -564,6 +571,7 @@ if (cclut::enforcePredeclare = TRUE)
 endif
 
 set cclutTestCaseRequest->testNamePattern = validate(cclutRequest->testNamePattern, "")
+set cclutTestCaseRequest->failFast = validate(cclutRequest->failFast, FALSE)
 
 call cclut::exitOnError("pre-execute", cclut::testCaseObjectName, cclutReply)
 execute value(cnvtupper(cclut::testCaseObjectName)) with 
