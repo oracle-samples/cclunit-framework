@@ -97,6 +97,7 @@ record cclut_request (
   1 enforcePredeclare = i2
   1 deprecatedFlag = vc
   1 legacyResultsFormat = i2
+  1 failFast = i2
 ) with protect
 
 /**

@@ -16,6 +16,8 @@ if (validate(reply) = FALSE)
       <ul>
         <li>VERSION: the version of the testing framework currently within the environment</li>
       </ul>
+    @field requiredCcl
+      The minimum CCL version required by this version of the framework
   */
   record reply (
       1 state = vc

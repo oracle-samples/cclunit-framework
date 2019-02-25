@@ -82,6 +82,8 @@ subroutine cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTyp
     declare cclutTypeCount = i4 with protect, noconstant(0)
     declare cclutTypeIndex = i4 with protect, noconstant(0)
     declare cclutColumnName = vc with protect, noconstant("")
+    declare cclutStat = i4 with protect, noconstant(0)
+    
     record cclutColumnRec(
         1 qual[*]
             2 str = vc
@@ -140,7 +142,7 @@ subroutine cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTyp
     ;Remove table if it exists, and add a new element to the end of the array
     call cclutRemoveMockTable(CCLUT_TABLE_NAME)
     set cclutMockTablePos = size(cclut_mockTables->tables, 5) + 1
-    set stat = alterlist(cclut_mockTables->tables, cclutMockTablePos)
+    set cclutStat = alterlist(cclut_mockTables->tables, cclutMockTablePos)
 
     ;Create the mock name and fill out the columns
     set cclut_mockTables->tables[cclutMockTablePos].originalName = CCLUT_TABLE_NAME
@@ -148,7 +150,7 @@ subroutine cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTyp
         trim(cnvtstring(cclutMockTablePos, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
     set cclut_mockTables->tables[cclutMockTablePos].isFinalized = FALSE
 
-    set stat = alterlist(cclut_mockTables->tables[cclutMockTablePos].columns, cclutColumnCount)
+    set cclutStat = alterlist(cclut_mockTables->tables[cclutMockTablePos].columns, cclutColumnCount)
     for (cclutColumnIndex = 1 to cclutColumnCount)
         set cclut_mockTables->tables[cclutMockTablePos].columns[cclutColumnIndex].columnName =
             cclutColumnRec->qual[cclutColumnIndex].str
@@ -288,6 +290,8 @@ subroutine cclutAddMockIndex(cclutTableName, cclutColumnNames, cclutIsUnique)
     declare cclutColumnCount = i4 with protect, noconstant(0)
     declare cclutColumnIndex = i4 with protect, noconstant(0)
     declare cclutColumnName = vc with protect, noconstant("")
+    declare cclutStat = i4 with protect, noconstant(0)
+
     record cclutColumnRec(
         1 qual[*]
             2 str = vc
@@ -331,7 +335,7 @@ subroutine cclutAddMockIndex(cclutTableName, cclutColumnNames, cclutIsUnique)
             CCLUT_COLUMN_NAMES, cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexIndex].indexColumns)
         if (cclutMockIndexPos < 1)
             set cclutMockIndexPos = cclutMockIndexLength + 1
-            set stat = alterlist(cclut_mockTables->tables[cclutMockTablePos].indexes, cclutMockIndexPos)
+            set cclutStat = alterlist(cclut_mockTables->tables[cclutMockTablePos].indexes, cclutMockIndexPos)
             set cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexPos].indexColumns = CCLUT_COLUMN_NAMES
         endif
         set cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexPos].isUnique =
@@ -413,6 +417,7 @@ subroutine cclutRemoveMockTable(cclutTableName)
     declare cclutMockTableCount = i4 with protect, noconstant(size(cclut_mockTables->tables, 5))
     declare cclutMockTablePos = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
+    declare cclutStat = i4 with protect, noconstant(0)
 
     ;Validate inbound parameter
     if (cclut::cclutValidateParameterIsNotEmpty(CCLUT_TABLE_NAME, "tableName") = FALSE)
@@ -431,7 +436,7 @@ subroutine cclutRemoveMockTable(cclutTableName)
             call parser(cclutParserText)
         endif
         ;Remove it from the mocked list
-        set stat = alterlist(cclut_mockTables->tables, cclutMockTableCount - 1, cclutMockTablePos - 1)
+        set cclutStat = alterlist(cclut_mockTables->tables, cclutMockTableCount - 1, cclutMockTablePos - 1)
     endif
 end ;cclutRemoveMockTable
 

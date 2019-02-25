@@ -50,7 +50,7 @@ end ;;;cclut::evaluateCondition
     The boolean value from evaluating the condition.
 */
 subroutine cclut::evaluateCondition2 (cclutLineNum, cclutCtx, cclutCondition, cclutDisp)
-  declare cclutRetVal = i2 with protect
+  declare cclutReturnValue = i2 with protect
   declare cclutECodeBefore = i4 with protect
   declare cclutEMessageBefore = vc with protect
   declare cclutECode = i4 with protect
@@ -59,14 +59,14 @@ subroutine cclut::evaluateCondition2 (cclutLineNum, cclutCtx, cclutCondition, cc
   /* Clear the queue before running */
   set cclutECodeBefore = error(cclutEMessageBefore, 1)
   if (parser(cclutCondition))
-    set cclutRetVal = TRUE
+    set cclutReturnValue = TRUE
   else
-    set cclutRetVal = FALSE
+    set cclutReturnValue = FALSE
   endif
 
   call cclut::reportAssert(cclutLineNum, cclutCtx, cclutDisp,
-      cclutRetVal, cclutECodeBefore, cclutEMessageBefore, cclutECode, cclutEMessage)
-  return (cclutRetVal)
+      cclutReturnValue, cclutECodeBefore, cclutEMessageBefore, cclutECode, cclutEMessage)
+  return (cclutReturnValue)
 end ;;;evaluateCondition
 
 /**
@@ -85,7 +85,7 @@ end ;;;evaluateCondition
     The right hand value.
 */
 subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cclutVal1, cclutVal2)
-  declare cclutRetVal = i2 with protect
+  declare cclutReturnValue = i2 with protect
   declare cclutECodeBefore = i4 with protect
   declare cclutEMessageBefore = vc with protect
   declare cclutECode = i4 with protect
@@ -94,68 +94,67 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
 
   /* Clear the error queue before running */
   set cclutECodeBefore = error(cclutEMessageBefore, 1)
-
-  set cclutRetVal = FALSE
-  set cclutCondition = concat('"', cclutVal1, '"', cclutComparison, '"', cclutVal2, '"')
+  set cclutReturnValue = FALSE
+  set cclutCondition = build2('"', cclutVal1, '" ', cclutComparison, ' "', cclutVal2, '"')
   if (cclutComparison = "=")
     if (cclutVal1 = cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = ">")
     if (cclutVal1 > cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = ">=")
     if (cclutVal1 >= cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "<")
     if (cclutVal1 < cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "<=")
     if (cclutVal1 <= cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "!=")
     if (cclutVal1 != cclutVal2)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "contains")
     set cclutCondition = concat('findstring("', cclutVal1, '","', cclutVal2, '") > 0')
     if (findstring(cclutVal1, cclutVal2) > 0)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not contains")
     set cclutCondition = concat('findstring("', cclutVal1, '","', cclutVal2, '") = 0')
     if (findstring(cclutVal1, cclutVal2) = 0)
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "starts with")
     set cclutCondition = concat('"', cclutVal2, '" starts with "', cclutVal1, '"')
     if (cclutVal1 = substring(1, textlen(cclutVal1), cclutVal2))
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not starts with")
     set cclutCondition = concat('"', cclutVal2, '" does not start with "', cclutVal1, '"')
     if (cclutVal1 != substring(1, textlen(cclutVal1), cclutVal2))
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "ends with")
     set cclutCondition = concat('"', cclutVal2, '" ends with "', cclutVal1, '"')
     if (cclutVal1 = substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2))
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   elseif (cclutComparison = "not ends with")
     set cclutCondition = concat('"', cclutVal2, '" does not end with "', cclutVal1, '"')
     if (cclutVal1 != substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2))
-      set cclutRetVal = TRUE
+      set cclutReturnValue = TRUE
     endif
   endif
 
   call cclut::reportAssert(cclutLineNum, cclutCtx, cclutCondition,
-                    cclutRetVal, cclutECodeBefore, cclutEMessageBefore, cclutECode, cclutEMessage)
-  return (cclutRetVal)
+                    cclutReturnValue, cclutECodeBefore, cclutEMessageBefore, cclutECode, cclutEMessage)
+  return (cclutReturnValue)
 end ;;;evaluateComparison
 
 /**

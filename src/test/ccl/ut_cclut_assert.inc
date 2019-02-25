@@ -755,7 +755,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8EQUALASSERT^
   set testing::outputLines->line[11].text = dashes
   set testing::outputLines->line[12].text = 
-    ^    Assert Failure: 6.700000=2.400000^
+    ^    Assert Failure: 6.700000 = 2.400000^
   set testing::outputLines->line[13].text =
     ^    Test Assert Failure 1^ 
   set testing::outputLines->line[14].text = 
@@ -764,7 +764,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4EQUALASSERT^
   set testing::outputLines->line[16].text = dashes
   set testing::outputLines->line[17].text = 
-    ^    Assert Failure: 9827=243^
+    ^    Assert Failure: 9827 = 243^
   set testing::outputLines->line[18].text = 
     ^    Test Assert Failure 2^ 
   set testing::outputLines->line[19].text = 
@@ -773,7 +773,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2EQUALASSERT^
   set testing::outputLines->line[21].text = dashes
   set testing::outputLines->line[22].text = 
-    ^    Assert Failure: 1=0^
+    ^    Assert Failure: 1 = 0^
   set testing::outputLines->line[23].text = 
     ^    Test Assert Failure 3^ 
   set testing::outputLines->line[24].text = 
@@ -782,7 +782,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCEQUALASSERT^
   set testing::outputLines->line[26].text = dashes
   set testing::outputLines->line[27].text = 
-    ^    Assert Failure: "Fantastic"="Terrible"^
+    ^    Assert Failure: "Fantastic" = "Terrible"^
   set testing::outputLines->line[28].text = 
     ^    Test Assert Failure 4^ 
   set testing::outputLines->line[29].text = 
@@ -791,7 +791,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFDATETIMEEQUALASSERT^
   set testing::outputLines->line[31].text = dashes
   set testing::outputLines->line[32].text = 
-    ^    Assert Failure: '2017-11-30 15:55:00'='2001-01-01 00:01:02'^
+    ^    Assert Failure: '2017-11-30 15:55:00' = '2001-01-01 00:01:02'^
   set testing::outputLines->line[33].text = 
     ^    Test Assert Failure 5^ 
   set testing::outputLines->line[34].text = 
@@ -800,7 +800,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8ALMOSTEQUALASSERT^
   set testing::outputLines->line[36].text = dashes
   set testing::outputLines->line[37].text = 
-    ^    Assert Failure: abs(2.600000-2.400000) <=0.030000^
+    ^    Assert Failure: abs(2.600000-2.400000) <= 0.030000^
   set testing::outputLines->line[38].text = 
     ^    Test Assert Failure 6^ 
   set testing::outputLines->line[39].text = 
@@ -809,7 +809,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8NOTALMOSTEQUALASSERT^
   set testing::outputLines->line[41].text = dashes
   set testing::outputLines->line[42].text = 
-    ^    Assert Failure: abs(2.880000-2.900000) >0.050000^
+    ^    Assert Failure: abs(2.880000-2.900000) > 0.050000^
   set testing::outputLines->line[43].text = 
     ^    Test Assert Failure 7^ 
   set testing::outputLines->line[44].text = 
@@ -818,7 +818,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8NOTEQUALASSERT^
   set testing::outputLines->line[46].text = dashes
   set testing::outputLines->line[47].text = 
-    ^    Assert Failure: 6.700000!=6.700000^
+    ^    Assert Failure: 6.700000 != 6.700000^
   set testing::outputLines->line[48].text = 
     ^    Test Assert Failure 8^ 
   set testing::outputLines->line[49].text = 
@@ -827,7 +827,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4NOTEQUALASSERT^
   set testing::outputLines->line[51].text = dashes
   set testing::outputLines->line[52].text = 
-    ^    Assert Failure: 9827!=9827^
+    ^    Assert Failure: 9827 != 9827^
   set testing::outputLines->line[53].text = 
     ^    Test Assert Failure 9^ 
   set testing::outputLines->line[54].text = 
@@ -836,7 +836,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2NOTEQUALASSERT^
   set testing::outputLines->line[56].text = dashes
   set testing::outputLines->line[57].text = 
-    ^    Assert Failure: 12!=12^
+    ^    Assert Failure: 12 != 12^
   set testing::outputLines->line[58].text = 
     ^    Test Assert Failure 10^ 
   set testing::outputLines->line[59].text = 
@@ -845,7 +845,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCNOTEQUALASSERT^
   set testing::outputLines->line[61].text = dashes
   set testing::outputLines->line[62].text = 
-    ^    Assert Failure: "Fantastic   "!="Fantastic"^
+    ^    Assert Failure: "Fantastic   " != "Fantastic"^
   set testing::outputLines->line[63].text = 
     ^    Test Assert Failure 11^ 
   set testing::outputLines->line[64].text = 
@@ -855,7 +855,7 @@ subroutine testAssertFailures(null)
   set testing::outputLines->line[66].text = dashes
   set testing::outputLines->line[67].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[67].text = concat(
-    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'!=^,
+    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' != ^,
     ^'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'^)
   set testing::outputLines->line[68].text = 
     ^    Test Assert Failure 12^ 
@@ -865,7 +865,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8LESSTHANASSERT^
   set testing::outputLines->line[71].text = dashes
   set testing::outputLines->line[72].text = 
-    ^    Assert Failure: 2.400000<2.400000^
+    ^    Assert Failure: 2.400000 < 2.400000^
   set testing::outputLines->line[73].text = 
     ^    Test Assert Failure 13^ 
   set testing::outputLines->line[74].text = 
@@ -874,7 +874,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4LESSTHANASSERT^
   set testing::outputLines->line[76].text = dashes
   set testing::outputLines->line[77].text = 
-    ^    Assert Failure: 827<243^
+    ^    Assert Failure: 827 < 243^
   set testing::outputLines->line[78].text = 
     ^    Test Assert Failure 14^ 
   set testing::outputLines->line[79].text = 
@@ -883,7 +883,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2LESSTHANASSERT^
   set testing::outputLines->line[81].text = dashes
   set testing::outputLines->line[82].text = 
-    ^    Assert Failure: 57<14^
+    ^    Assert Failure: 57 < 14^
   set testing::outputLines->line[83].text = 
     ^    Test Assert Failure 15^ 
   set testing::outputLines->line[84].text = 
@@ -892,7 +892,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCLESSTHANASSERT^
   set testing::outputLines->line[86].text = dashes
   set testing::outputLines->line[87].text = 
-    ^    Assert Failure: "Wow"<"Terrible"^
+    ^    Assert Failure: "Wow" < "Terrible"^
   set testing::outputLines->line[88].text = 
     ^    Test Assert Failure 16^ 
   set testing::outputLines->line[89].text = 
@@ -901,7 +901,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFDATETIMELESSTHANASSERT^
   set testing::outputLines->line[91].text = dashes
   set testing::outputLines->line[92].text = 
-    ^    Assert Failure: '2001-01-01 00:01:02'<'2001-01-01 00:01:02'^
+    ^    Assert Failure: '2001-01-01 00:01:02' < '2001-01-01 00:01:02'^
   set testing::outputLines->line[93].text = 
     ^    Test Assert Failure 17^ 
   set testing::outputLines->line[94].text = 
@@ -910,7 +910,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8NOTLESSTHANASSERT^
   set testing::outputLines->line[96].text = dashes
   set testing::outputLines->line[97].text = 
-    ^    Assert Failure: 1.700000>=2.400000^
+    ^    Assert Failure: 1.700000 >= 2.400000^
   set testing::outputLines->line[98].text = 
     ^    Test Assert Failure 18^ 
   set testing::outputLines->line[99].text = 
@@ -919,7 +919,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4NOTLESSTHANASSERT^
   set testing::outputLines->line[101].text = dashes
   set testing::outputLines->line[102].text = 
-    ^    Assert Failure: 127>=243^
+    ^    Assert Failure: 127 >= 243^
   set testing::outputLines->line[103].text = 
     ^    Test Assert Failure 19^ 
   set testing::outputLines->line[104].text = 
@@ -928,7 +928,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2NOTLESSTHANASSERT^
   set testing::outputLines->line[106].text = dashes
   set testing::outputLines->line[107].text = 
-    ^    Assert Failure: 7>=14^
+    ^    Assert Failure: 7 >= 14^
   set testing::outputLines->line[108].text = 
     ^    Test Assert Failure 20^ 
   set testing::outputLines->line[109].text = 
@@ -937,7 +937,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCNOTLESSTHANASSERT^
   set testing::outputLines->line[111].text = dashes
   set testing::outputLines->line[112].text = 
-    ^    Assert Failure: "Fantastic">="Terrible"^
+    ^    Assert Failure: "Fantastic" >= "Terrible"^
   set testing::outputLines->line[113].text = 
     ^    Test Assert Failure 21^ 
   set testing::outputLines->line[114].text = 
@@ -947,7 +947,7 @@ subroutine testAssertFailures(null)
   set testing::outputLines->line[116].text = dashes
   set testing::outputLines->line[117].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[117].text = concat(
-    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'>=^,
+    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' >= ^,
     ^'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'^)
   set testing::outputLines->line[118].text = 
     ^    Test Assert Failure 22^ 
@@ -957,7 +957,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8GREATERTHANASSERT^
   set testing::outputLines->line[121].text = dashes
   set testing::outputLines->line[122].text = 
-    ^    Assert Failure: 1.700000>2.400000^
+    ^    Assert Failure: 1.700000 > 2.400000^
   set testing::outputLines->line[123].text = 
     ^    Test Assert Failure 23^ 
   set testing::outputLines->line[124].text = 
@@ -966,7 +966,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4GREATERTHANASSERT^
   set testing::outputLines->line[126].text = dashes
   set testing::outputLines->line[127].text = 
-    ^    Assert Failure: 827>827^
+    ^    Assert Failure: 827 > 827^
   set testing::outputLines->line[128].text = 
     ^    Test Assert Failure 24^ 
   set testing::outputLines->line[129].text = 
@@ -975,7 +975,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2GREATERTHANASSERT^
   set testing::outputLines->line[131].text = dashes
   set testing::outputLines->line[132].text = 
-    ^    Assert Failure: 57>114^
+    ^    Assert Failure: 57 > 114^
   set testing::outputLines->line[133].text = 
     ^    Test Assert Failure 25^ 
   set testing::outputLines->line[134].text = 
@@ -984,7 +984,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCGREATERTHANASSERT^
   set testing::outputLines->line[136].text = dashes
   set testing::outputLines->line[137].text = 
-    ^    Assert Failure: "Dove">"Terrible"^
+    ^    Assert Failure: "Dove" > "Terrible"^
   set testing::outputLines->line[138].text = 
     ^    Test Assert Failure 26^ 
   set testing::outputLines->line[139].text = 
@@ -993,7 +993,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFDATETIMEGREATERTHANASSERT^
   set testing::outputLines->line[141].text = dashes
   set testing::outputLines->line[142].text = 
-    ^    Assert Failure: '2001-01-01 00:01:02'>'2001-01-01 00:01:02'^
+    ^    Assert Failure: '2001-01-01 00:01:02' > '2001-01-01 00:01:02'^
   set testing::outputLines->line[143].text = 
     ^    Test Assert Failure 27^ 
   set testing::outputLines->line[144].text = 
@@ -1002,7 +1002,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFF8NOTGREATERTHANASSERT^
   set testing::outputLines->line[146].text = dashes
   set testing::outputLines->line[147].text = 
-    ^    Assert Failure: 981.700000<=2.400000^
+    ^    Assert Failure: 981.700000 <= 2.400000^
   set testing::outputLines->line[148].text = 
     ^    Test Assert Failure 28^ 
   set testing::outputLines->line[149].text = 
@@ -1011,7 +1011,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI4NOTGREATERTHANASSERT^
   set testing::outputLines->line[151].text = dashes
   set testing::outputLines->line[152].text = 
-    ^    Assert Failure: 593<=243^
+    ^    Assert Failure: 593 <= 243^
   set testing::outputLines->line[153].text = 
     ^    Test Assert Failure 29^ 
   set testing::outputLines->line[154].text = 
@@ -1020,7 +1020,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFI2NOTGREATERTHANASSERT^
   set testing::outputLines->line[156].text = dashes
   set testing::outputLines->line[157].text = 
-    ^    Assert Failure: 87<=14^
+    ^    Assert Failure: 87 <= 14^
   set testing::outputLines->line[158].text = 
     ^    Test Assert Failure 30^ 
   set testing::outputLines->line[159].text = 
@@ -1029,7 +1029,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCNOTGREATERTHANASSERT^
   set testing::outputLines->line[161].text = dashes
   set testing::outputLines->line[162].text = 
-    ^    Assert Failure: "Wave"<="Terrible"^
+    ^    Assert Failure: "Wave" <= "Terrible"^
   set testing::outputLines->line[163].text = 
     ^    Test Assert Failure 31^ 
   set testing::outputLines->line[164].text = 
@@ -1039,7 +1039,7 @@ subroutine testAssertFailures(null)
   set testing::outputLines->line[166].text = dashes
   set testing::outputLines->line[167].type = testing::ASSERT_TYPE_MATCH
   set testing::outputLines->line[167].text = concat(
-    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'<=^,
+    ^    Assert Failure: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' <= ^,
     ^'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'^)
   set testing::outputLines->line[168].text = 
     ^    Test Assert Failure 32^ 
@@ -1166,7 +1166,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFVCNOTOPERATORASSERT^
   set testing::outputLines->line[236].text = dashes
   set testing::outputLines->line[237].text = 
-    ^    Assert Failure: 0=1^
+    ^    Assert Failure: 0 = 1^
   set testing::outputLines->line[238].text = 
     ^    Test Assert Return Value^ 
   set testing::outputLines->line[239].text = 
@@ -1175,7 +1175,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFDATETIMEOPERATORASSERT^
   set testing::outputLines->line[241].text = dashes
   set testing::outputLines->line[242].text = 
-    ^    Assert Failure: 0=1^
+    ^    Assert Failure: 0 = 1^
   set testing::outputLines->line[243].text = 
     ^    Test Assert Return Value^ 
   set testing::outputLines->line[244].text = 
@@ -1184,7 +1184,7 @@ subroutine testAssertFailures(null)
     ^TESTFAILUREOFDATETIMENOTOPERATORASSERT^
   set testing::outputLines->line[246].text = dashes
   set testing::outputLines->line[247].text = 
-    ^    Assert Failure: 0=1^
+    ^    Assert Failure: 0 = 1^
   set testing::outputLines->line[248].text = 
     ^    Test Assert Return Value^ 
   set testing::outputLines->line[249].text = 
@@ -1206,7 +1206,7 @@ record ut_cclut_testCaseResults (
 %i cclsource:status_block.inc
 ) with protect    
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_assert_failure" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_assert_failure", "", "", "", FALSE with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults)
   call testing::checkLines(testing::outputLines)
 end ;;;testAssertFailures

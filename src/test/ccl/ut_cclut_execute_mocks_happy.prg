@@ -34,6 +34,7 @@ record public::internalRecord (
 declare public::internalSubroutine(null) = null with protect
 
 subroutine (public::internalSubroutine(null) = null with protect)
+    declare stat = i4 with protect, noconstant(0)
     set public_subroutine = 1
 
     if (reflect(parameter(1, 0)) > " ")

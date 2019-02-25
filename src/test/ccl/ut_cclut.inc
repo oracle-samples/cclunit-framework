@@ -25,6 +25,11 @@ declare cclut1::transferTestCaseResultsError(source = vc(ref), target = vc(ref))
 declare testGenerateResultsReportErrors(null) = null with protect
 declare cclut1::generateResultsReportError(destination = vc, request = vc(ref), results = vc(ref)) = i2 with protect
 declare testTransferAndGenerateErrors(null) = null with protect
+declare testFailFastFailTest(null) = null with protect
+declare testFailFastSetupError(null) = null with protect
+declare testFailFastSetupOnceErrorFailTest(null) = null with protect
+declare testFailFastAllTestsFail(null) = null with protect
+declare testFailFastErroredTests(null) = null with protect
 
 record ut_cclut_testCaseResults (
   1 resultInd = i2
@@ -445,15 +450,15 @@ Failed Tests
 ========================================================================================================================
 TESTONE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testOne failure
 
 TESTTHREE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testThree failure A
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testThree failure B
 
 
@@ -491,7 +496,7 @@ TEARDOWNONCE
   set testing::outputLines->line[11].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[12].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[13].text = 
 ^    testOne failure^
   set testing::outputLines->line[14].text = 
@@ -501,13 +506,13 @@ TEARDOWNONCE
   set testing::outputLines->line[16].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[17].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[18].text = 
 ^    testThree failure A^
   set testing::outputLines->line[19].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[20].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[21].text = 
 ^    testThree failure B^
   set testing::outputLines->line[22].text = 
@@ -529,7 +534,7 @@ TEARDOWNONCE
 
   set testing::failTest = TRUE
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", FALSE with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
       replace("CCLUT1TESTCASEREQUEST", cclut_request), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
@@ -644,7 +649,7 @@ subroutine testSetupError(null)
 
   set testing::errorSetup = TRUE
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", FALSE with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
       replace("CCLUT1TESTCASEREQUEST", cclut_request), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
@@ -677,15 +682,15 @@ subroutine testSetupOnceErrorFailTest(null)
 ^========================================================================================================================^
 ^TESTONE^
 ^------------------------------------------------------------------------------------------------------------------------^
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
 ^    testOne failure^
 ^^
 ^TESTTHREE^
 ^------------------------------------------------------------------------------------------------------------------------^
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
 ^    testThree failure A^
 ^------------------------------------------------------------------------------------------------------------------------^
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
 ^    testThree failure B^
 ^^
 ^^
@@ -740,7 +745,7 @@ subroutine testSetupOnceErrorFailTest(null)
   set testing::outputLines->line[19].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[20].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[21].text = 
 ^    testOne failure^
   set testing::outputLines->line[22].text = 
@@ -750,13 +755,13 @@ subroutine testSetupOnceErrorFailTest(null)
   set testing::outputLines->line[24].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[25].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[26].text = 
 ^    testThree failure A^
   set testing::outputLines->line[27].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[28].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[29].text = 
 ^    testThree failure B^
   set testing::outputLines->line[30].text = 
@@ -777,7 +782,7 @@ subroutine testSetupOnceErrorFailTest(null)
   set testing::errorSetupOnce = TRUE
   set testing::failTest = TRUE
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", FALSE with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
       replace("CCLUT1TESTCASEREQUEST", cclut_request), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
@@ -965,7 +970,7 @@ Test Case: cclsource:ut_cclut_suo_su_td_tdo
     ut_cclut_testCaseReplyX->status_data.subeventstatus[1].targetObjectValue, 
     "regexplike", concat("Execution Failed: ", expectedErrorPattern))
 
-  call testing::mergeCoverages(null)      
+  call testing::mergeCoverages(null)
   call testing::checkLines(testing::outputLines)
 end ;;;testFrameworkFailure
 
@@ -1025,25 +1030,25 @@ Failed Tests
 ========================================================================================================================
 SETUPONCE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     setupOnce failure
 
 TESTONE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testOne failure
 
 TESTTHREE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testThree failure A
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     testThree failure B
 
 TEARDOWNONCE
 ------------------------------------------------------------------------------------------------------------------------
-    Assert Failure: 0=1
+    Assert Failure: 0 = 1
     teardownOnce failure
 
 
@@ -1078,7 +1083,7 @@ Passed Tests
   set testing::outputLines->line[11].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[12].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[13].text = 
 ^    setupOnce failure^
   set testing::outputLines->line[14].text = 
@@ -1088,7 +1093,7 @@ Passed Tests
   set testing::outputLines->line[16].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[17].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[18].text = 
 ^    testOne failure^
   set testing::outputLines->line[19].text = 
@@ -1098,13 +1103,13 @@ Passed Tests
   set testing::outputLines->line[21].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[22].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[23].text = 
 ^    testThree failure A^
   set testing::outputLines->line[24].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[25].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[26].text = 
 ^    testThree failure B^
   set testing::outputLines->line[27].text = 
@@ -1114,7 +1119,7 @@ Passed Tests
   set testing::outputLines->line[29].text = 
 ^------------------------------------------------------------------------------------------------------------------------^
   set testing::outputLines->line[30].text = 
-^    Assert Failure: 0=1^
+^    Assert Failure: 0 = 1^
   set testing::outputLines->line[31].text = 
 ^    teardownOnce failure^
   set testing::outputLines->line[32].text = 
@@ -1126,7 +1131,7 @@ Passed Tests
   set testing::failTest = TRUE
   set testing::failTeardownOnce = TRUE
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "(one|three)" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "(one|three)", "", "", FALSE with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
       replace("CCLUT1TESTCASEREQUEST", cclut_request), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
@@ -1234,7 +1239,7 @@ TEARDOWNONCE
 
   set testing::errorTest = TRUE
 
-  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "(one|three)" with
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "(one|three)", "", "", FALSE  with
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
       replace("CCLUT1TESTCASEREQUEST", cclut_request), 
       replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
@@ -1397,4 +1402,425 @@ TESTCCLUTERRORS
   call testing::mergeCoverages(null)
   call testing::checkLines(testing::outputLines)
 end ;;;testTransferAndGenerateErrors
+
+
+
+/**
+  Test a case where the test cases have assert failures
+*/
+subroutine testFailFastFailTest(null)
+/*
+========================================================================================================================
+                                                  CCL Unit Test Report                           17-NOV-2017 18:24:36.00
+
+Test Case: cclsource:ut_cclut_suo_su_td_tdo
+PASSED: 2           FAILED: 1           errored: 0
+
+
+Failed Tests
+========================================================================================================================
+TESTONE
+------------------------------------------------------------------------------------------------------------------------
+    Assert Failure: 0 = 1
+    testOne failure
+
+
+Passed Tests
+========================================================================================================================
+SETUPONCE
+TEARDOWNONCE
+************************************************************************************************************************
+*/
+  declare stat = i4 with protect, noconstant(0)
+
+  set stat = alterlist(testing::outputLines->line, 29)
+  set testing::outputLines->line[1].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[2].type = testing::ASSERT_TYPE_DATE
+  set testing::outputLines->line[2].text = 
+^                                                  CCL Unit Test Report                           ^
+  set testing::outputLines->line[3].text = 
+^^
+  set testing::outputLines->line[4].text = 
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+  set testing::outputLines->line[5].text = 
+^PASSED: 2           FAILED: 1           errored: 0^
+  set testing::outputLines->line[6].text = 
+^^
+  set testing::outputLines->line[7].text = 
+^^
+  set testing::outputLines->line[8].text = 
+^Failed Tests^
+  set testing::outputLines->line[9].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[10].text = 
+^TESTONE^
+  set testing::outputLines->line[11].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[12].text = 
+^    Assert Failure: 0 = 1^
+  set testing::outputLines->line[13].text = 
+^    testOne failure^
+  set testing::outputLines->line[14].text = 
+^^
+  set testing::outputLines->line[15].text = 
+^^
+  set testing::outputLines->line[16].text = 
+^Passed Tests^
+  set testing::outputLines->line[17].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[18].text = 
+^SETUPONCE^
+  set testing::outputLines->line[19].text = 
+^TEARDOWNONCE^
+  set testing::outputLines->line[20].text = 
+^************************************************************************************************************************^
+
+  set testing::failTest = TRUE
+
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", TRUE with
+      replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
+      replace("CCLUT1TESTCASEREQUEST", cclut_request), 
+      replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
+  call testing::mergeCoverages(null)      
+  call testing::checkLines(testing::outputLines)
+end ;;;testFailFastFailTest
+
+
+/**
+  Test a case where the setup routine throws errors
+*/
+subroutine testFailFastSetupError(null)
+/*
+^========================================================================================================================^
+^                                                  CCL Unit Test Report                           ^
+^^
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+^PASSED: 2           failed: 0           ERRORED: 1^
+^^
+^^
+^Errored Tests^
+^========================================================================================================================^
+^TESTONE^
+^------------------------------------------------------------------------------------------------------------------------^
+^    Error: %CCL-E-94-PRG_7073463_2175368(822,1)171118:0602{GUARANTEEDERROR}Assignment of Report expression (GUARANTE^
+^    EDERROR) to incompatible type.^
+^^
+^^
+^Passed Tests^
+^========================================================================================================================^
+^SETUPONCE^
+^TEARDOWNONCE^
+^************************************************************************************************************************^
+*/
+  declare stat = i4 with protect, noconstant(0)
+
+  set stat = alterlist(testing::outputLines->line, 34)
+  set testing::outputLines->line[1].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[2].type = testing::ASSERT_TYPE_DATE
+  set testing::outputLines->line[2].text = 
+^                                                  CCL Unit Test Report                           ^
+  set testing::outputLines->line[3].text = 
+^^
+  set testing::outputLines->line[4].text = 
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+  set testing::outputLines->line[5].text = 
+^PASSED: 2           failed: 0           ERRORED: 1^
+  set testing::outputLines->line[6].text = 
+^^
+  set testing::outputLines->line[7].text = 
+^^
+  set testing::outputLines->line[8].text = 
+^Errored Tests^
+  set testing::outputLines->line[9].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[10].text = 
+^TESTONE^
+  set testing::outputLines->line[11].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
+  set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
+  set testing::outputLines->line[13].text = concat(
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
+    ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
+  set testing::outputLines->line[14].text = 
+^^
+  set testing::outputLines->line[15].text = 
+^^
+  set testing::outputLines->line[16].text = 
+^Passed Tests^
+  set testing::outputLines->line[17].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[18].text = 
+^SETUPONCE^
+  set testing::outputLines->line[19].text = 
+^TEARDOWNONCE^
+  set testing::outputLines->line[20].text = 
+^************************************************************************************************************************^
+
+  set testing::errorSetup = TRUE
+
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", TRUE with
+      replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
+      replace("CCLUT1TESTCASEREQUEST", cclut_request), 
+      replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
+  call testing::mergeCoverages(null)      
+  call testing::checkLines(testing::outputLines)
+end ;;;testFailFastSetupError
+
+
+/**
+  Test a case where the setupOnce routine throws errors and the tests have assert failures
+*/
+subroutine testFailFastSetupOnceErrorFailTest(null)
+/*
+^========================================================================================================================^
+^                                                  CCL Unit Test Report                           ^
+^^
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+^PASSED: 1           FAILED: 0           ERRORED: 1^
+^^
+^^
+^Errored Tests^
+^========================================================================================================================^
+^SETUPONCE^
+^------------------------------------------------------------------------------------------------------------------------^
+^    Error: %CCL-E-94-PRG_7073463_2215992(802,1)171118:0609{GUARANTEEDERROR}Assignment of Report expression (GUARANTE^
+^    EDERROR) to incompatible type.^
+^^
+^^
+^Failed Tests^
+^========================================================================================================================^
+^^
+^^
+^Passed Tests^
+^========================================================================================================================^
+^TEARDOWNONCE^
+^************************************************************************************************************************^
+*/
+  declare stat = i4 with protect, noconstant(0)
+
+  set stat = alterlist(testing::outputLines->line, 36)
+  set testing::outputLines->line[1].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[2].type = testing::ASSERT_TYPE_DATE
+  set testing::outputLines->line[2].text = 
+^                                                  CCL Unit Test Report                           ^
+  set testing::outputLines->line[3].text = 
+^^
+  set testing::outputLines->line[4].text = 
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+  set testing::outputLines->line[5].text = 
+^PASSED: 1           failed: 0           ERRORED: 1^
+  set testing::outputLines->line[6].text = 
+^^
+  set testing::outputLines->line[7].text = 
+^^
+  set testing::outputLines->line[8].text = 
+^Errored Tests^
+  set testing::outputLines->line[9].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[10].text = 
+^SETUPONCE^
+  set testing::outputLines->line[11].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
+  set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
+  set testing::outputLines->line[13].text = concat(
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
+    ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
+^    EDERROR) to incompatible type.^
+  set testing::outputLines->line[14].text = 
+^^
+  set testing::outputLines->line[15].text = 
+^^
+  set testing::outputLines->line[16].text = 
+^Passed Tests^
+  set testing::outputLines->line[17].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[18].text = 
+^TEARDOWNONCE^
+  set testing::outputLines->line[19].text = 
+^************************************************************************************************************************^
+
+  set testing::errorSetupOnce = TRUE
+  set testing::failTest = TRUE
+
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", TRUE with
+      replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
+      replace("CCLUT1TESTCASEREQUEST", cclut_request), 
+      replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
+  call testing::mergeCoverages(null)      
+  call testing::checkLines(testing::outputLines)
+end ;;;testFailFastSetupOnceErrorFailTest
+
+
+/**
+  Test FailFast when no tests pass
+*/
+subroutine testFailFastAllTestsFail(null)
+/*
+========================================================================================================================
+                                                  CCL Unit Test Report                           17-NOV-2017 18:24:36.00
+
+Test Case: cclsource:ut_cclut_suo_su_td_tdo
+PASSED: 0           FAILED: 2           errored: 0
+
+
+Failed Tests
+========================================================================================================================
+SETUPONCE
+------------------------------------------------------------------------------------------------------------------------
+    Assert Failure: 0 = 1
+    setupOnce failure
+
+TEARDOWNONCE
+------------------------------------------------------------------------------------------------------------------------
+    Assert Failure: 0 = 1
+    teardownOnce failure
+
+
+Passed Tests
+========================================================================================================================
+************************************************************************************************************************
+*/
+  declare stat = i4 with protect, noconstant(0)
+
+  set stat = alterlist(testing::outputLines->line, 33)
+  set testing::outputLines->line[1].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[2].type = testing::ASSERT_TYPE_DATE
+  set testing::outputLines->line[2].text = 
+^                                                  CCL Unit Test Report                           ^
+  set testing::outputLines->line[3].text = 
+^^
+  set testing::outputLines->line[4].text = 
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+  set testing::outputLines->line[5].text = 
+^passed: 0           FAILED: 2           errored: 0^
+  set testing::outputLines->line[6].text = 
+^^
+  set testing::outputLines->line[7].text = 
+^^
+  set testing::outputLines->line[8].text = 
+^Failed Tests^
+  set testing::outputLines->line[9].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[10].text = 
+^SETUPONCE^
+  set testing::outputLines->line[11].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[12].text = 
+^    Assert Failure: 0 = 1^
+  set testing::outputLines->line[13].text = 
+^    setupOnce failure^
+  set testing::outputLines->line[14].text = 
+^^
+  set testing::outputLines->line[15].text = 
+^TEARDOWNONCE^
+  set testing::outputLines->line[16].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[17].text = 
+^    Assert Failure: 0 = 1^
+  set testing::outputLines->line[18].text = 
+^    teardownOnce failure^
+  set testing::outputLines->line[19].text = 
+^^
+  set testing::outputLines->line[20].text = 
+^************************************************************************************************************************^
+
+  set testing::failSetupOnce = TRUE
+  set testing::failTest = TRUE
+  set testing::failTeardownOnce = TRUE
+
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "", "", "", TRUE with
+      replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
+      replace("CCLUT1TESTCASEREQUEST", cclut_request), 
+      replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
+  call testing::mergeCoverages(null)      
+  call testing::checkLines(testing::outputLines)
+end ;;;testFailFastAllTestsFail
+
+/**
+  Test fail fast when tests error out.
+*/
+subroutine testFailFastErroredTests(null)
+/*
+========================================================================================================================
+                                                  CCL Unit Test Report                           17-NOV-2017 18:24:36.00
+
+Test Case: cclsource:ut_cclut_suo_su_td_tdo
+PASSED: 2           failed: 0           ERRORED: 1
+
+
+Errored Tests
+========================================================================================================================
+^TESTONE^
+^------------------------------------------------------------------------------------------------------------------------^
+^    Error: %CCL-E-94-PRG_7073463_2175368(822,1)171118:0602{GUARANTEEDERROR}Assignment of Report expression (GUARANTE^
+^    EDERROR) to incompatible type.^
+^^
+Passed Tests
+========================================================================================================================
+SETUPONCE
+TEARDOWNONCE
+************************************************************************************************************************
+*/
+  declare stat = i4 with protect, noconstant(0)
+
+  set stat = alterlist(testing::outputLines->line, 28)
+  set testing::outputLines->line[1].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[2].type = testing::ASSERT_TYPE_DATE
+  set testing::outputLines->line[2].text = 
+^                                                  CCL Unit Test Report                           ^
+  set testing::outputLines->line[3].text = 
+^^
+  set testing::outputLines->line[4].text = 
+^Test Case: cclsource:ut_cclut_suo_su_td_tdo^
+  set testing::outputLines->line[5].text = 
+^PASSED: 2           failed: 0           ERRORED: 1^
+  set testing::outputLines->line[6].text = 
+^^
+  set testing::outputLines->line[7].text = 
+^^
+  set testing::outputLines->line[8].text = 
+^Errored Tests^
+  set testing::outputLines->line[9].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[10].text = 
+^TESTONE^
+  set testing::outputLines->line[11].text = 
+^------------------------------------------------------------------------------------------------------------------------^
+  set testing::outputLines->line[12].type = testing::ASSERT_TYPE_MERGE_NEXT
+  set testing::outputLines->line[13].type = testing::ASSERT_TYPE_MATCH
+  set testing::outputLines->line[13].text = concat(
+    "    Error: %CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}",;^
+    ^Assignment of Report expression \(GUARANTEEDERROR) to incompatible type.^)
+  set testing::outputLines->line[14].text = 
+^^
+  set testing::outputLines->line[15].text = 
+^^
+  set testing::outputLines->line[16].text = 
+^Passed Tests^
+  set testing::outputLines->line[17].text = 
+^========================================================================================================================^
+  set testing::outputLines->line[18].text = 
+^SETUPONCE^
+  set testing::outputLines->line[19].text = 
+^TEARDOWNONCE^
+  set testing::outputLines->line[20].text = 
+^************************************************************************************************************************^
+
+  set testing::errorTest = TRUE
+
+  execute cclut "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo", "(one|two|three)", "", "", TRUE with
+      replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults),
+      replace("CCLUT1TESTCASEREQUEST", cclut_request), 
+      replace("CCLUT1TESTCASEREPLY", ut_cclut_testCaseReply)
+  call testing::mergeCoverages(null)      
+  call testing::checkLines(testing::outputLines)
+end ;;;testFailFastErroredTests
+
 

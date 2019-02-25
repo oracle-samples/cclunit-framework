@@ -50,19 +50,24 @@ Manually executing a single test provides for this and avoids the time overhead 
 
 ---
 - Transfer your test case file to the back end.
-- excute cclut_ff or cclut.
+- excute **cclut** or **cclut_ff**.
 - Examine the output.
 - Repeat.
  - If the test case file is modified, transfer it again.
  - If the testing target (script) is modified, recompile the script.
 
-cclut_ff and cclut are prompt programs which generate a temporary program from a test case and execute its tests.  
+**cclut** and **cclut_ff** are prompt programs which generate a temporary program from a test case and execute its tests.  
 
-The cclut_ff program fails fast, i.e., stops executing tests as soon as it encounters an assert failure or a runtime error. 
+If its failFast parameter is checked (true), **cclut** will fail fast, i.e., stop executing tests as soon as some test produces 
+an assert failure or a runtime error. Otherwise it will continue executing tests even after it encounters assert failures or errors.
+After all tests complete, **cclut** generates a report listing the status of every executed test along with 
+a list of all failed asserts and runtime errors that were encountered.  
+
+The **cclut_ff** program always fails fast and merely echoes out the final status preceded by information about the assert failure and/or 
+errors which led to the failure in case the test case run was not successful.
 It indicates whether the tests executed successfully and if not, indicates the assert failure or error that was encountered.  
-In contrast cclut continues executing tests even after it encounters assert failures or errors. After all tests complete, 
-it generates a report listing the status of every executed test along with a list of all failed asserts and runtime errors 
-that were encountered. Both cclut_ff and cclut have the following parameters:
+
+Both **cclut** and **cclut_ff** have the following parameters:
  * outputLocation - location to write the output, "MINE" by default.
  * testCaseDirectory - logical name for the directory containing the test case file, "cclsource" by default.
  * testCaseName - (required) the name of the test case file with or without the .inc extension
@@ -70,11 +75,14 @@ that were encountered. Both cclut_ff and cclut have the following parameters:
  * optimizerMode - the optimizer mode (CBO or RBO) to set when running the tests, the current system value by default.
  * deprecatedFlag - the severity level (E,W,I,L,D) if deprecated constructs are encounter when testing, E (error) by default.
 
+**cclut** offers the following additional parameter:
+ * failFast - indicate whether to fail fast or not, true by default.
+
 Example:
 
-`cclut_ff "MINE", "ccluserdir", "ut_my_script", "testOne" go`
+`cclut "MINE", "ccluserdir", "ut_my_script", "testOne" go`
 
-`cclut "MINE", "ccluserdir", "ut_my_script", "", "CBO" go`
+`cclut_ff "MINE", "ccluserdir", "ut_my_script", "", "CBO" go`
 
 ## Maven Execution
 Maven is a build system that can transfer all of the source and test files to the back end, compile them, execute all of the test
