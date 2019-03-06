@@ -234,6 +234,9 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     declare mock_subroutine = i4 with protect, noconstant(0)
     declare test_subroutine = i4 with protect, noconstant(0)
     declare stat = i4 with protect, noconstant(0)
+    declare sample_person_rdb_mock_table_name = vc with protect, noconstant("")
+    declare sample_encounter_rdb_mock_table_name = vc with protect, noconstant("")
+    declare sample_encounter_alias_rdb_mock_table_name = vc with protect, noconstant("")
 
     record executeReply (
         1 number_parameter = i4
@@ -258,14 +261,32 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     call cclutCreateMockTable("sample_encounter")
     call cclutCreateMockTable("sample_encounter_alias")
 
+    set sample_person_rdb_mock_table_name = cclutDefineMockTable("sample_person_rdb", "person_id", "f8")
+    set sample_encounter_rdb_mock_table_name =
+        cclutDefineMockTable("sample_encounter_rdb", "encounter_id|person_id", "f8|f8")
+    set sample_encounter_alias_rdb_mock_table_name =
+        cclutDefineMockTable("sample_encounter_alias_rdb", "encounter_id|encounter_alias", "f8|vc")
+    call cclutCreateMockTable("sample_person_rdb")
+    call cclutCreateMockTable("sample_encounter_rdb")
+    call cclutCreateMockTable("sample_encounter_alias_rdb")
+
     call cclutAddMockData("sample_person", "1.0")
     call cclutAddMockData("sample_person", "2.0")
     call cclutAddMockData("sample_person", "3.0")
     call cclutAddMockData("sample_encounter", "4.0|1.0")
     call cclutAddMockData("sample_encounter", "5.0|2.0")
     call cclutAddMockData("sample_encounter_alias", "4.0|test alias")
+    call cclutAddMockData("sample_person_rdb", "6.0")
+    call cclutAddMockData("sample_person_rdb", "7.0")
+    call cclutAddMockData("sample_person_rdb", "8.0")
+    call cclutAddMockData("sample_encounter_rdb", "9.0|6.0")
+    call cclutAddMockData("sample_encounter_rdb", "10.0|7.0")
+    call cclutAddMockData("sample_encounter_alias_rdb", "9.0|test alias rdb")
 
     call cclutAddMockImplementation("REPLY", "EXECUTEREPLY")
+    call cclutAddMockImplementation("SAMPLE_PERSON_RDB", sample_person_rdb_mock_table_name)
+    call cclutAddMockImplementation("SAMPLE_ENCOUNTER_RDB", sample_encounter_rdb_mock_table_name)
+    call cclutAddMockImplementation("SAMPLE_ENCOUNTER_ALIAS_RDB", sample_encounter_alias_rdb_mock_table_name)
 
     call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy", "10,^test param^")
 
@@ -324,7 +345,7 @@ subroutine test_cclutExecuteProgramWithMocks_happy(null)
     call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 021", executeReply->rdb_join[1].columns,
         "regexplike", "PERSON_ID.*ENCOUNTER_ID.*PERSON_ID.*ENCOUNTER_ID.*ENCOUNTER_ALIAS")
     call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_happy 022", executeReply->rdb_join[1].data,
-        "regexplike", "1.*4.*1.*4.*test alias")
+        "regexplike", "6.*9.*6.*9.*test alias rdb")
 end ;test_cclutExecuteProgramWithMocks_happy
 
 /* test_cclutExecuteProgramWithMocks_no_parameters **********************************************************
@@ -332,6 +353,9 @@ end ;test_cclutExecuteProgramWithMocks_happy
 ************************************************************************************************************/
 subroutine test_cclutExecuteProgramWithMocks_no_parameters(null)
     declare public_subroutine = i4 with protect, noconstant(0)
+    declare sample_person_rdb_mock_table_name = vc with protect, noconstant("")
+    declare sample_encounter_rdb_mock_table_name = vc with protect, noconstant("")
+    declare sample_encounter_alias_rdb_mock_table_name = vc with protect, noconstant("")
 
     record executeReply (
         1 number_parameter = i4
@@ -356,7 +380,19 @@ subroutine test_cclutExecuteProgramWithMocks_no_parameters(null)
     call cclutCreateMockTable("sample_encounter")
     call cclutCreateMockTable("sample_encounter_alias")
 
+    set sample_person_rdb_mock_table_name = cclutDefineMockTable("sample_person_rdb", "person_id", "f8")
+    set sample_encounter_rdb_mock_table_name =
+        cclutDefineMockTable("sample_encounter_rdb", "encounter_id|person_id", "f8|f8")
+    set sample_encounter_alias_rdb_mock_table_name =
+        cclutDefineMockTable("sample_encounter_alias_rdb", "encounter_id|encounter_alias", "f8|vc")
+    call cclutCreateMockTable("sample_person_rdb")
+    call cclutCreateMockTable("sample_encounter_rdb")
+    call cclutCreateMockTable("sample_encounter_alias_rdb")
+
     call cclutAddMockImplementation("REPLY", "EXECUTEREPLY")
+    call cclutAddMockImplementation("SAMPLE_PERSON_RDB", sample_person_rdb_mock_table_name)
+    call cclutAddMockImplementation("SAMPLE_ENCOUNTER_RDB", sample_encounter_rdb_mock_table_name)
+    call cclutAddMockImplementation("SAMPLE_ENCOUNTER_ALIAS_RDB", sample_encounter_alias_rdb_mock_table_name)
 
     call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy")
 
@@ -418,6 +454,78 @@ subroutine test_cclutExecuteProgramWithMocks_mock_subroutine(null)
     call cclutAsserti4Equal(CURREF, "test_cclutExecuteProgramWithMocks_mock_subroutine 005",
         cclut::internalRecord->item, 1)
 end ;test_cclutExecuteProgramWithMocks_mock_subroutine
+
+/* test_cclutExecuteProgramWithMocks_same_table_column_name *************************************************
+*  Scenario: Replaces only table names when the table and column share the same name                        *
+************************************************************************************************************/
+subroutine test_cclutExecuteProgramWithMocks_same_table_column_name(null)
+    record cclut_testRecord (
+        1 table_name = vc
+        1 value = vc
+    ) with protect
+    call cclutDefineMockTable("sample_table", "sample_table", "vc")
+    call cclutCreateMockTable("sample_table")
+    call cclutAddMockData("sample_table", "sample_table_text")
+
+    call cclutExecuteProgramWithMocks("ut_cclut_table_column_name")
+
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_same_table_column_name 001",
+        cclut_testRecord->value, "sample_table_text")
+end ;test_cclutExecuteProgramWithMocks_same_table_column_name
+
+/* test_cclutExecuteProgramWithMocks_v9 *********************************************************************
+*  Scenario: Replaces all names (tables and columns) when the version is less than 90300 and revision 9.    *
+************************************************************************************************************/
+subroutine test_cclutExecuteProgramWithMocks_v9(null)
+    record cclut_testRecord (
+        1 table_name = vc
+        1 value = vc
+    ) with protect
+    declare errorMessage = vc with protect, noconstant("")
+    declare errorCode = i4 with protect, noconstant(0)
+    call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_v9")
+
+    set errorCode = error(errorMessage, 0)
+
+    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_v9 001", trim(errorMessage, 3), "regexplike",
+        concat("%CCL-E-26-UT_CCLUT_TABLE_COLUMN_NAME\([^)]+\)[0-9]+:[0-9]+\{ST.", cclut_testRecord->table_name,
+            "}The attribute \(", cclut_testRecord->table_name, "\) does not exist in the table \(ST\)."))
+end ;test_cclutExecuteProgramWithMocks_v9
+
+/* test_cclutExecuteProgramWithMocks_v8_new *****************************************************************
+*  Scenario: Replaces only table names when the version is greater than 81500 and revision 8.               *
+************************************************************************************************************/
+subroutine test_cclutExecuteProgramWithMocks_v8_new(null)
+    record cclut_testRecord (
+        1 table_name = vc
+        1 value = vc
+    ) with protect
+
+    call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_v8_new")
+
+    call cclutAssertvcEqual(CURREF, "test_cclutExecuteProgramWithMocks_same_table_column_name 001",
+        cclut_testRecord->value, "sample_table_v8")
+end ;test_cclutExecuteProgramWithMocks_v8_new
+
+/* test_cclutExecuteProgramWithMocks_v8_old *****************************************************************
+*  Scenario: Replaces all names (tables and columns) when the version is less than 81500 and revision 8.    *
+************************************************************************************************************/
+subroutine test_cclutExecuteProgramWithMocks_v8_old(null)
+    record cclut_testRecord (
+        1 table_name = vc
+        1 value = vc
+    ) with protect
+    declare errorMessage = vc with protect, noconstant("")
+    declare errorCode = i4 with protect, noconstant(0)
+    call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_v8_old")
+
+    set errorCode = error(errorMessage, 0)
+
+    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_v8_old 001", trim(errorMessage, 3),
+        "regexplike", concat("%CCL-E-26-UT_CCLUT_TABLE_COLUMN_NAME\([^)]+\)[0-9]+:[0-9]+\{ST.",
+            cclut_testRecord->table_name, "}The attribute \(", cclut_testRecord->table_name,
+            "\) does not exist in the table \(ST\)."))
+end ;test_cclutExecuteProgramWithMocks_v8_old
 
 /* test_cclutExecuteProgramWithMocks_missing_programName ****************************************************
 *  Scenario: Throws an error when an empty programName is supplied to the function (after trimming)         *

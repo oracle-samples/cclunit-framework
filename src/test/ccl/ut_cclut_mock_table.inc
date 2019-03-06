@@ -548,7 +548,7 @@ subroutine test_cclutRemoveMockTable_happy(null)
 end ;test_cclutRemoveMockTable_happy
 
 /* test_cclutRemoveMockTable_created_table ******************************************************************
-*  Scenario: Removes a mock table that has been created yet and drops it from the RDBMS                     *
+*  Scenario: Removes a mock table that has been created and drops it from the RDBMS                         *
 ************************************************************************************************************/
 subroutine test_cclutRemoveMockTable_created_table(null)
     declare mockTable = vc with protect, noconstant("")
@@ -593,6 +593,89 @@ subroutine test_cclutRemoveMockTable_created_table(null)
 
     call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table 005", size(cclut_mockTables->tables, 5), 0)
 end ;test_cclutRemoveMockTable_created_table
+
+/* test_cclutRemoveMockTable_created_table_group1 ***********************************************************
+*  Scenario: Removes a mock table that has been created and drops the CCL definition as a group1 user       *
+************************************************************************************************************/
+subroutine test_cclutRemoveMockTable_created_table_group1(null)
+    free record cclut_drop_table_reply
+    record cclut_drop_table_reply (
+%i cclsource:status_block.inc
+    ) with protect
+    set cclut_drop_table_reply->status_data.status = "S"
+
+    declare mockTdbexecuteWasCalled = i4 with protect, noconstant(0)
+    declare mock_cclutRemoveMockTable_created_table_group1_tdbexecute(appNum = f8, taskNum = f8, reqNum = f8,
+        reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4 with protect
+    subroutine mock_cclutRemoveMockTable_created_table_group1_tdbexecute(appNum, taskNum, reqNum, reqType, req, repType,
+        rep)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1 001", appNum, 3070000)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1 002", taskNum, 3070001)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1 003", reqNum, 3050002)
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1 004", reqType, "REC")
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1 005",
+                cclut_drop_table_request->program_name, "cclut_drop_table_definition")
+            call cclutAssertStartsWith(CURREF, "test_cclutRemoveMockTable_created_table_group1 006",
+                concat("^MINE^,^CUST_CCLUT"), cclut_drop_table_request->params)
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1 007", repType, "REC")
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1 008",
+                cclut_drop_table_reply->status_data.status, "S")
+            set mockTdbexecuteWasCalled = 1
+            return(0)
+    end
+
+    call cclutAddMockImplementation("tdbexecute", "mock_cclutremovemocktable_created_table_group1_tdbexecute")
+    call cclutExecuteProgramWithMocks("ut_cclut_removeMockTable_grp1", "")
+
+    call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1 009", mockTdbexecuteWasCalled, 1)
+end ;test_cclutRemoveMockTable_created_table_group1
+
+/* test_cclutRemoveMockTable_created_table_group1_error *****************************************************
+*  Scenario: Generates an error when attempting to drop the CCL definition as a group1 user                 *
+************************************************************************************************************/
+subroutine test_cclutRemoveMockTable_created_table_group1_error(null)
+    free record cclut_drop_table_reply
+    record cclut_drop_table_reply (
+%i cclsource:status_block.inc
+    ) with protect
+    set cclut_drop_table_reply->status_data.status = "S"
+
+    declare mockTdbexecuteWasCalled = i4 with protect, noconstant(0)
+    declare mock_cclutRemoveMockTable_created_table_group1_error_tdbexecute(appNum = f8, taskNum = f8, reqNum = f8,
+        reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4 with protect
+    subroutine mock_cclutRemoveMockTable_created_table_group1_error_tdbexecute(appNum, taskNum, reqNum, reqType, req,
+        repType, rep)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 001", appNum, 3070000)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 002", taskNum,
+                3070001)
+            call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 003", reqNum, 3050002)
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 004", reqType, "REC")
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 005",
+                cclut_drop_table_request->program_name, "cclut_drop_table_definition")
+            call cclutAssertStartsWith(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 006",
+                concat("^MINE^,^CUST_CCLUT"), cclut_drop_table_request->params)
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 007", repType, "REC")
+            call cclutAssertvcEqual(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 008",
+                cclut_drop_table_reply->status_data.status, "S")
+            set mockTdbexecuteWasCalled = 1
+            return(1)
+    end
+
+    call cclutAddMockImplementation("tdbexecute", "mock_cclutremovemocktable_created_table_group1_error_tdbexecute")
+    call cclutExecuteProgramWithMocks("ut_cclut_removeMockTable_grp1", "")
+
+    declare errorMessage = vc with protect, noconstant("")
+    declare errorCode = i4 with protect, noconstant(0)
+    set errorCode = error(errorMessage, 0)
+
+    call cclutAssertVcOperator(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 009",
+        trim(errorMessage, 3), "regexplike",
+        concat("%CCL-E-392-UT_CCLUT_REMOVEMOCKTABLE_GRP1\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
+            " cclutRemoveMockTable\(SAMPLE_TABLE\) - Unable to drop table.  Manual cleanup may be required.  ",
+            "Mock table name is.*"))
+    call cclutAsserti4Equal(CURREF, "test_cclutRemoveMockTable_created_table_group1_error 010", mockTdbexecuteWasCalled,
+        1)
+end ;test_cclutRemoveMockTable_created_table_group1
 
 /* test_cclutRemoveMockTable_missing_tableName **************************************************************
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *

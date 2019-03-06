@@ -212,6 +212,17 @@ call cclutRemoveAllMockImplementations(null)
 7. The table mocking APIs are not supported when called from within a reportwriter section.  It might be tempting to use a dummyt query to set up mock data from a record structure, but various mocking calls such as cclutCreateMockTable, cclutRemoveMockTable and cclutAddMockData cannot be executed within the context of a query (because the implementations execute queries). Use a for loop instead.
  
 8. Mocking the tdbexecute "reply_to" entity is unsupported under certain conditions, specifically if a call to free the "reply_to" entity is made just prior to calling tdbexecute.  If the scenario is truly necessary for a test, the best alternative is to define and use a subroutine for freeing the "reply_to" entity within the script and use a mock for that subroutine which does not actually perform the freeing of the "reply_to" entity.
+
+9. In versions of CCL prior to 8.14.4 (32-bit) and 9.2.4 (64-bit), mocking is not supported in situations where all of the following are true:
+    - The item to be mocked is inside of a subroutine declared using the "subroutine" syntax instead of the "declare" syntax.
+    - The item to be mocked is inside of a subroutine declared with the "with copy" option.
+    - A program is executed in the script-under-test before the first invocation of the subroutine containing the item to be mocked.
+
+   The simplest way to avoid this if all three are true is to change to the older "declare" syntax for the subroutine.
+
+10. In versions of CCL prior to 8.15.0 (32-bit) and 9.3.0 (64-bit), if a table is mocked and that table shares its name with one of its columns (e.g. code_value), then the column name will be incorrectly replaced when running cclutExecuteProgramWithMocks.  If upgrading the CCL version is not an acceptable workaround, then the real versions of the table should be used instead of mocks.
+
+11. Starting with CCL versions 8.15.0 (32-bit) and 9.3.0 (64-bit), mocked items created through cclutCreateMockTable will not be applied to "rdb" commands.  This was necessary to resolve the previous point.  For "rdb" commands, it is best to use the real tables. 
   
 ## Example
 Below is an example of some of the APIs available in the CCL Unit Mocking framework along with some simple notes.

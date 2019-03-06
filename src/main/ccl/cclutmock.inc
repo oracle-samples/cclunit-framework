@@ -16,6 +16,9 @@ declare cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = v
     cclutNamespace = vc(val, "PUBLIC")) = null with protect
 declare cclutRemoveAllMocks(null) = null with protect
 
+declare cclut::cclutGetCurrentRevision(null) = i4 with protect
+declare cclut::cclutGetCurrentVersion(null) = i4 with protect
+
 record cclut_mockImplementations (
     1 implementations[*]
 		2 originalName = vc
@@ -114,6 +117,22 @@ subroutine cclutRemoveAllMockImplementations(null)
 end ;cclutRemoveAllMockImplementations
 
 /**
+Helper function to return the current revision of CCL.  This is wrapped in a helper function so that it can be easily
+mocked.
+**/
+subroutine cclut::cclutGetCurrentRevision(null)
+    return(currev)
+end ;cclut::cclutGetCurrentRevision
+
+/**
+Helper function to return the current version of CCL.  This is wrapped in a helper function so that it can be easily
+mocked.
+**/
+subroutine cclut::cclutGetCurrentVersion(null)
+    return(curcclver)
+end ;cclut::cclutGetCurrentVersion
+
+/**
 Executes a CCL program applying an indicated namespace and all mocks that have been specified using the functions
 described below.  programName is required.  params is a stringified representation of the parameters to be passed to the
 program, so all commas and string delimiters must be specified.  If namespace is omitted, it will default to the PUBLIC
@@ -141,12 +160,20 @@ subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutName
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
     declare cclutMockTableLength = i4 with protect, noconstant(size(cclut_mockTables->tables, 5))
     declare cclutMockTableIndex = i4 with protect, noconstant(0)
+    declare cclutReplaceOption = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
 
     ;Validate inbound parameters
     if (cclut::cclutIsEmpty(CCLUT_PROGRAM_NAME))
         call cclexception(100, "E", "cclutExecuteProgramWithMocks() - programName is a required field")
         return
+    endif
+
+    ;For tables, use option 6 if available (replace table names, but not column names to avoid replacing columns that
+    ;share a name with the table, such as code_value); otherwise use option 0.
+    if (cclut::cclutGetCurrentVersion(null) >= 90300 or
+        (cclut::cclutGetCurrentRevision(null) = 8 and cclut::cclutGetCurrentVersion(null) >= 81500))
+            set cclutReplaceOption = 6
     endif
 
     set cclutParserText = concat(" execute ", CCLUT_PROGRAM_NAME)
@@ -167,7 +194,7 @@ subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutName
         if (cclut_mockTables->tables[cclutMockTableIndex].isFinalized = TRUE)
             set cclutParserText =
                 concat(cclutParserText, ^ replace("^, cclut_mockTables->tables[cclutMockTableIndex].originalName, ^", ^,
-                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^),^)
+                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^, ^, cnvtstring(cclutReplaceOption),^),^)
         endif
     endfor
 

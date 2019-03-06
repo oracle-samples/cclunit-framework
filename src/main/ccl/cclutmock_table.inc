@@ -36,6 +36,7 @@ declare cclut::cclutNormalizeEscapes(cclutEscapedData = vc(val)) = vc with prote
 declare cclut::cclutConstructDBSetStatement(cclutTableIndex = i4(val), cclutColumnIndex = i4(val),
     cclutDataBuffer = vc(val)) = vc with protect
 declare cclut::cclutNextPipeValue(cclutPipeString = vc(ref)) = vc with protect
+declare cclut::cclutGetCurrentGroup(null) = i4 with protect
 
 record cclut_mockTables (
     1 markerTime = i4
@@ -403,6 +404,14 @@ subroutine cclutCreateMockTable(cclutTableName)
 end ;cclutCreateMockTable
 
 /**
+Helper function to return the current group for the user.  This is wrapped in a helper function so that it can be easily
+mocked.
+**/
+subroutine cclut::cclutGetCurrentGroup(null)
+    return(curgroup)
+end ;cclut::cclutGetCurrentGroup
+
+/**
 Removes a mock table.  If the table was already created, it will also be dropped.  If the table is not currently
 mocked, it will return silently.  tableName is required.
 
@@ -416,6 +425,7 @@ subroutine cclutRemoveMockTable(cclutTableName)
     declare CCLUT_TABLE_NAME = vc with protect, constant(cnvtupper(cclutTableName))
     declare cclutMockTableCount = i4 with protect, noconstant(size(cclut_mockTables->tables, 5))
     declare cclutMockTablePos = i4 with protect, noconstant(0)
+    declare cclutMockTableName = vc with protect, noconstant("")
     declare cclutParserText = vc with protect, noconstant("")
     declare cclutStat = i4 with protect, noconstant(0)
 
@@ -427,12 +437,41 @@ subroutine cclutRemoveMockTable(cclutTableName)
     set cclutMockTablePos = cclut::cclutGetMockTableIndex(CCLUT_TABLE_NAME)
     if (cclutMockTablePos > 0)
         if (cclut_mockTables->tables[cclutMockTablePos].isFinalized)
+            set cclutMockTableName = cclut_mockTables->tables[cclutMockTablePos].replaceName
             ;Drop the table if it was already added
+            ;For group1 users, they are unable to drop Discern definitions for tables (even ones they created).  A
+            ;prompt program will execute to perform the drop for them.  RDB drops have no such restrictions, so that can
+            ;be done directly
+            if (cclut::cclutGetCurrentGroup(null) = 0)
+                set cclutParserText = concat(" drop table ", cclutMockTableName, " go")
+                call parser(cclutParserText)
+            else
+                free record cclut_drop_table_request
+                record cclut_drop_table_request (
+                  1 program_name = vc
+                  1 query_command = vc
+                  1 output_device = vc
+                  1 Is_printer = c1
+                  1 Is_Odbc = c1
+                  1 IsBlob = c1
+                  1 params = vc
+                  1 qual [*]
+                    2 parameter = vc
+                    2 data_type = c1
+                  1 blob_in = gvc
+                )
+                set cclut_drop_table_request->program_name = "cclut_drop_table_definition"
+                set cclut_drop_table_request->params = concat("^MINE^,^", cclutMockTableName, "^")
+                set stat = tdbexecute(3070000, 3070001, 3050002, "REC", cclut_drop_table_request, "REC",
+                    cclut_drop_table_reply)
+                if (stat = 1 or cclut_drop_table_reply->status_data.status = "F")
+                    call cclexception(100, "E", concat("cclutRemoveMockTable(", CCLUT_TABLE_NAME,
+                        ") - Unable to drop table.  Manual cleanup may be required.  Mock table name is ",
+                        cclutMockTableName))
+                endif
+            endif
             set cclutParserText =
-                concat(" drop table ", cclut_mockTables->tables[cclutMockTablePos].replaceName, " go")
-            call parser(cclutParserText)
-            set cclutParserText =
-                concat(" rdb drop table ", cclut_mockTables->tables[cclutMockTablePos].replaceName, " end go")
+                concat(" rdb drop table ", cclutMockTableName, " end go")
             call parser(cclutParserText)
         endif
         ;Remove it from the mocked list

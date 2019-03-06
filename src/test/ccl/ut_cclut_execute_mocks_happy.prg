@@ -82,9 +82,9 @@ subroutine (public::internalSubroutine(null) = null with protect)
     rdb set output "ccluserdir:cclut_happy.dat" end
     rdb
         select *
-        from sample_person sp
-            ,sample_encounter se
-            ,sample_encounter_alias sea
+        from sample_person_rdb sp
+            ,sample_encounter_rdb se
+            ,sample_encounter_alias_rdb sea
         where se.person_id = sp.person_id
         and sea.encounter_id = se.encounter_id
     end
