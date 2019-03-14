@@ -45,7 +45,7 @@ subroutine cclut::evaluateAsserts(cclutTestIndex, cclutPPReplyStruct, cclutPPAss
   declare cclutErrorCount = i4 with protect, noconstant(0)
   declare cclutErrorMessage = vc with protect, noconstant("")
   declare cclutStat = i4 with protect, noconstant(0) 
-  
+
   if (cclut::errorOccurred(cclutErrorMessage))
     set cclutErrorCount = size(cclutPPReplyStruct->tests[cclutTestIndex].errors, 5) + 1
     set cclutStat = alterlist(cclutPPReplyStruct->tests[cclutTestIndex].errors, cclutErrorCount)
@@ -54,9 +54,9 @@ subroutine cclut::evaluateAsserts(cclutTestIndex, cclutPPReplyStruct, cclutPPAss
     set cclutPPReplyStruct->tests[cclutTestIndex].errors[cclutErrorCount].errorText = cclutErrorMessage
     set cclutResultValue = FALSE
   endif
-  
+
   set cclutStat = alterlist(cclutPPReplyStruct->tests[cclutTestIndex].asserts, cclutReplyAssertIndex + cclutAssertCount)
- 
+
   ;Append all assert to the reply structure.
   for (cclutAssertIndex = 1 to cclutAssertCount)
     set cclutReplyAssertIndex = cclutReplyAssertIndex + 1
@@ -253,7 +253,7 @@ subroutine cclut::executeTestLogic(null)
         set cclutReplyTestCount = cclutReplyTestCount + 1
         set cclutStat = alterlist(cclutReply->tests, cclutReplyTestCount)
         set cclutReply->tests[cclutReplyTestCount].name = cclut::testName
-       
+
         call echo(build2("running test ", cclut::testName))
         if (checkfun("SETUP") = CCLUT_FUN_TYPE_SUBROUTINE)
           if (cclutReplyTestCount = 1) ;there is no setupOnce

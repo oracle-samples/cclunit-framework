@@ -9,17 +9,20 @@
 
 %i cclsource:cclutmock_table.inc
 
-declare cclutAddMockImplementation(cclutOriginalName = vc(val), cclutReplaceName = vc(val)) = null with protect
-declare cclutRemoveMockImplementation(cclutOriginalName = vc(val)) = null with protect
-declare cclutRemoveAllMockImplementations(null) = null with protect
-declare cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val, " "),
+declare public::cclutAddMockImplementation(cclutOriginalName = vc(val), cclutReplaceName = vc(val)) = null with protect
+declare public::cclutRemoveMockImplementation(cclutOriginalName = vc(val)) = null with protect
+declare public::cclutRemoveAllMockImplementations(null) = null with protect
+declare public::cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val, " "),
     cclutNamespace = vc(val, "PUBLIC")) = null with protect
-declare cclutRemoveAllMocks(null) = null with protect
+declare public::cclutRemoveAllMocks(null) = null with protect
+
+declare public::cclutGetCurrentRevision(null) = i4 with protect
+declare public::cclutGetCurrentVersion(null) = i4 with protect
 
 record cclut_mockImplementations (
     1 implementations[*]
-		2 originalName = vc
-		2 replaceName = vc
+        2 originalName = vc
+        2 replaceName = vc
 ) with protect
 
 /**
@@ -35,7 +38,7 @@ the mock will be overwritten with the new replaceName.
 Example:
 call cclutAddMockImplementation("uar_get_code_by", "mock_uar_get_code_by")
 **/
-subroutine cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
+subroutine public::cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
     declare CCLUT_ORIGINAL_NAME = vc with protect, constant(cnvtupper(cclutOriginalName))
     declare CCLUT_REPLACE_NAME = vc with protect, constant(cnvtupper(cclutReplaceName))
     declare cclutMockImplementationLength =
@@ -45,11 +48,11 @@ subroutine cclutAddMockImplementation(cclutOriginalName, cclutReplaceName)
     declare cclutStat = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
-    if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
+    if (cclutIsEmpty(CCLUT_ORIGINAL_NAME))
         call cclexception(100, "E", "cclutAddMockImplementation() - originalName is a required field")
         return
     endif
-    if (cclut::cclutIsEmpty(CCLUT_REPLACE_NAME))
+    if (cclutIsEmpty(CCLUT_REPLACE_NAME))
         call cclexception(100, "E", concat("cclutAddMockImplementation(", CCLUT_ORIGINAL_NAME,
             ") - replaceName is a required field"))
         return
@@ -77,7 +80,7 @@ Removes a mock implementation.
 Example:
 call cclutRemoveMockImplementation("uar_get_code_by")
 **/
-subroutine cclutRemoveMockImplementation(cclutOriginalName)
+subroutine public::cclutRemoveMockImplementation(cclutOriginalName)
     declare CCLUT_ORIGINAL_NAME = vc with protect, constant(cnvtupper(cclutOriginalName))
     declare cclutMockImplementationLength =
             i4 with protect, noconstant(size(cclut_mockImplementations->implementations, 5))
@@ -86,7 +89,7 @@ subroutine cclutRemoveMockImplementation(cclutOriginalName)
     declare cclutStat = i4 with protect, noconstant(0)
 
     ;Validate inbound parameters
-    if (cclut::cclutIsEmpty(CCLUT_ORIGINAL_NAME))
+    if (cclutIsEmpty(CCLUT_ORIGINAL_NAME))
         call cclexception(100, "E", "cclutRemoveMockImplementation() - originalName is a required field")
         return
     endif
@@ -107,11 +110,25 @@ Removes all mock implementations.
 Example:
 call cclutRemoveAllMockImplementations(null)
 **/
-subroutine cclutRemoveAllMockImplementations(null)
+subroutine public::cclutRemoveAllMockImplementations(null)
     while (size(cclut_mockImplementations->implementations, 5) > 0)
         call cclutRemoveMockImplementation(cclut_mockImplementations->implementations[1].originalName)
     endwhile
 end ;cclutRemoveAllMockImplementations
+
+/**
+Returns the current revision of CCL. Allows CURREV to be mocked.
+**/
+subroutine public::cclutGetCurrentRevision(null)
+    return(currev)
+end ;cclutGetCurrentRevision
+
+/**
+Returns the current version of CCL. Allows CURCCLVER to be mocked.
+**/
+subroutine public::cclutGetCurrentVersion(null)
+    return(curcclver)
+end ;cclutGetCurrentVersion
 
 /**
 Executes a CCL program applying an indicated namespace and all mocks that have been specified using the functions
@@ -132,7 +149,7 @@ call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parame
 call cclutExecuteProgramWithMocks("ccl_my_program", "", "MYNAMESPACE")
 call cclutExecuteProgramWithMocks("ccl_my_program", "^MINE^, 1.0, ^string parameter^", "MYNAMESPACE")
 **/
-subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutNamespace)
+subroutine public::cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutNamespace)
     declare CCLUT_PROGRAM_NAME = vc with protect, constant(cnvtupper(cclutProgramName))
     declare CCLUT_PARAMS = vc with protect, constant(cclutParams)
     declare CCLUT_NAMESPACE = vc with protect, constant(cclutNamespace)
@@ -141,16 +158,23 @@ subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutName
     declare cclutMockImplementationIndex = i4 with protect, noconstant(0)
     declare cclutMockTableLength = i4 with protect, noconstant(size(cclut_mockTables->tables, 5))
     declare cclutMockTableIndex = i4 with protect, noconstant(0)
+    declare cclutReplaceOption = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
 
     ;Validate inbound parameters
-    if (cclut::cclutIsEmpty(CCLUT_PROGRAM_NAME))
+    if (cclutIsEmpty(CCLUT_PROGRAM_NAME))
         call cclexception(100, "E", "cclutExecuteProgramWithMocks() - programName is a required field")
         return
     endif
 
-    set cclutParserText = concat(" execute ", CCLUT_PROGRAM_NAME)
-    if (cclut::cclutIsEmpty(CCLUT_PARAMS) = FALSE)
+    ;Use replace option 6 for table names if it is available.
+    if (cclutGetCurrentVersion(null) >= 90300 or
+        (cclutGetCurrentRevision(null) = 8 and cclutGetCurrentVersion(null) >= 81500))
+            set cclutReplaceOption = 6
+    endif
+
+    set cclutParserText = concat("execute ", CCLUT_PROGRAM_NAME)
+    if (cclutIsEmpty(CCLUT_PARAMS) = FALSE)
         set cclutParserText = concat(cclutParserText, " ", CCLUT_PARAMS)
     endif
     set cclutParserText = concat(cclutParserText, " with")
@@ -167,13 +191,13 @@ subroutine cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, cclutName
         if (cclut_mockTables->tables[cclutMockTableIndex].isFinalized = TRUE)
             set cclutParserText =
                 concat(cclutParserText, ^ replace("^, cclut_mockTables->tables[cclutMockTableIndex].originalName, ^", ^,
-                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^),^)
+                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^, ^, trim(cnvtstring(cclutReplaceOption), 3),^),^)
         endif
     endfor
 
     ;Add namespace
     set cclutParserText = concat(cclutParserText, ^ curnamespace = "^, CCLUT_NAMESPACE, ^" go^)
-    call parser(cclutParserText)
+    call cclutInvokeparser(cclutParserText)
 end ;cclutExecuteProgramWithMocks
 
 /**
@@ -183,7 +207,7 @@ at the completion of a test case to clean up all mocks.
 Example:
 call cclutRemoveAllMocks(null)
 **/
-subroutine cclutRemoveAllMocks(null)
+subroutine public::cclutRemoveAllMocks(null)
     call cclutRemoveAllMockImplementations(null)
     call cclutRemoveAllMockTables(null)
 end ;cclutRemoveAllMocks

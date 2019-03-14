@@ -187,34 +187,49 @@ call cclutRemoveAllMockImplementations(null)
 ```
 
 ## Implementation Notes
-1. For consistency, all mocking functions normalize names (tables, subroutines, records, etc.) to be uppercase.  This matches with CCL and Oracle.
+1. The mocking functions automatically normalize entity names to uppercase to match with CCL and Oracle.
 
-2. cclutRemoveAllMocks should be called as part of the teardown for all tests.  The framework will attempt to clean up any outstanding mocks, but it is good practice to explicitly remove any mocks to ensure that no mocked tables remain in the Oracle instance.
+1. `cclutRemoveAllMocks` should be called from teardown.  
+  - The framework removes outstanding mocks after a test case run, but it is good practice to do so explicitly per test.
 
-3. Namespaces are not supported when using cclutAddMockImplementation.  An example of this would be:
+1. Mocks can be leveraged for tables and fields that do not exist in the testing domain.
+  - This can be useful to test tables that are still under construction.
+
+1. Mocks created through cclutCreateMockTable() and cclutAddMockImplementation are not applied to child scripts called from the script-under-test. Alternatives:
+  - Mock each child script to return data appropriate for the test.
+  - Mock each child script to execute the real child script using `with replace` to reference the mock entities.
+
+1. Mock table substitutions are not automatically applied to `rdb` commands (32-bit >= 8.15.0, 64-bit >= 9.3.0).  
+  - Use `call cclutAddMockImplementation(<table name>, <mock table name>)` to achieve this.
+    - This is ineffective if a query accesses a field with the same name as the mocked table.
+
+1. Mock substitutions are not applied to statements executed via `call parser`. Alternatives:
+  - Do not invoke `call parser` directly but define and invoke a wrapper subroutine instead. Mock the wrapper to make any necessary name substitutions before invoking `call parser`.
+    - The mock wrapper could additionally assert that the program generates the expected command string.
+  - Use subroutines to generate the parser commands and mock those subroutines to generate commands that incorporate the mock entity names.
+
+1. The table mocking APIs are not supported within a reportwriter section. It might be tempting to use a dummyt query to set up mock data from a record structure, but several mocking calls cannot be executed in the context of a query because their implementations execute queries. Use a for loop instead.
+ 
+1. Namespaces are not supported when using cclutAddMockImplementation.  The following does not work.
 
    ```javascript
    call cclutAddMockImplementation("public::testSubroutine", "myNamespace::mockSubroutine")
    ```
 
-   Alternatives will depend on the specifics of the script-under-test, but one alternative for the example above would be to define the mock implementation under the namespace that the program uses (i.e. public::mockSubroutine) and exclude the namespaces when adding the mock:
+   Alternatives depend on the specifics of the script-under-test. An option that works for the example above is defining the mock implementation with the same namespace as the real subroutine (i.e., public::mockSubroutine) and excluding the namespaces when adding the mock.
    
    ```javascript
    call cclutAddMockImplementation("testSubroutine", "mockSubroutine")
    ```
 
-4. Tables can be mocked even if the table does not exist in the domain where the test is run.  The mocked version will be used when executing programs with executeProgramWithMocks.  This can be useful to test tables that do not formally exist yet.
+1. Mocking the tdbexecute `reply_to` entity is unsupported under certain conditions, specifically if the `reply_to` entity is freed prior to calling tdbexecute. If this scenario is truly necessary, the best alternative is to define and use a subroutine to free the `reply_to` entity and mock that subroutine to not actually perform the free record statement.
 
-5. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to child scripts called from the script-under-test.  Some alternatives would be to mock the child script to return the appropriate data or to mock the child script to execute the real script applying the mocked tables and implementations.
+1. Table mocking produces unexpected results with older versions of CCL if the table and one of its fields have the same name, like `code_value.code_value` for example (32-bit < 8.15.0, 64-bit < 9.3.0). Anomalies will occur in all versions of CCL if a mocked entity shares the same name as a table or field queried by the script under test.
 
-6. The mocked items created through cclutCreateMockTable() and cclutAddMockImplementation will not be applied to statements executed through "call parser()" commands.  One alternative would be to separate the parser string generation into separate subroutines and mock the subroutines to return parser strings using the mocked entity names.  Another alternative would be to mock the parser() call to validate the correct information is supplied, then perform the appropriate mock versions of the actions the statement would normally perform.
-
-7. The table mocking APIs are not supported when called from within a reportwriter section.  It might be tempting to use a dummyt query to set up mock data from a record structure, but various mocking calls such as cclutCreateMockTable, cclutRemoveMockTable and cclutAddMockData cannot be executed within the context of a query (because the implementations execute queries). Use a for loop instead.
- 
-8. Mocking the tdbexecute "reply_to" entity is unsupported under certain conditions, specifically if a call to free the "reply_to" entity is made just prior to calling tdbexecute.  If the scenario is truly necessary for a test, the best alternative is to define and use a subroutine for freeing the "reply_to" entity within the script and use a mock for that subroutine which does not actually perform the freeing of the "reply_to" entity.
+1. Mock substitutions can fail to occur in older versions of CCL if the script under test executes some other CCL program before declaring/implementing its subroutines (32-bit < 8.14.1, 64-bit < 9.2.4).
   
 ## Example
-Below is an example of some of the APIs available in the CCL Unit Mocking framework along with some simple notes.
+The following annotated example illustrates some of the APIs available in the CCL Unit Mocking framework.
 
 Script-under-test:
 

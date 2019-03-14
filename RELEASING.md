@@ -5,7 +5,7 @@ Updates to the framework are released by tagging this repository.
 When 'releasing' be sure to 
 * update the changelog.
 * update the version listed in readme.md.
-* update the version number in the pom files.
+* update the version number in the pom file.
 * update the version number in cclut_framework_version.inc.
 * update the minimum required CCL vesion in cclut_framework_version.inc if changed.
 * correct any impacted tests.

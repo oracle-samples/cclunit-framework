@@ -958,7 +958,6 @@ Test Case: cclsource:ut_cclut_suo_su_td_tdo
     set stat = error(msg, 0)
   endwhile
   
-  call echo(build2("msg = ", msg))
   call cclutAssertVcEqual(CURREF, "framework failure status", ut_cclut_testCaseReplyX->status_data.status, "F")
   call cclutAssertVcEqual(CURREF, "framework failure operationName", 
       ut_cclut_testCaseReplyX->status_data.subeventstatus[1].operationName, "pre-executeTestLogic-1")
