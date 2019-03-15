@@ -192,10 +192,10 @@ call cclutRemoveAllMockImplementations(null)
 1. `cclutRemoveAllMocks` should be called from teardown.  
   1. The framework removes outstanding mocks after a test case run, but it is good practice to do so explicitly per test.
 
-1. Mocks can be leveraged for tables and fields that do not exist in the testing domain.
+1. Mocks can be leveraged for tables and fields that do not exist in the testing domain.  
   1. This can be useful to test tables that are still under construction.
 
-1. Mocks created through cclutCreateMockTable() and cclutAddMockImplementation are not applied to child scripts called from the script-under-test. Alternatives:
+1. Mocks created through cclutCreateMockTable() and cclutAddMockImplementation are not applied to child scripts called from the script-under-test. Alternatives:  
   1. Mock each child script to return data appropriate for the test.
   1. Mock each child script to execute the real child script using `with replace` to reference the mock entities.
 
@@ -203,14 +203,14 @@ call cclutRemoveAllMockImplementations(null)
   1. Use `call cclutAddMockImplementation(<table name>, <mock table name>)` to achieve this.
      1. This is ineffective if a query accesses a field with the same name as the mocked table.
 
-1. Mock substitutions are not applied to statements executed via `call parser`. Alternatives:
+1. Mock substitutions are not applied to statements executed via `call parser`. Alternatives:  
   1. Do not invoke `call parser` directly but define and invoke a wrapper subroutine instead. Mock the wrapper to make any necessary name substitutions before invoking `call parser`.
     1. The mock wrapper could additionally assert that the program generates the expected command string.
   1. Use subroutines to generate the parser commands and mock those subroutines to generate commands that incorporate the mock entity names.
 
-1. The table mocking APIs are not supported within a reportwriter section. It might be tempting to use a dummyt query to set up mock data from a record structure, but several mocking calls cannot be executed in the context of a query because their implementations execute queries. Use a for loop instead.
+1. The table mocking APIs are not supported within a reportwriter section. It might be tempting to use a dummyt query to set up mock data from a record structure, but several mocking calls cannot be executed in the context of a query because their implementations execute queries. Use a for loop instead.  
  
-1. Namespaces are not supported when using cclutAddMockImplementation.  The following does not work.
+1. Namespaces are not supported when using cclutAddMockImplementation.  The following does not work.  
 
    ```javascript
    call cclutAddMockImplementation("public::testSubroutine", "myNamespace::mockSubroutine")
@@ -222,11 +222,11 @@ call cclutRemoveAllMockImplementations(null)
    call cclutAddMockImplementation("testSubroutine", "mockSubroutine")
    ```
 
-1. Mocking the tdbexecute `reply_to` entity is unsupported under certain conditions, specifically if the `reply_to` entity is freed prior to calling tdbexecute. If this scenario is truly necessary, the best alternative is to define and use a subroutine to free the `reply_to` entity and mock that subroutine to not actually perform the free record statement.
+1. Mocking the tdbexecute `reply_to` entity is unsupported under certain conditions, specifically if the `reply_to` entity is freed prior to calling tdbexecute. If this scenario is truly necessary, the best alternative is to define and use a subroutine to free the `reply_to` entity and mock that subroutine to not actually perform the free record statement.  
 
-1. Table mocking produces unexpected results with older versions of CCL if the table and one of its fields have the same name, like `code_value.code_value` for example (32-bit < 8.15.0, 64-bit < 9.3.0). Anomalies will occur in all versions of CCL if a mocked entity shares the same name as a table or field queried by the script under test.
+1. Table mocking produces unexpected results with older versions of CCL if the table and one of its fields have the same name, like `code_value.code_value` for example (32-bit < 8.15.0, 64-bit < 9.3.0). Anomalies will occur in all versions of CCL if a mocked entity shares the same name as a table or field queried by the script under test.  
 
-1. Mock substitutions can fail to occur in older versions of CCL if the script under test executes some other CCL program before declaring/implementing its subroutines (32-bit < 8.14.1, 64-bit < 9.2.4).
+1. Mock substitutions can fail to occur in older versions of CCL if the script under test executes some other CCL program before declaring/implementing its subroutines (32-bit < 8.14.1, 64-bit < 9.2.4).  
   
 ## Example
 The following annotated example illustrates some of the APIs available in the CCL Unit Mocking framework.
