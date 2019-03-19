@@ -234,8 +234,8 @@ The following annotated example illustrates some of the APIs available in the CC
 Script-under-test:
 
 ```javascript
-drop program 1abc_mo_get_persons:dba go
-create program 1abc_mo_get_persons:dba
+drop program abc_mo_get_persons:dba go
+create program abc_mo_get_persons:dba
   declare newSize = i4 with protect, noconstant(0)
 
   select into "nl:" from person p
@@ -309,11 +309,11 @@ subroutine testIt(null)
         2 birth_dt_tm = dq8
   ) with protect
 
-  ; Have with replace("REPLY", AGP_REPLY) be applied when executing 1abc_mo_get_persons.
+  ; Have with replace("REPLY", AGP_REPLY) be applied when executing abc_mo_get_persons.
   call cclutAddMockImplementation("REPLY", "AGP_REPLY")
 
   ; Execute the script-under-test
-  call cclutExecuteProgramWithMocks("1abc_mo_get_persons", "")
+  call cclutExecuteProgramWithMocks("abc_mo_get_persons", "")
 
   ; Do validation
   call cclutAssertf8Equal(CURREF, "check person_id a", agp_reply->persons[1].person_id, 1.0)
