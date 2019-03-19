@@ -52,7 +52,7 @@ with outdev, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode
       The text to echo/append.
   */
   subroutine cclut_ff::doOutput(cclutMsg)    
-    call echo(cclutMsg)
+    call echo(cclutMsg) ;intentional
     if (cclut_ff::output = "")
       set cclut_ff::output = cclutMsg
     else

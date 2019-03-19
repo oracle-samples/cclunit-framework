@@ -34,14 +34,16 @@ subroutine public::dropTable(cclutTableName)
             set reply->status = "S"
             set reply->message = concat("Table ", cclutTableName, " was dropped")
         else
+            set cclutErrorMessage = concat("Failed to drop table ", cclutTableName, char(10), char(13), cclutErrorMessage)
             set reply->status = "F"
-            set reply->message = concat("Failed to drop table ", cclutTableName, char(10), char(13), cclutErrorMessage)
+            set reply->message = cclutErrorMessage
+            call echo(cclutErrorMessage) ;intentional
         endif
     else
         set cclutErrorMessage = "Only CCL Unit mock tables can be dropped with this program"
         set reply->status = "F"
         set reply->message = cclutErrorMessage
-        call echo(cclutErrorMessage)
+        call echo(cclutErrorMessage) ;intentional
     endif
 end ;cclutDropTableDefinition::dropTable
 

@@ -44,7 +44,6 @@ declare cclut::enforcePredeclare        = i2 with protect, noconstant(validate(c
 declare cclut::legacyResultsFormat      = i2 with protect, noconstant(validate(cclutRequest->legacyResultsFormat, FALSE))
 declare cclut::stat                     = i2 with protect, noconstant(0) 
 
-
 /**
   The primary input for the CCL Testing Framework.
   
@@ -574,9 +573,10 @@ set cclutTestCaseRequest->testNamePattern = validate(cclutRequest->testNamePatte
 set cclutTestCaseRequest->failFast = validate(cclutRequest->failFast, FALSE)
 
 call cclut::exitOnError("pre-execute", cclut::testCaseObjectName, cclutReply)
-execute value(cnvtupper(cclut::testCaseObjectName)) with 
-    replace ("CCLUTREQUEST", cclutTestCaseRequest), 
-    replace ("CCLUTREPLY", cclutTestCaseResults)
+execute value(cnvtupper(cclut::testCaseObjectName)) with
+    replace ("CCLUTREQUEST", cclutTestCaseRequest),
+    replace ("CCLUTREPLY", cclutTestCaseResults),
+    replace ("TDBEXECUTE", tdbexecute)
 
 set modify nopredeclare
 set trace nodeprecated
@@ -646,7 +646,7 @@ if (cclutReply->status_data.status = "S")
 endif
 
 if (validate(cclut::debug, FALSE) = TRUE)
-  call echorecord(cclutReply)
+  call echorecord(cclutReply) ;intentional
 endif
    
 end go

@@ -65,7 +65,7 @@ subroutine testTransformSource(null)
   set request->source[14].line = trim("")
   set request->source[15].line = ^declare some_vc = vc with protect, noconstant("")^
   set request->source[16].line = ^set some_vc = "hello_world"^
-  set request->source[17].line = "call echo(some_vc)" 
+  set request->source[17].line = "call echo(some_vc)" ;intentional
   set request->source[18].line = "; a comment with a cdata tag <![CDATA[ not sure why this needs to be here but it is]]>"
   set request->source[19].line = trim("")
   set request->source[20].line = "end"
@@ -93,7 +93,7 @@ subroutine testTransformSource(null)
     "<LINE><NBR>14</NBR><TEXT><![CDATA[]]></TEXT></LINE>",
     ^<LINE><NBR>15</NBR><TEXT><![CDATA[declare some_vc = vc with protect, noconstant("")]]></TEXT></LINE>^,
     ^<LINE><NBR>16</NBR><TEXT><![CDATA[set some_vc = "hello_world"]]></TEXT></LINE>^,
-    "<LINE><NBR>17</NBR><TEXT><![CDATA[call echo(some_vc)]]></TEXT></LINE>",
+    "<LINE><NBR>17</NBR><TEXT><![CDATA[call echo(some_vc)]]></TEXT></LINE>", ;intentional
     "<LINE><NBR>18</NBR><TEXT><![CDATA[; a comment with a cdata tag &lt;![CDATA[ not sure why this needs to be he",
         "re but it is]]&gt;]]></TEXT></LINE>",
     "<LINE><NBR>19</NBR><TEXT><![CDATA[]]></TEXT></LINE>",

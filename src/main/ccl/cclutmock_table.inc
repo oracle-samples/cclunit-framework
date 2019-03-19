@@ -7,6 +7,8 @@
 ;
 ;**********************************************************************************************************************************
 
+%i cclsource:cclut_utils.inc
+
 declare CCLUT_BACKSLASH = vc with protect, constant("\")
 declare CCLUT_ESCAPED_BACKSLASH = vc with protect, constant("\\")
 declare CCLUT_PIPE = vc with protect, constant("|")
@@ -28,15 +30,14 @@ declare public::cclutGetMockColumnIndex(cclutTableName = vc(val), cclutColumnNam
 declare public::cclutAssertMockDefinedForTable(cclutTableName = vc(val)) = i4 with protect
 declare public::cclutAssertMockTableIsCreated(cclutTableName = vc(val)) = i4 with protect
 declare public::cclutAssertMockTableIsNotCreated(cclutTableName = vc(val)) = i4 with protect
-declare public::cclutAssertStringIsNonEmpty(cclutParameter = vc(val),
-    cclutParameterName = vc(val)) = i4 with protect
+declare public::cclutAssertStringIsNonEmpty(cclutValue = vc(val),
+    cclutValueName = vc(val)) = i4 with protect
 declare public::cclutAssertNoInvalidEscapes(cclutValue = vc(val)) = i4 with protect
 declare public::cclutAssertNoEscapedNulls(cclutValue = vc(val)) = i4 with protect
 declare public::cclutNormalizeEscapes(cclutEscapedData = vc(val)) = vc with protect
 declare public::cclutConstructDBSetStatement(cclutTableIndex = i4(val), cclutColumnIndex = i4(val),
     cclutDataBuffer = vc(val)) = vc with protect
 declare public::cclutNextPipeValue(cclutPipeString = vc(ref)) = vc with protect
-declare public::cclutGetCurrentGroup(null) = i4 with protect
 
 record cclut_mockTables (
     1 markerTime = i4
@@ -81,10 +82,9 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
     declare cclutColumnCount = i4 with protect, noconstant(0)
     declare cclutColumnIndex = i4 with protect, noconstant(0)
     declare cclutTypeCount = i4 with protect, noconstant(0)
-    declare cclutTypeIndex = i4 with protect, noconstant(0)
     declare cclutColumnName = vc with protect, noconstant("")
     declare cclutStat = i4 with protect, noconstant(0)
-    
+
     record cclutColumnRec(
         1 qual[*]
             2 str = vc
@@ -105,11 +105,11 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
         return("")
     endif
 
-    ;Validate the column count matches the type count
+    ;Populate cclutColumnRec and cclutTypeRec and then validate that the column count matches the type count
     set cclutColumnCount =
-        arraysplit(cclutColumnRec->qual[cclutColumnIndex].str, cclutColumnIndex, CCLUT_COLUMN_NAMES, CCLUT_PIPE)
+        cclutDoArraySplit(cclutColumnRec, CCLUT_COLUMN_NAMES, CCLUT_PIPE)
     set cclutTypeCount =
-        arraysplit(cclutTypeRec->qual[cclutTypeIndex].str, cclutTypeIndex, CCLUT_COLUMN_TYPES, CCLUT_PIPE)
+        cclutDoArraySplit(cclutTypeRec, CCLUT_COLUMN_TYPES, CCLUT_PIPE)
 
     if (cclutColumnCount != cclutTypeCount)
         call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME, ") - Size mismatch. ",
@@ -165,16 +165,16 @@ end ;cclutDefineMockTable
 /**
 Asserts that a specified string variable is non-empty, raising an error if it is.
 
-@param cclutParameter 
+@param cclutValue
     The variable to be checked.
-@param cclutParameterName 
+@param cclutValueName
     The name for the variable to be displayed in the error if raised.
-@return 
-    A boolean flag indicating whether the variable is non-empty, TRUE if and only if the variable is empty.
+@return
+    A boolean flag indicating whether the variable is non-empty, TRUE if and only if the variable is non-empty.
 */
-subroutine public::cclutAssertStringIsNonEmpty(cclutParameter, cclutParameterName)
-    if (cclutIsEmpty(cclutParameter))
-        call cclexception(100, "E", concat("cclutAssertStringIsNonEmpty() - ", cclutParameterName,
+subroutine public::cclutAssertStringIsNonEmpty(cclutValue, cclutValueName)
+    if (cclutIsEmpty(cclutValue))
+        call cclexception(100, "E", concat("cclutAssertStringIsNonEmpty() - ", cclutValueName,
             " is a required field"))
         return(FALSE)
     endif
@@ -184,9 +184,9 @@ end ;cclutAssertStringIsNonEmpty
 /**
 Asserts that a specified table name has a defined mock in cclut_mockTables, raising an error if not.
 
-@param cclutTableName 
+@param cclutTableName
     The name of the table.
-@return 
+@return
     The index in cclut_mockTables for the table's defined mock or 0 if there is none.
 */
 subroutine public::cclutAssertMockDefinedForTable(cclutTableName)
@@ -204,9 +204,9 @@ end ;cclutAssertMockDefinedForTable
 /**
 Asserts that a mock for a specified table has been created in the RDBMS, raising an error otherwise.
 
-@param cclutTableName 
-    The name of the table.  
-@return 
+@param cclutTableName
+    The name of the table.
+@return
     A boolean flag indicating that a mock for the table has been created.
 */
 subroutine public::cclutAssertMockTableIsCreated(cclutTableName)
@@ -226,9 +226,9 @@ end ;cclutAssertMockTableIsCreated
 /**
 Asserts that a mock for a specified table has not been created in the RDBMS, raising an error otherwise.
 
-@param cclutTableName 
-    The name of the table.  
-@return 
+@param cclutTableName
+    The name of the table.
+@return
     A boolean flag indicating that a mock for the table has NOT been created.
 */
 subroutine public::cclutAssertMockTableIsNotCreated(cclutTableName)
@@ -246,11 +246,11 @@ subroutine public::cclutAssertMockTableIsNotCreated(cclutTableName)
 end ;cclutAssertMockTableIsNotCreated
 
 /**
-Retrieves the index within cclut_mockTables->tables corresponding to a sepcified table name.
+Retrieves the index within cclut_mockTables->tables corresponding to a specified table name.
 
-@param cclutTableName 
+@param cclutTableName
     The name of the table.
-@return 
+@return
     The table's index within cclut_mockTables->tables or 0 if there is none.
 */
 subroutine public::cclutGetMockTableIndex(cclutTableName)
@@ -261,15 +261,15 @@ subroutine public::cclutGetMockTableIndex(cclutTableName)
 end ;cclutGetMockTableIndex
 
 /**
-Retrieves the index cclut_mockTables->tables->colums corresponding to a sepcified table name and column name.
+Retrieves the index in cclut_mockTables->tables->columns corresponding to a specified table name and column name.
 An error will occur if the table does not have a defined mock.
 
-@param cclutTableName 
+@param cclutTableName
     The table name.
-@param cclutTableName 
+@param cclutColumnName
     The column name.
-@return 
-    The column's index within the table's list of defined columns or 0 if the column is not defined for the table. 
+@return
+    The column's index within the table's list of defined columns or 0 if the column is not defined for the table.
 */
 subroutine public::cclutGetMockColumnIndex(cclutTableName, cclutColumnName)
     declare cclutMockTableIndex = i4 with protect, noconstant(0)
@@ -333,7 +333,7 @@ subroutine public::cclutAddMockIndex(cclutTableName, cclutColumnNames, cclutIsUn
     if (cclutMockTablePos > 0 and cclutAssertMockTableIsNotCreated(CCLUT_TABLE_NAME))
         ;Validate that each column in the index is valid and that there are no duplicates
         set cclutColumnCount =
-                arraysplit(cclutColumnRec->qual[cclutColumnIndex].str, cclutColumnIndex, CCLUT_COLUMN_NAMES, CCLUT_PIPE)
+                cclutDoArraySplit(cclutColumnRec, CCLUT_COLUMN_NAMES, CCLUT_PIPE)
         for (cclutColumnIndex = 1 to cclutColumnCount)
             set cclutColumnName = cclutColumnRec->qual[cclutColumnIndex].str
             set cclutMockColumnPos = cclutGetMockColumnIndex(CCLUT_TABLE_NAME, cclutColumnName)
@@ -426,13 +426,6 @@ subroutine public::cclutCreateMockTable(cclutTableName)
 end ;cclutCreateMockTable
 
 /**
-Returns the group for the current CCL user. Allows CURGROUP to be mocked.
-*/
-subroutine public::cclutGetCurrentGroup(null)
-    return(curgroup)
-end ;cclutGetCurrentGroup
-
-/**
 Removes a mock table.  If the table was already created, it will also be dropped.  If the table is not currently
 mocked, it will return silently.  tableName is required.
 
@@ -459,7 +452,7 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
     if (cclutMockTablePos > 0)
         if (cclut_mockTables->tables[cclutMockTablePos].isFinalized)
             set cclutMockTableName = cclut_mockTables->tables[cclutMockTablePos].replaceName
-            ;only DBA users can drop a CCL table definition 
+            ;only DBA users can drop a CCL table definition
             ; so cclut_drop_mock_table_def is executed via tdbexecute to handle this for non-DBA users.
             if (cclutGetCurrentGroup(null) = 0)
                 set cclutParserText = concat(" drop table ", cclutMockTableName, " go")
@@ -469,23 +462,25 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
                 record cclut_drop_table_request (
                   1 program_name = vc
                   1 output_device = vc
-                  1 IsBlob = i1
+                  1 isBlob = i1
                   1 params = vc
                 )
                 set cclut_drop_table_request->program_name = "cclut_drop_mock_table_def"
+                set cclut_drop_table_request->output_device = "MINE"
+                set cclut_drop_table_request->isBlob = 1
                 set cclut_drop_table_request->params = concat("^MINE^,^", cclutMockTableName, "^")
                 set stat = tdbexecute(3202004, 3202004, 3050002, "REC", cclut_drop_table_request, "REC", cclut_drop_table_reply)
-                if (stat = 1 or cclut_drop_table_reply->status_data.status = "F")
+                if (stat != 0 or cclut_drop_table_reply->status_data.status = "F")
                     call cclexception(100, "E", concat("cclutRemoveMockTable(", CCLUT_TABLE_NAME,
                         ") - Unable to drop table.  Manual cleanup may be required.  Mock table name is ",
                         cclutMockTableName))
                 endif
             endif
-            set cclutParserText =
-                concat(" rdb drop table ", cclutMockTableName, " end go")
+            set cclutParserText = concat(" rdb drop table ", cclutMockTableName, " end go")
+            call parser(" reset")
+            call parser("execute null go")
             call parser(cclutParserText)
         endif
-        ;Remove it from the mocked list
         set cclutStat = alterlist(cclut_mockTables->tables, cclutMockTableCount - 1, cclutMockTablePos - 1)
     endif
 end ;cclutRemoveMockTable
@@ -581,11 +576,11 @@ subroutine public::cclutAddMockData(cclutTableName, cclutRowData)
     endwhile
 
     if (cclutMockColumnIndex < cclutMockColumnLength)
-        call cclexception(100, "E", concat("cclutAddMockData(", CCLUT_TABLE_NAME,
-            ") - Too few columns of data. rowData: ", cclutRowData))
+        call cclexception(100, "E",
+            concat("cclutAddMockData(", CCLUT_TABLE_NAME,") - Too few columns of data. rowData: ", cclutRowData))
         call parser(" reset")
-        call parser(" generate null go")
-        return
+        call parser("execute null go")
+        return(null)
     endif
 
     ;No columns have been added meaning all are null
@@ -607,7 +602,7 @@ is any substring beginning with a backslash ('\') and the only valid escape sequ
 
 @param cclutValue
     The string value to inspect.
-@return 
+@return
     A boolean flag indicating that the string does not contain any invalid escapes.
 */
 subroutine public::cclutAssertNoInvalidEscapes(cclutValue)
@@ -630,14 +625,12 @@ the preceding backslash is not escaped to represent an actual backslash characte
     A boolean flag indicating that the string does not contain any escaped nulls.
 */
 subroutine public::cclutAssertNoEscapedNulls(cclutValue)
-    if (findstring(CCLUT_ESCAPED_NULL, replace(replace(cclutValue, CCLUT_ESCAPED_BACKSLASH, ""),
-        CCLUT_ESCAPED_PIPE, "")) > 0)
-            call cclexception(100, "E",
-                concat("cclutValidateNotNulls() - \null column must have no other characters. rowData: ",
-                    cclutValue))
-            call parser(" reset")
-            call parser(" generate null go")
-            return(FALSE)
+    if (findstring(CCLUT_ESCAPED_NULL, replace(replace(cclutValue, CCLUT_ESCAPED_BACKSLASH, ""), CCLUT_ESCAPED_PIPE, "")) > 0)
+        call cclexception(100, "E",
+            concat("cclutValidateNotNulls() - \null column must have no other characters. rowData: ", cclutValue))
+        call parser(" reset")
+        call parser("execute null go")
+        return(FALSE)
     endif
     return(TRUE)
 end ;cclutAssertNoEscapedNulls
@@ -647,7 +640,7 @@ Replaces escaped character sequences in a string value with their corresponding 
 
 @param cclutEscapedData
     The string value to normalize.
-@return 
+@return
     The result of replacing all escape sequences in cclutEscapedData with their corresponding values.
 */
 subroutine public::cclutNormalizeEscapes(cclutEscapedData)
@@ -657,9 +650,9 @@ end ;cclutNormalizeEscapes
 
 /**
 Pops the next value out from a pipe-delimited string.  The input string will be modified by removing
-the first pipe-delimited value similar to popping from a stack.  
+the first pipe-delimited value similar to popping from a stack.
 
-@param cclutPipeString 
+@param cclutPipeString
     The pipe-delimited string
 @return
     The first pipe-delimited value in cclutPipeString.
@@ -688,16 +681,16 @@ end ;cclutNextPipeValue
 
 
 /**
-Constructs a statement for setting the value of a column in a within in a database query on a mock table. 
+Constructs a statement for setting the value of a column in a database query on a mock table.
 
-@param cclutTableIndex 
+@param cclutTableIndex
     The index of the mock table within cclut_mockTables->tables.
-@param cclutColumnIndex 
+@param cclutColumnIndex
     The index of the column within the table's colums from cclut_mockTables->tables->columns.
-@param cclutDataBuffer 
+@param cclutDataBuffer
     The value to set on the column.
-@return 
-    A string in the form of "<column> = <data>" with appropriate wrapping (cnvtdatetime, trim, etc.) 
+@return
+    A string in the form of "<column> = <data>" with appropriate wrapping (cnvtdatetime, trim, etc.)
     depending on tne column's data type.
 */
 subroutine public::cclutConstructDBSetStatement(cclutTableIndex, cclutColumnIndex, cclutDataBuffer)
@@ -706,10 +699,11 @@ subroutine public::cclutConstructDBSetStatement(cclutTableIndex, cclutColumnInde
     declare cclutMockColumnName = vc with protect, noconstant("")
 
     if (cclutColumnIndex > CCLUT_COLUMN_COUNT)
+        call parser(" reset")
+        call parser(" reset")
+        call parser("execute null go")
         call cclexception(100, "E", concat("cclutConstructDBSetStatement(",
             cclut_mockTables->tables[cclutTableIndex].originalName, ") - Too many columns of data added to table."))
-        call parser(" reset")
-        call parser(" generate null go")
         return("")
     endif
 

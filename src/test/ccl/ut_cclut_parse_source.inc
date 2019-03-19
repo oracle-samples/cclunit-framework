@@ -35,7 +35,7 @@ subroutine testItA(null)
   set stat = cclutAssertVCEqual(CURREF, "line 5",  reply->source[5].line, "  declare idx = i4 with protect, noconstant(0)")
   set stat = cclutAssertVCEqual(CURREF, "line 6",  reply->source[6].line, "  for (idx = 1 to 10) ;this is a loop")
   set stat = cclutAssertVCEqual(CURREF, "line 7",  reply->source[7].line, 
-      ^    call echo("this is a program for unit testing cclut_parse_source")^)
+      ^    call echo("this is a program for unit testing cclut_parse_source") ;intentional^)
   set stat = cclutAssertVCEqual(CURREF, "line 8",  reply->source[8].line, "  endfor")
   set stat = cclutAssertVCEqual(CURREF, "line 9",  reply->source[9].line, "end go")
 end ;;;testItA
@@ -90,7 +90,7 @@ subroutine testItB(null)
   set stat = cclutAssertVCEqual(CURREF, "line 5",  reply->source[5].line, "  declare idx = i4 with protect, noconstant(0)")
   set stat = cclutAssertVCEqual(CURREF, "line 6",  reply->source[6].line, "  for (idx = 1 to 10) ;this is a loop")
   set stat = cclutAssertVCEqual(CURREF, "line 7",  reply->source[7].line, 
-      ^    call echo("this is a program for unit testing cclut_parse_source")^)
+      ^    call echo("this is a program for unit testing cclut_parse_source") ;intentional^)
   set stat = cclutAssertVCEqual(CURREF, "line 8",  reply->source[8].line, "  endfor")
   set stat = cclutAssertVCEqual(CURREF, "line 9",  reply->source[9].line, "end go")
 end ;;;testItB

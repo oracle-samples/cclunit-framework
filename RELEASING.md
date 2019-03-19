@@ -8,7 +8,7 @@ When 'releasing' be sure to
 * update the version number in the pom file.
 * update the version number in cclut_framework_version.inc.
 * update the minimum required CCL vesion in cclut_framework_version.inc if changed.
-* correct any impacted tests.
+* double check for dangling call echo and call echorecord statements.
 * push to a new branch.
 * execute `mvn clean test -P<profileId>` on the branch.
 * tag the branch with the release number and merge to master.

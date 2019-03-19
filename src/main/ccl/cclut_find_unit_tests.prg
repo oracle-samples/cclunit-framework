@@ -1,11 +1,10 @@
 drop program cclut_find_unit_tests:dba go
 create program cclut_find_unit_tests:dba
 /**
-  Discovers the unit tests contained in a given test case (i.e., ccl program containing unit tests) where 'unit test'
-  means a subroutine whose name starts with "test". Note that it does not check for return values or arguments. All test* 
-  subroutines will be returned.
-  The consumer is expected to provide the cclutRequest and cclutReply structures. 
-*/
+  Discovers the unit tests contained in a given [test case] program, where 'unit test' means any subroutine whose name
+  starts with "test". Parameters and return values not not checked. All subroutines with name matching "test*" are returned.
+  The consumer is expected to provide the cclutRequest and cclutReply structures.
+  */
 
 
 %i cclsource:cclut_get_file_as_string.inc
@@ -25,7 +24,7 @@ record cclutRequest (
   1 programName = vc
 ) with protect
 */
- 
+
 /**
   @reply
   @field tests
@@ -43,11 +42,11 @@ record cclutRequest (
 
 /**
   Identifies all subrouties of a CCL program whose name begins with "test".
- 
+
   @param cclutProgramName
     The name of the program that contains the unit tests.
   @param cclutUnitTests
-    A return buffer for the identified list of subroutines. 
+    A return buffer for the identified list of subroutines.
   @returns
     Returns FALSE if an error occurred or TRUE if successful
 */
@@ -67,36 +66,36 @@ subroutine cclut::findUnitTests(cclutProgramName, cclutUnitTests)
   declare cclutSubroutineCount   = i4 with protect, noconstant(1)
   declare cclutErrorMessage      = vc with protect, noconstant("")
   declare cclStat                = i4 with protect, noconstant(0)
-  
+
   call parser(concat('translate into "ccluserdir:', cclutXmlFileName, '"', cclutProgramName, ' with xml go'))
-  
+
   set cclutProgramXml = cclut::getFileAsString(cclutPathToXmlFile)
-  
+
   if (textlen(trim(cclutProgramXml)) = 0)
-    set cclutErrorMessage = build2("Failed to translate program. Listing file ccluserdir:", cclutXmlFileName, " is empty.") 
+    set cclutErrorMessage = build2("Failed to translate program. Listing file ccluserdir:", cclutXmlFileName, " is empty.")
     set cclutReply->status_data.subeventstatus[1].operationName = "TRANSLATE"
     set cclutReply->status_data.subeventstatus[1].operationStatus = "F"
     set cclutReply->status_data.subeventstatus[1].targetObjectName = cclutProgramName
     set cclutReply->status_data.subeventstatus[1].targetObjectValue = cclutErrorMessage
     return (FALSE)
   endif
- 
+
   set cclStat = remove(cclutXmlFileName)
- 
+
   set cclutHXmlRoot = cclut::parseXmlBuffer(cclutProgramXml, cclutHXmlFile)
   ;note that cclut::parseXmlBuffer is more likely to hang than return zeros if the xml is bad.
   if (cclutHXmlRoot = 0 or cclutHXmlFile = 0)
-    set cclutErrorMessage = build2("Failed to parse xml from listing file ccluserdir:", cclutXmlFileName, ".") 
+    set cclutErrorMessage = build2("Failed to parse xml from listing file ccluserdir:", cclutXmlFileName, ".")
     set cclutReply->status_data.subeventstatus[1].operationName = "PARSE"
     set cclutReply->status_data.subeventstatus[1].operationStatus = "F"
     set cclutReply->status_data.subeventstatus[1].targetObjectName = cclutProgramName
     set cclutReply->status_data.subeventstatus[1].targetObjectValue = cclutErrorMessage
     return (FALSE)
   endif
- 
+
   set cclutHProgram = cclut::getXmlListItemHandle(cclutHXmlRoot, "ZC_PROGRAM.", 1)
   set cclutHSubroutine = cclut::getXmlListItemHandle(cclutHProgram, "SUBROUTINE.", cclutSubroutineCount)
- 
+
   while (cclutHSubroutine != 0)
     set cclutSubroutineName = ""
     set cclutHNamespace = cclut::getXmlListItemHandle(cclutHSubroutine, "NAMESPACE.", 1)
@@ -113,7 +112,7 @@ subroutine cclut::findUnitTests(cclutProgramName, cclutUnitTests)
         set cclutNamespacedName = cclutSubroutineName
       endif
     endif
-     
+
     if (substring(1, 4, cclutSubroutineName) = "TEST")
       set cclutUnitTestCount = cclutUnitTestCount + 1
       set cclStat = alterlist(cclutUnitTests->tests, cclutUnitTestCount)
@@ -122,7 +121,7 @@ subroutine cclut::findUnitTests(cclutProgramName, cclutUnitTests)
     set cclutSubroutineCount = cclutSubroutineCount + 1
     set cclutHSubroutine = cclut::getXmlListItemHandle(cclutHProgram, "SUBROUTINE.", cclutSubroutineCount)
   endwhile
- 
+
   call cclut::releaseXmlResources(cclutHXmlFile)
   return (TRUE)
 end ;;;findUnitTests
@@ -136,10 +135,10 @@ endif
 
 
 #exit_script
- 
+
 if (validate(cclut::debug, FALSE) = TRUE)
-  call echorecord(cclutRequest)
-  call echorecord(cclutReply)
+  call echorecord(cclutRequest) ;intentional
+  call echorecord(cclutReply) ;intentional
 endif
- 
+
 end go

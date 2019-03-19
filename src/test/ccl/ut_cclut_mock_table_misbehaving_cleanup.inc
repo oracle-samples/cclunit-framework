@@ -6,14 +6,12 @@
 
 if (not validate(cclutMockTableName))
     declare cclutMockTableName = vc with protect, noconstant("masking cclutMockTableName ")
-    call echo(cclutMockTableName)
 endif
-    call echo("cclutMockTableName being initialized")
 
-declare tearDown(dummyVar = i2) = null
-declare tearDownOnce(dummyVar = i2) = null
+declare tearDown(null) = null
+declare tearDownOnce(null) = null
 
-subroutine tearDown(dummyVar)
+subroutine tearDown(null)
     declare mockId = f8 with protect, noconstant(0.0)
     declare mockText = vc with protect, noconstant("")
     declare mockDate = dq8 with protect, noconstant(0)
@@ -31,7 +29,7 @@ subroutine tearDown(dummyVar)
         cnvtdatetime("27-NOV-2018 08:00"))
 end ;tearDown
 
-subroutine tearDownOnce(dummyVar)
+subroutine tearDownOnce(null)
     declare mockId = f8 with protect, noconstant(0.0)
     declare mockText = vc with protect, noconstant("")
     declare mockDate = dq8 with protect, noconstant(0)
@@ -55,7 +53,6 @@ end ;tearDownOnce
 subroutine test_cclut_mock_table_misbehaving_cleanup(null)
     set cclutMockTableName =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-call echo(build2("cclutMockTableName: ", cclutMockTableName))        
     call cclutCreateMockTable("sample_table")
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00")
     call cclutAddMockImplementation("sample_subroutine", "mock_subroutine")

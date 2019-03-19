@@ -16,7 +16,7 @@
 declare cclut::doOutput(cclutMsg = vc) = null with protect
 
 subroutine cclut::doOutput(cclutMsg)
-  call echo(cclutMsg)
+  call echo(cclutMsg) ;intentional
   if (validate(cclut_ff::output) = TRUE)
     if (cclut_ff::output = "")
       set cclut_ff::output = cclutMsg

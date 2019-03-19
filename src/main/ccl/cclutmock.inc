@@ -7,6 +7,7 @@
 ;
 ;**********************************************************************************************************************************
 
+%i cclsource:cclut_utils.inc
 %i cclsource:cclutmock_table.inc
 
 declare public::cclutAddMockImplementation(cclutOriginalName = vc(val), cclutReplaceName = vc(val)) = null with protect
@@ -15,9 +16,7 @@ declare public::cclutRemoveAllMockImplementations(null) = null with protect
 declare public::cclutExecuteProgramWithMocks(cclutProgramName = vc(val), cclutParams = vc(val, " "),
     cclutNamespace = vc(val, "PUBLIC")) = null with protect
 declare public::cclutRemoveAllMocks(null) = null with protect
-
-declare public::cclutGetCurrentRevision(null) = i4 with protect
-declare public::cclutGetCurrentVersion(null) = i4 with protect
+declare public::cclutInvokeParser(cclutParserString = vc) = null with protect
 
 record cclut_mockImplementations (
     1 implementations[*]
@@ -117,20 +116,6 @@ subroutine public::cclutRemoveAllMockImplementations(null)
 end ;cclutRemoveAllMockImplementations
 
 /**
-Returns the current revision of CCL. Allows CURREV to be mocked.
-**/
-subroutine public::cclutGetCurrentRevision(null)
-    return(currev)
-end ;cclutGetCurrentRevision
-
-/**
-Returns the current version of CCL. Allows CURCCLVER to be mocked.
-**/
-subroutine public::cclutGetCurrentVersion(null)
-    return(curcclver)
-end ;cclutGetCurrentVersion
-
-/**
 Executes a CCL program applying an indicated namespace and all mocks that have been specified using the functions
 described below.  programName is required.  params is a stringified representation of the parameters to be passed to the
 program, so all commas and string delimiters must be specified.  If namespace is omitted, it will default to the PUBLIC
@@ -212,4 +197,16 @@ subroutine public::cclutRemoveAllMocks(null)
     call cclutRemoveAllMockTables(null)
 end ;cclutRemoveAllMocks
 
+
+/**
+Invokes call parser on a specified string. Allows for overriding specific calls to call parser.
+
+Warning: Adding/Removing usages could affect unit tests which mock this function. It might be better to create alternate versions.
+
+@param cclutParserString
+    The string to invoke call parser on.
+*/
+subroutine public::cclutInvokeParser(cclutParserString)
+    call parser(cclutParserString)
+end ;cclutInvokeParser
 %#endif CCLUTMOCK_INC

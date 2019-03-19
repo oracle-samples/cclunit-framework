@@ -27,8 +27,13 @@ Please review the below guidelines before contributing to help ensure a smooth p
 * Add an appropriate entry to the [Changelog][4].
 * Please add your name to the CONTRIBUTORS.md file. Adding your name to the CONTRIBUTORS.md file signifies agreement to all rights and reservations provided by the [License][5].
 * [Squash related commits together][6].
+* Remove dangling debug code
+  * Intentional call echo[record] statements should be marked such with `;intentional`.
+* Remove charcters inserted to battle editor quirks.
 * Open a [pull request][7].
 * The pull request will be reviewed by the community and merged by the project committers.
+
+
 
 [1]: https://github.com/cerner/cclunit-framework/issues
 [2]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request

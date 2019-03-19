@@ -117,7 +117,7 @@ call cclutRemoveAllMockTables(null)
 
 **cclutAddMockData(tableName = vc, rowData = vc)**
 
-Add a row of mock data to a table.  tableName and rowData are required.  tableName must have already been created through cclutCreateMockTable() or an error will be thrown.  rowData is a pipe-delimited string for each column in the same order that was used in cclutDefineMockTable().  For character fields, the backslash (\\) will serve as an escape character.  For date fields, the value in rowData will be supplied to the cnvtdatetime() function.  All other values will be passed as-is.  
+Add a row of mock data to a table.  tableName and rowData are required.  tableName must have already been created through `cclutCreateMockTable` or an error will be thrown.  rowData is a pipe-delimited string for each column in the same order that was used in cclutDefineMockTable().  For character fields, the backslash (\\) will serve as an escape character.  For date fields, the value in rowData will be supplied to the cnvtdatetime() function.  All other values will be passed as-is.  
   
 Supported escape values  
 \\| = | (to represent a pipe in character fields)  
@@ -141,7 +141,7 @@ call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madi
 
 **cclutClearMockData(tableName = vc)**
 
-Clears all data from a specified mock table.  This is functionally similar to a truncate.  tableName is required.  The table must have been created through cclutCreateMockTable() or else an error will be thrown.  
+Clears all data from a specified mock table.  This is functionally similar to a truncate.  tableName is required.  The table must have been created through `cclutCreateMockTable` or an error will be thrown.  
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the source table for the mock table to be cleared.  
@@ -195,13 +195,14 @@ call cclutRemoveAllMockImplementations(null)
 1. Mocks can be leveraged for tables and fields that do not exist in the testing domain.
     * This can be useful to test tables that are still under construction.
 
-1. Mocks created through cclutCreateMockTable() and cclutAddMockImplementation are not applied to child scripts called from the script-under-test. Alternatives:
+1. Mocks created through `cclutCreateMockTable` and `cclutAddMockImplementation` are not applied to child scripts called from the script-under-test. Alternatives:
     * Mock each child script to return data appropriate for the test.
     * Mock each child script to execute the real child script using `with replace` to reference the mock entities.
 
 1. Mock table substitutions are not automatically applied to `rdb` commands (32-bit >= 8.15.0, 64-bit >= 9.3.0).
     * Use `call cclutAddMockImplementation(<table name>, <mock table name>)` to achieve this.
         * This is ineffective if a query accesses a field with the same name as the mocked table.
+        * This should not be done if there are non-rdb queries against the same table.
 
 1. Mock substitutions are not applied to statements executed via `call parser`. Alternatives:
     * Do not invoke `call parser` directly but define and invoke a wrapper subroutine instead. Mock the wrapper to make any necessary name substitutions before invoking `call parser`.
@@ -234,104 +235,126 @@ Script-under-test:
 
 ```javascript
 drop program 1abc_mo_get_persons:dba go
-create program 1abc_mo_get_persons:dba    
+create program 1abc_mo_get_persons:dba
+  declare newSize = i4 with protect, noconstant(0)
 
-declare newSize = i4 with protect, noconstant(0)
-
-select into "nl:"
-from person p
-plan p
-order by p.person_id
-detail
+  select into "nl:" from person p
+  plan p
+  order by p.person_id
+  detail
     newSize = newSize + 1
     stat = alterlist(reply->persons, newSize)
     reply->persons[newSize].person_id = p.person_id
     reply->persons[newSize].name_last = p.name_last
     reply->persons[newSize].name_first = p.name_first
     reply->persons[newSize].birth_dt_tm = p.birth_dt_tm
-with nocounter
+  with nocounter
 
-end
-go
+  rdb set output "ccluserdir:rdb_output.dat" end
+  rdb select p.person_id, p.position_cd, p.username from prsnl p where p.username = 'CCLUNIT' end
+end go
 ```
 
 Test Code:
 
 ```javascript
-declare mock_table_person = vc with protect, noconstant("")
+declare teardown(null) = null
+declare testIt(null) = null
 
-; Defining a mock person table.  The return value is the name of the mocked table.  
-; This can be useful to perform a select on the table after the script-under-test is complete
-; to verify (among other things) that an insert or a delete worked correctly.
-set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm",
-    "f8|vc|vc|dq8")
+subroutine teardown(null)
+  call cclutRemoveAllMocks(null)
+end
 
-; Add a non-unique index to name_last
-call cclutAddMockIndex("person", "name_last", FALSE)
+subroutine testIt(null)
+  declare mock_table_person = vc with protect, noconstant("")
+  declare mock_table_prsnl_rdb = vc with protect, noconstant("")
 
-; Creates the mock table.  After this, it is available for DML statements.
-call cclutCreateMockTable("person")
+  ; Defining a mock person table.  The return value is the name of the mocked table.
+  ; It can be useful to perform a select on the table after the script-under-test is complete
+  ; to verify (among other things) that an insert or a delete worked correctly.
+  ; It is also necesary if mocking an rdb query which is demonstrated farther down.
+ set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")
 
-; Create data for the table.
-call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington 
-call cclutAddMockData("person", "2.0|Adams|John|02-FEB-1971 11:11") ;Will add John Adams 
-call cclutAddMockData("person", "3.0|Jefferson|\null|03-MAR-1972 22:22") ;Will add Jefferson (no first name) 
-call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
+  ; Add a non-unique index to name_last
+  call cclutAddMockIndex("person", "name_last", FALSE)
 
-record agp_reply (
+  ; Create the mock table.  After this, it is available for DML statements.
+  call cclutCreateMockTable("person")
+
+  ; Create data for the table.
+  call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington
+  call cclutAddMockData("person", "2.0|Adams|John|02-FEB-1971 11:11") ;Will add John Adams
+  call cclutAddMockData("person", "3.0|Jefferson|\null|03-MAR-1972 22:22") ;Will add Jefferson (no first name)
+  call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
+
+
+  ; Perform similar steps to mock the prsnl table, but a call to addMockImplemention is needed to make it work.
+  set mock_table_prsnl_rdb = cclutDefineMockTable("prsnl", "person_id|position_cd|username", "f8|f8|vc")
+  call cclutCreateMockTable("prsnl")
+  call cclutAddMockData("prsnl", "1.0|441.0|CERNER")
+  call cclutAddMockData("prsnl", "2.0|441.0|SYSTEM")
+  call cclutAddMockData("prsnl", "3.0|315.0|CCLUNIT")
+  call cclutAddMockData("prsnl", "4.0|689.0|DRONE")
+  call cclutAddMockData("prsnl", "5.0|712.0|RNONE")
+
+  ; This additional call is needed to have the mock table substitued in the rdb query.
+  call cclutAddMockImplementation("prsnl", mock_table_prsnl_rdb)
+
+
+  record agp_reply (
     1 persons[*]
         2 person_id = f8
         2 name_last = vc
         2 name_first = vc
         2 birth_dt_tm = dq8
-) with protect
+  ) with protect
 
-; Have with replace("REPLY", AGP_REPLY) be applied when executing 1abc_mo_get_persons.
-call cclutAddMockImplementation("REPLY", "AGP_REPLY")
+  ; Have with replace("REPLY", AGP_REPLY) be applied when executing 1abc_mo_get_persons.
+  call cclutAddMockImplementation("REPLY", "AGP_REPLY")
 
-; Execute the script-under-test
-call cclutExecuteProgramWithMocks("1abc_mo_get_persons", "")
+  ; Execute the script-under-test
+  call cclutExecuteProgramWithMocks("1abc_mo_get_persons", "")
 
-; Do validation
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 001", agp_reply->persons[1].person_id, 1.0)  
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 002", agp_reply->persons[1].name_last,
-    "Washington") 
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 003", agp_reply->persons[1].name_first,
-    "George") 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 004", agp_reply->persons[1].birth_dt_tm,
-    cnvtdatetime("01-JAN-1970 00:00"))
+  ; Do validation
+  call cclutAssertf8Equal(CURREF, "check person_id a", agp_reply->persons[1].person_id, 1.0)
+  call cclutAssertvcEqual(CURREF, "check name_last a", agp_reply->persons[1].name_last, "Washington")
+  call cclutAssertvcEqual(CURREF, "check name_first a", agp_reply->persons[1].name_first, "George")
+  call cclutAssertf8Equal(CURREF, "check birth_dt_tm a", agp_reply->persons[1].birth_dt_tm, cnvtdatetime("01-JAN-1970 00:00"))
 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 005", agp_reply->persons[2].person_id, 2.0)  
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 006", agp_reply->persons[2].name_last,
-    "Adams") 
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 007", agp_reply->persons[2].name_first,
-    "John") 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 008", agp_reply->persons[2].birth_dt_tm,
-    cnvtdatetime("02-FEB-1971 11:11"))
-    
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 009", agp_reply->persons[3].person_id, 3.0)  
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 010", agp_reply->persons[3].name_last,
-    "Jefferson") 
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 011", agp_reply->persons[3].name_first,
-    "") 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 012", agp_reply->persons[3].birth_dt_tm,
-    cnvtdatetime("03-MAR-1972 22:22"))
+  call cclutAssertf8Equal(CURREF, "check person_id b", agp_reply->persons[2].person_id, 2.0)
+  call cclutAssertvcEqual(CURREF, "check name_last b", agp_reply->persons[2].name_last, "Adams")
+  call cclutAssertvcEqual(CURREF, "check name_first b", agp_reply->persons[2].name_first, "John")
+  call cclutAssertf8Equal(CURREF, "check birth_dt_tm b", agp_reply->persons[2].birth_dt_tm, cnvtdatetime("02-FEB-1971 11:11"))
 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 013", agp_reply->persons[4].person_id, 4.0)  
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 014", agp_reply->persons[4].name_last,
-    "Madison") 
-call cclutAssertvcEqual(CURREF, "test_get_people_happy 015", agp_reply->persons[4].name_first,
-    "") 
-call cclutAssertf8Equal(CURREF, "test_get_people_happy 016", agp_reply->persons[4].birth_dt_tm,
-    cnvtdatetime("04-APR-1973 10:33"))
-    
-; A contrived example to demonstrate a potential use for the return value from cclutDefineMockTable
-select into "nl:"
+  call cclutAssertf8Equal(CURREF, "check person_id c", agp_reply->persons[3].person_id, 3.0)
+  call cclutAssertvcEqual(CURREF, "check name_last c", agp_reply->persons[3].name_last, "Jefferson")
+  call cclutAssertvcEqual(CURREF, "check name_first c", agp_reply->persons[3].name_first, "")
+  call cclutAssertf8Equal(CURREF, "check birth_dt_tm c", agp_reply->persons[3].birth_dt_tm, cnvtdatetime("03-MAR-1972 22:22"))
+
+  call cclutAssertf8Equal(CURREF, "check person_id d", agp_reply->persons[4].person_id, 4.0)
+  call cclutAssertvcEqual(CURREF, "check name_last d", agp_reply->persons[4].name_last, "Madison")
+  call cclutAssertvcEqual(CURREF, "check name_first d", agp_reply->persons[4].name_first, "")
+  call cclutAssertf8Equal(CURREF, "check birth_dt_tm d", agp_reply->persons[4].birth_dt_tm, cnvtdatetime("04-APR-1973 10:33"))
+
+  ; Here is a contrived example to demonstrate a potential use for the return value from cclutDefineMockTable
+  select into "nl:"
     personCount = count(*)
-from (value(mock_table_person) mtp)
-head report
-    call cclutAsserti4Equal(CURREF, "test_get_people_happy 017", cnvtint(personCount), 4)
-with nocounter
+  from (value(mock_table_person) mtp)
+  head report
+    call cclutAsserti4Equal(CURREF, "check person count a", cnvtint(personCount), 4)
+  with nocounter
 
-call cclutRemoveAllMocks(null)
+  ; Validate the results of the rdb query
+  free define rtl2
+  define rtl2 is "ccluserdir:rdb_output.dat"
+  select into "nl:" from rtl2t r
+    head report
+      call cclutAssertVcOperator(CURREF, "rdb result header", r.line,
+               "regexplike", "PERSON_ID[ ]*\|POSITION_CD[ ]*\|USERNAME[ ]*\|")
+    foot report
+      call cclutAssertVcOperator(CURREF, "rdb result data", r.line,
+               "regexplike", "3\|[ ]*315\|[ ]*|CCLUNIT[ ]*\|")
+  with nocounter
+
+end ;testIt
 ```

@@ -1,7 +1,6 @@
-declare setup(dummyVar = i2) = null
-declare tearDown(dummyVar = i2) = null
+declare tearDown(null) = null
 
-subroutine tearDown(dummyVar)
+subroutine tearDown(null)
     call cclutRemoveAllMocks(null)
     rollback
 end ;tearDown
@@ -1208,13 +1207,15 @@ subroutine test_cclutAddMockData_too_many_columns(null)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
 
+    call cclutAssertVcOperator(CURREF, "cclutAssertVcOperator check", "this is a test string", "regexplike", "test")
+
     declare errorMessage = vc with protect, noconstant("")
     declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00|extra")
 
     set errorCode = error(errorMessage, 0)
 
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_many_columns 001", trim(errorMessage, 3),
+    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_many_columns 001", errorMessage,
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
             " cclutConstructDBSetStatement\(SAMPLE_TABLE\) - Too many columns of data added to table."))
 end ;test_cclutAddMockData_too_many_columns

@@ -135,7 +135,7 @@ subroutine cclut1::main(null)
   set cclut1TestCaseRequest->failFast = cclut1::failFast
 
   call cclut1::executeTestCase(null)
-    
+
   call cclut1::processTestCaseResponse(
       cclut1::outputDestination, cclut1TestCaseRequest, cclut1TestCaseReply, cclut1TestCaseResults, cclut1TestResults)
   call cclut1::errorCheck(null)
