@@ -18,7 +18,7 @@ with outputDestination, tableName
 declare public::dropTable(cclutTableName = vc) = null with protect
 declare public::main(null) = null with protect
 
-record reply (1 status = c1 1 message = vc) with protect
+record cclutDropMockTableReply (1 status = c1 1 message = vc) with protect
 
 if (validate(_memory_reply_string) = FALSE)
     declare _memory_reply_string = vc with protect, noconstant("")
@@ -31,18 +31,18 @@ subroutine public::dropTable(cclutTableName)
         call parser(concat(" drop table ", cclutTableName, " go"))
         set cclutErrorCode = error(cclutErrorMessage, 0)
         if (cclutErrorCode = 0)
-            set reply->status = "S"
-            set reply->message = concat("Table ", cclutTableName, " was dropped")
+            set cclutDropMockTableReply->status = "S"
+            set cclutDropMockTableReply->message = concat("Table ", cclutTableName, " was dropped")
         else
             set cclutErrorMessage = concat("Failed to drop table ", cclutTableName, char(10), char(13), cclutErrorMessage)
-            set reply->status = "F"
-            set reply->message = cclutErrorMessage
+            set cclutDropMockTableReply->status = "F"
+            set cclutDropMockTableReply->message = cclutErrorMessage
             call echo(cclutErrorMessage) ;intentional
         endif
     else
         set cclutErrorMessage = "Only CCL Unit mock tables can be dropped with this program"
-        set reply->status = "F"
-        set reply->message = cclutErrorMessage
+        set cclutDropMockTableReply->status = "F"
+        set cclutDropMockTableReply->message = cclutErrorMessage
         call echo(cclutErrorMessage) ;intentional
     endif
 end ;cclutDropTableDefinition::dropTable
@@ -53,6 +53,6 @@ end ;cclutDropTableDefinition::main
 
 call main(null)
 
-set _memory_reply_string = cnvtrectojson(reply)
+set _memory_reply_string = cnvtrectojson(cclutDropMockTableReply)
 
 end go

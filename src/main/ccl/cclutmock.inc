@@ -176,7 +176,11 @@ subroutine public::cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, c
         if (cclut_mockTables->tables[cclutMockTableIndex].isFinalized = TRUE)
             set cclutParserText =
                 concat(cclutParserText, ^ replace("^, cclut_mockTables->tables[cclutMockTableIndex].originalName, ^", ^,
-                cclut_mockTables->tables[cclutMockTableIndex].replaceName, ^, ^, trim(cnvtstring(cclutReplaceOption), 3),^),^)
+                cclut_mockTables->tables[cclutMockTableIndex].replaceName)
+             if (cclut_mockTables->tables[cclutMockTableIndex].isAccessedViaRdbCommands = FALSE)
+                set cclutParserText = concat(cclutParserText, ^, ^, trim(cnvtstring(cclutReplaceOption), 3))
+             endif
+            set cclutParserText = concat(cclutParserText, ^),^)
         endif
     endfor
 

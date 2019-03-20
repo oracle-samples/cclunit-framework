@@ -1,16 +1,18 @@
 /**
     Unit tests for ut_cclut_execute_mocks_happy used for unit testing the mocking framework.
 */
+declare teardown(null) = null
 declare test_ut_cclut_execte_mocks_happy_basic(null) = null with protect
 declare public::execute_mocks_happy_validations(null) = null with protect
-   
+
+subroutine teardown(null)
+    call cclutRemoveAllMocks(null)
+end
+
 subroutine test_ut_cclut_execte_mocks_happy_basic(null)
     declare mock_sample_person = vc with protect, noconstant("")
     declare mock_sample_encounter = vc with protect, noconstant("")
     declare mock_sample_encounter_alias = vc with protect, noconstant("")
-    declare sample_person_rdb_mock_table_name = vc with protect, noconstant("")
-    declare sample_encounter_rdb_mock_table_name = vc with protect, noconstant("")
-    declare sample_encounter_alias_rdb_mock_table_name = vc with protect, noconstant("")
 
     declare stat = i4 with protect, noconstant(0)
 
@@ -38,11 +40,9 @@ subroutine test_ut_cclut_execte_mocks_happy_basic(null)
     call cclutCreateMockTable("sample_encounter")
     call cclutCreateMockTable("sample_encounter_alias")
 
-    set sample_person_rdb_mock_table_name = cclutDefineMockTable("sample_person_rdb", "person_id", "f8")
-    set sample_encounter_rdb_mock_table_name =
-        cclutDefineMockTable("sample_encounter_rdb", "encounter_id|person_id", "f8|f8")
-    set sample_encounter_alias_rdb_mock_table_name =
-        cclutDefineMockTable("sample_encounter_alias_rdb", "encounter_id|encounter_alias", "f8|vc")
+    call cclutDefineMockTable("sample_person_rdb", "person_id", "f8", TRUE)
+    call cclutDefineMockTable("sample_encounter_rdb", "encounter_id|person_id", "f8|f8", TRUE)
+    call cclutDefineMockTable("sample_encounter_alias_rdb", "encounter_id|encounter_alias", "f8|vc", TRUE)
 
     call cclutCreateMockTable("sample_person_rdb")
     call cclutCreateMockTable("sample_encounter_rdb")
@@ -62,14 +62,10 @@ subroutine test_ut_cclut_execte_mocks_happy_basic(null)
     call cclutAddMockData("sample_encounter_alias_rdb", "9.0|test alias rdb")
 
     call cclutAddMockImplementation("reply", "executereply")
-    call cclutAddMockImplementation("sample_person_rdb", sample_person_rdb_mock_table_name)
-    call cclutAddMockImplementation("sample_encounter_rdb", sample_encounter_rdb_mock_table_name)
-    call cclutAddMockImplementation("sample_encounter_alias_rdb", sample_encounter_alias_rdb_mock_table_name)
 
     if (checkfun("ADDUNITTESTSPECIFICMOCKS") = 7)
         call addUnitTestSpecificMocks(null)
     endif
-
 
     if (executeParams = "" and executeNamespace = "")
         call cclutExecuteProgramWithMocks("ut_cclut_execute_mocks_happy")

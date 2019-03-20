@@ -35,8 +35,8 @@ subroutine test_dropTable_happy_with(null)
 
     set stat = cnvtjsontorec(_memory_reply_string)
     call cclutAssertI4Equal(CURREF, "cnvtjsontorec stat a", stat, 1)
-    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status a", cclut_drop_mock_table_def_reply->status, "S")
-    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def message a", cclut_drop_mock_table_def_reply->message,
+    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status a", cclutDropMockTableReply->status, "S")
+    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def message a", cclutDropMockTableReply->message,
         concat("Table ", mockTable, " was dropped"))
 end ;test_dropTable_happy_with
 
@@ -65,7 +65,6 @@ subroutine dropTable_happy(null)
     set errorCode = error(errorMessage, 0)
     call cclutAssertI4Equal(CURREF, "select success", errorCode, 0)
 
-    call cclutAddMockImplementation("reply", "cclut_drop_mock_table_def_reply")
     call cclutExecuteProgramWithMocks("cclut_drop_mock_table_def", concat("^MINE^,^", mockTable, "^"), "test_dropTable_happy")
 
     ;the same select should now produce an error if the table was actally dropped by cclut_drop_mock_table_def.
@@ -89,8 +88,8 @@ subroutine test_dropTable_non_mock_with(null)
     set stat = cnvtjsontorec(_memory_reply_string)
 
     call cclutAssertI4Equal(CURREF, "cnvtjsontorec stat b", stat, 1)
-    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status b", cclut_drop_mock_table_def_reply->status, "F")
-    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def message b", cclut_drop_mock_table_def_reply->message,
+    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status b", cclutDropMockTableReply->status, "F")
+    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def message b", cclutDropMockTableReply->message,
         "Only CCL Unit mock tables can be dropped with this program")
 end ;test_dropTable_non_mock_with
 
@@ -120,9 +119,7 @@ subroutine dropTable_non_mock(null)
     set errorCode = error(errorMessage, 0)
     call cclutAsserti4Equal(CURREF, "test_dropTable_non_mock 001", errorCode, 0)
 
-    execute cclut_drop_mock_table_def ^MINE^, ^CUST__CCLUT_CUSTOM_TABLE^ with
-        replace("REPLY", cclut_drop_mock_table_def_reply)
-
+    execute cclut_drop_mock_table_def ^MINE^, ^CUST__CCLUT_CUSTOM_TABLE^
     
     ;the same select should still cause no problems if cclut_drop_mock_table_def did not drop it.
     select into "nl:" from CUST__CCLUT_CUSTOM_TABLE with nocounter
@@ -143,9 +140,9 @@ subroutine test_dropTable_error_with(null)
     set stat = cnvtjsontorec(_memory_reply_string)
 
     call cclutAssertI4Equal(CURREF, "cnvtjsontorec stat c", stat, 1)
-    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status c", cclut_drop_mock_table_def_reply->status, "F")
+    call cclutAssertVcEqual(CURREF, "cclut_drop_mock_table_def status c", cclutDropMockTableReply->status, "F")
     call cclutAssertStartsWith(CURREF, "cclut_drop_mock_table_def message c",
-                "Failed to drop table", cclut_drop_mock_table_def_reply->message)
+                "Failed to drop table", cclutDropMockTableReply->message)
 end ;test_dropTable_error_with
 
 /**
@@ -160,8 +157,7 @@ subroutine dropTable_error(null)
     declare errorMessage = vc with protect, noconstant("")
     declare errorCode = i4 with protect, noconstant(0)
 
-    execute cclut_drop_mock_table_def ^MINE^, ^CUST_CCLUT I_AM_NOT_A_VALID_TABLE_NAME^ with 
-        replace("REPLY", cclut_drop_mock_table_def_reply)
+    execute cclut_drop_mock_table_def ^MINE^, ^CUST_CCLUT I_AM_NOT_A_VALID_TABLE_NAME^
     
     set errorCode = error(errorMessage, 0)
     call cclutAsserti4Equal(CURREF, "dropTable_error 001", errorCode, 0)
@@ -174,9 +170,7 @@ end ;dropTable_error
 subroutine test_main_happy(null)
     declare dropTableCalled = i4 with protect, noconstant(0)
 
-    execute cclut_drop_mock_table_def ^MINE^,^test_table^ with  
-        replace("REPLY", cclut_drop_mock_table_def_reply),
-        curnamespace = "test_main_happy"
+    execute cclut_drop_mock_table_def ^MINE^,^test_table^ with curnamespace = "test_main_happy"
 
     call cclutAsserti4Equal(CURREF, "test_main_happy 002", dropTableCalled, 1)
 end ;test_main_happy

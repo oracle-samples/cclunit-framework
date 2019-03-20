@@ -1,6 +1,6 @@
 # cclunit-framework Change Log
 
-## 3.3 - 2019.03.19
+## 3.3 - 2019.03.20
 * Fix [#17](https://github.com/cerner/cclunit-framework/issues/17): Table mocking fails if some field shares the same name as the table being mocked.
 * Fix [#18](https://github.com/cerner/cclunit-framework/issues/18): The CCL definitions for mock tables do not get dropped if the test user does not have DBA privileges.
 

@@ -57,7 +57,7 @@ end ;cclutGetCurrentGroup
 
 
 /**
-    Parses a delimeted string placing the (right trimmed) parts into the qual[*].str member of a provided record structure.
+    Parses a delimited string placing the (right trimmed) parts into the qual[*].str member of a provided record structure.
     If the minimum requied CCL version is bumped above 8.13.2 / 9.1.2, arraySplit can be used and this can be removed.
 */
 subroutine public::cclutDoArraySplit(cclutRec, cclutSource, cclutDelimiter)
@@ -69,7 +69,7 @@ subroutine public::cclutDoArraySplit(cclutRec, cclutSource, cclutDelimiter)
     declare cclutDelimLen = i4 with protect, constant(textlen(cclutDelimiter))
 
     set cclutDelimPos = findString(cclutDelimiter, cclutSource)
-    while(cclutDelimPos > 0 and cclutItemCount < 100)
+    while(cclutDelimPos > 0)
         set cclutDelimEnd = cclutDelimPos + cclutDelimLen
         set cclutItemCount = cclutItemCount + 1
         set cclutStat = alterlist(cclutRec->qual, cclutItemCount)

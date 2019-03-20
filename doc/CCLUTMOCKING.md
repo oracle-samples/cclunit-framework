@@ -46,9 +46,9 @@ Example:
 call cclutRemoveAllMocks(null)
 ```
 
-**cclutDefineMockTable(tableName = vc, fieldNames = vc, fieldTypes = vc)**
+**cclutDefineMockTable(tableName = vc, fieldNames = vc, fieldTypes = vc, isAccessedViaRdbCommands = i2)**
 
-Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  
+Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  isAccessedViaRdbCommands is optional and should be TRUE only if the script-under-test accesses the table using rdb commands. Table mocking will fail if there are both rdb and non-rdb queries against the table.
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The table to be mocked.  
@@ -199,11 +199,6 @@ call cclutRemoveAllMockImplementations(null)
     * Mock each child script to return data appropriate for the test.
     * Mock each child script to execute the real child script using `with replace` to reference the mock entities.
 
-1. Mock table substitutions are not automatically applied to `rdb` commands (32-bit >= 8.15.0, 64-bit >= 9.3.0).
-    * Use `call cclutAddMockImplementation(<table name>, <mock table name>)` to achieve this.
-        * This is ineffective if a query accesses a field with the same name as the mocked table.
-        * This should not be done if there are non-rdb queries against the same table.
-
 1. Mock substitutions are not applied to statements executed via `call parser`. Alternatives:
     * Do not invoke `call parser` directly but define and invoke a wrapper subroutine instead. Mock the wrapper to make any necessary name substitutions before invoking `call parser`.
         * The mock wrapper could additionally assert that the program generates the expected command string.
@@ -224,9 +219,11 @@ call cclutRemoveAllMockImplementations(null)
 
 1. Mocking the tdbexecute `reply_to` entity is unsupported under certain conditions, specifically if the `reply_to` entity is freed prior to calling tdbexecute. If this scenario is truly necessary, the best alternative is to define and use a subroutine to free the `reply_to` entity and mock that subroutine to not actually perform the free record statement.
 
-1. Table mocking produces unexpected results with older versions of CCL if the table and one of its fields have the same name, like `code_value.code_value` for example (32-bit < 8.15.0, 64-bit < 9.3.0). Anomalies will occur in all versions of CCL if a mocked entity shares the same name as a table or field queried by the script under test.
+1. Table mocking produces unexpected results with older versions of CCL if the table and one of its fields have the same name, like `code_value.code_value` for example (32-bit < 8.15.0, 64-bit < 9.3.0). Anomalies will occur in all versions of CCL if a mocked entity shares the same name as a table or field queried by the script-under-test.
 
-1. Mock substitutions can fail to occur in older versions of CCL if the script under test executes some other CCL program before declaring/implementing its subroutines (32-bit < 8.14.1, 64-bit < 9.2.4).
+1. Table mocking is ineffective for an rdb command that accesses a field with the same name as the mocked table (32-bit >= 8.15.0, 64-bit >= 9.3.0).
+
+1. Mock substitutions can fail to occur in older versions of CCL if the script-under-test executes some other CCL program before declaring/implementing its subroutines (32-bit < 8.14.1, 64-bit < 9.2.4).
   
 ## Example
 The following annotated example illustrates some of the APIs available in the CCL Unit Mocking framework.
@@ -267,13 +264,10 @@ end
 
 subroutine testIt(null)
   declare mock_table_person = vc with protect, noconstant("")
-  declare mock_table_prsnl_rdb = vc with protect, noconstant("")
 
-  ; Defining a mock person table.  The return value is the name of the mocked table.
-  ; It can be useful to perform a select on the table after the script-under-test is complete
-  ; to verify (among other things) that an insert or a delete worked correctly.
-  ; It is also necesary if mocking an rdb query which is demonstrated farther down.
- set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")
+  ; Define a mock person table. The return value is the name of the mock table which can be useful to perform a select on the
+  ; mock table after the script-under-test is complete to verify (among other things) that an insert or a delete worked correctly.
+  set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")
 
   ; Add a non-unique index to name_last
   call cclutAddMockIndex("person", "name_last", FALSE)
@@ -288,17 +282,15 @@ subroutine testIt(null)
   call cclutAddMockData("person", "4.0|Madison||04-APR-1973 10:33") ;Will add Madison (empty string for first name)
 
 
-  ; Perform similar steps to mock the prsnl table, but a call to addMockImplemention is needed to make it work.
-  set mock_table_prsnl_rdb = cclutDefineMockTable("prsnl", "person_id|position_cd|username", "f8|f8|vc")
+  ; Perform similar steps to mock the prsnl table but pass TRUE into cclutDefineMockTable because the script-under-test
+  ; uses an rdb command to read the prsnl table.
+  call cclutDefineMockTable("prsnl", "person_id|position_cd|username", "f8|f8|vc", TRUE)
   call cclutCreateMockTable("prsnl")
   call cclutAddMockData("prsnl", "1.0|441.0|CERNER")
   call cclutAddMockData("prsnl", "2.0|441.0|SYSTEM")
   call cclutAddMockData("prsnl", "3.0|315.0|CCLUNIT")
   call cclutAddMockData("prsnl", "4.0|689.0|DRONE")
   call cclutAddMockData("prsnl", "5.0|712.0|RNONE")
-
-  ; This additional call is needed to have the mock table substitued in the rdb query.
-  call cclutAddMockImplementation("prsnl", mock_table_prsnl_rdb)
 
 
   record agp_reply (

@@ -16,7 +16,7 @@ declare CCLUT_ESCAPED_PIPE = vc with protect, constant("\|")
 declare CCLUT_ESCAPED_NULL = vc with protect, constant("\null")
 
 declare public::cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames = vc(val),
-    cclutFieldTypes = vc(val)) = vc with protect
+    cclutFieldTypes = vc(val), cclutIsAccessedViaRdbCommands= i2(val, FALSE)) = vc with protect
 declare public::cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
     cclutIsUnique = i4(val)) = null with protect
 declare public::cclutCreateMockTable(cclutTableName = vc(val)) = null with protect
@@ -42,15 +42,16 @@ declare public::cclutNextPipeValue(cclutPipeString = vc(ref)) = vc with protect
 record cclut_mockTables (
     1 markerTime = i4
     1 tables[*]
-		2 originalName = vc
-		2 replaceName = vc
-		2 columns[*]
-		    3 columnName = vc
-		    3 columnType = vc
-		2 indexes[*]
-		    3 indexColumns = vc
-		    3 isUnique = i2
-		2 isFinalized = i2
+        2 originalName = vc
+        2 replaceName = vc
+        2 columns[*]
+            3 columnName = vc
+            3 columnType = vc
+        2 indexes[*]
+            3 indexColumns = vc
+            3 isUnique = i2
+        2 isFinalized = i2
+        2 isAccessedViaRdbCommands = i2
 ) with protect
 
 set cclut_mockTables->markerTime = cnvtint(curtime3)
@@ -61,6 +62,8 @@ the process of mocking a table.  It must be called before cclutAddMockIndex() or
 The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().
 tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited
 strings.  The columnTypes should have the same count as columnNames and be in the same order.
+isAccessedViaRdbCommands is optional and should be TRUE only if the script under test accesses the table using rdb commands.
+Table mocking will fail if there are both rdb and non-rdb queries against the table.
 
 @param tableName
     The table to be mocked.
@@ -68,13 +71,16 @@ strings.  The columnTypes should have the same count as columnNames and be in th
     A pipe-delimited list of columns to be mocked on the table
 @param columnTypes
     A pipe-delimited list of types for each column
+@param isAccessedViaRdbCommands
+    A boolean flag indicating that the mocked table will be accessed using an rdb command
 @returns
     The name of the mock table (This can be used to select data for testing)
 
 Example:
 call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")
+call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8", TRUE) ;person rdb-query exists
 */
-subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTypes)
+subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutColumnTypes, cclutIsAccessedViaRdbCommands)
     declare CCLUT_TABLE_NAME = vc with protect, constant(cnvtupper(cclutTableName))
     declare CCLUT_COLUMN_NAMES = vc with protect, constant(cnvtupper(cclutColumnNames))
     declare CCLUT_COLUMN_TYPES = vc with protect, constant(cnvtupper(cclutColumnTypes))
@@ -159,6 +165,7 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
             cclutTypeRec->qual[cclutColumnIndex].str
     endfor
 
+    set cclut_mockTables->tables[cclutMockTablePos].isAccessedViaRdbCommands = cclutIsAccessedViaRdbCommands
     return(cclut_mockTables->tables[cclutMockTablePos].replaceName)
 end ;cclutDefineMockTable
 
@@ -445,7 +452,7 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
 
     ;Validate inbound parameter
     if (cclutAssertStringIsNonEmpty(CCLUT_TABLE_NAME, "tableName") = FALSE)
-        return
+        return (null)
     endif
 
     set cclutMockTablePos = cclutGetMockTableIndex(CCLUT_TABLE_NAME)
@@ -458,6 +465,7 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
                 set cclutParserText = concat(" drop table ", cclutMockTableName, " go")
                 call parser(cclutParserText)
             else
+                declare dropSuccess = i2 with protect, noconstant(FALSE)
                 free record cclut_drop_table_request
                 record cclut_drop_table_request (
                   1 program_name = vc
@@ -469,8 +477,23 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
                 set cclut_drop_table_request->output_device = "MINE"
                 set cclut_drop_table_request->isBlob = 1
                 set cclut_drop_table_request->params = concat("^MINE^,^", cclutMockTableName, "^")
-                set stat = tdbexecute(3202004, 3202004, 3050002, "REC", cclut_drop_table_request, "REC", cclut_drop_table_reply)
-                if (stat != 0 or cclut_drop_table_reply->status_data.status = "F")
+                set cclutStat =
+                    tdbexecute(3202004, 3202004, 3050002, "REC", cclut_drop_table_request, "REC", cclut_drop_table_reply)
+                if (cclutStat = 0)
+                    if (cclut_drop_table_reply->status_data.status = "F")
+                        call cclexception(100, "E", "VCCL_RUN_PROGRAM failure.")
+                    else
+                        set cclutStat = cnvtjsontorec(cclut_drop_table_reply->document)
+                        if(cclutDropMockTableReply->status = "S")
+                            set dropSuccess = TRUE
+                        else
+                            call cclexception(100, "E", cclutDropMockTableReply->message)
+                        endif
+                    endif
+                else
+                    call cclexception(100, "E", concat("TDBEXECUTE error (status = ", build(cclutStat), ")"))
+                endif
+                if (dropSuccess = FALSE)
                     call cclexception(100, "E", concat("cclutRemoveMockTable(", CCLUT_TABLE_NAME,
                         ") - Unable to drop table.  Manual cleanup may be required.  Mock table name is ",
                         cclutMockTableName))
@@ -686,7 +709,7 @@ Constructs a statement for setting the value of a column in a database query on 
 @param cclutTableIndex
     The index of the mock table within cclut_mockTables->tables.
 @param cclutColumnIndex
-    The index of the column within the table's colums from cclut_mockTables->tables->columns.
+    The index of the column within the table's columns from cclut_mockTables->tables->columns.
 @param cclutDataBuffer
     The value to set on the column.
 @return

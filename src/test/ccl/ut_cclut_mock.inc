@@ -12,6 +12,13 @@ declare cclutEPWM_mock_subroutine::cclutExecuteProgramWithMocks(
 
 declare tdbexecuteA(
     app = i4, task = i4, request = i4, reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4
+declare tdbexecuteB(
+    app = i4, task = i4, request = i4, reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4
+declare tdbexecuteC(
+    app = i4, task = i4, request = i4, reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4
+declare tdbexecuteD(
+    app = i4, task = i4, request = i4, reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4
+
 
 declare cclutEPWM_group1_tdb::cclutGetCurrentGroup(null) = i4
 
@@ -247,10 +254,6 @@ end ;test_cclutRemoveAllMockImplementations_happy
 */
 subroutine common_test_cclutExecuteProgramWithMocks(null)
     declare stat = i4 with protect, noconstant(0)
-;    declare sample_person_rdb_mock_table_name = vc with protect, noconstant("")
-;    declare sample_encounter_rdb_mock_table_name = vc with protect, noconstant("")
-;    declare sample_encounter_alias_rdb_mock_table_name = vc with protect, noconstant("")
-
     record ucetcf_request (
       1 testCaseDirectory = vc
       1 testCaseFileName = vc
@@ -384,7 +387,7 @@ subroutine cclutEPWM_namespace::execute_mocks_happy_validations(null)
     call cclutAsserti4Equal(CURREF, "check cclut::internalRecord", cclut::internalRecord->item, 1)
     call cclutAssertVcEqual(CURREF, "check internalSubroutineSource",
         executeReply->internalSubroutineSource, "cclut::internalSubroutine")
-end ;cclutEPWM_namespace::execute_mocks_happy_validations
+end ;execute_mocks_happy_validations
 
 
 /**
@@ -420,13 +423,16 @@ end ;test_cclutExecuteProgramWithMocks_namespace::cclutExecuteProgramWithMocks
 subroutine cclutEPWM_mock_subroutine::execute_mocks_happy_validations(null)
     call cclutAssertI4Equal(CURREF, "check cclut::internalVariable", cclut::internalVariable, 1)
     call cclutAsserti4Equal(CURREF, "check cclut::internalRecord", cclut::internalRecord->item, 1)
-    call cclutAssertVcEqual(CURREF, "check internalSubroutineSource", 
+    call cclutAssertVcEqual(CURREF, "check internalSubroutineSource",
         executeReply->internalSubroutineSource, "cclut::mockSubroutine")
-end ;cclutEPWM_mock_subroutine::execute_mocks_happy_validations
+end ;execute_mocks_happy_validations
 
 
 /**
     Confirms that mock tables get dropped for a group1 user.
+
+    Note that in conjuction with test_mock_tables_dropped_via_tdbexecute_for_group1_user this test demonstrates that the
+    tdbexecute call gets performed successfully.
 */
 subroutine test_mock_tables_dropped_for_group1_user(null)
     declare idx = i4 with protect, noconstant(0)
@@ -455,29 +461,64 @@ subroutine cclutEPWM_group1_drop::execute_mocks_happy_validations(null)
     for (idx = 1 to mockTableCount)
         set mockTables->item[idx].name = cclutEPWM_group1_drop::cclut_mockTables->tables[idx].replaceName
     endfor
-end ;cclutEPWM_namespace::execute_mocks_happy_validations
+end ;execute_mocks_happy_validations
+
+/**
+    common startup code for group1 table drop exception tests.
+*/
+subroutine group1_mock_table_test(null)
+    record mockTables(1 item[*] 2 name = vc)
+    declare executeParams = vc with protect, constant("10,^test param^")
+    declare executeNamespace = vc with protect, constant("")
+    declare etcfKickoff = vc with protect, constant(concat(testNamespace, "::etcfKickoff"))
+
+    record errors(1 item[*] 2 code = i4 2 message = vc) with protect
+    declare errorMessage = vc with protect, noconstant("")
+    declare errorCode = i4 with protect, noconstant(0)
+    declare errorCount = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
+
+    call common_test_cclutExecuteProgramWithMocks(null)
+
+    call group1_mock_table_cleanup(null)
+end ;group1_mock_table_cleanup
 
 
 /**
-    Confirms that tdbexecute is used to drop mock tables for a group1 user.
+    Common error collection code for group1 table drop exception tests.
 */
-subroutine test_mock_tables_dropped_via_tdbexecute_for_group1_user(null)
+subroutine group1_collect_errors(null)
+    set errorCode = error(errorMessage, 0)
+    while(errorCode != 0)
+        set errorCount = errorCount + 1
+        set stat = alterlist(errors->item, errorCount)
+        set errors->item[errorCount].code = errorCode
+        set errors->item[errorCount].message = errorMessage
+        set errorCode = error(errorMessage, 0)
+    endwhile
+end
+
+/**
+    Common table collection code for group1 table drop exception tests.
+    This must occur in the context of the test's namespace since <namespace>::cclut_mockTables contains the data.
+*/
+subroutine group1_collect_tables(null)
+    declare idx = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
+    declare mockTableCount = i4 with protect, noconstant(0)
+    set mockTableCount = size(cclut_mockTables->tables, 5)
+    set stat = alterlist(mockTables->item, mockTableCount)
+    for (idx = 1 to mockTableCount)
+        set mockTables->item[idx].name = cclut_mockTables->tables[idx].replaceName
+    endfor
+end
+
+/**
+    Common cleanup code for group1 table drop exception tests.
+*/
+subroutine group1_mock_table_cleanup(null)
     declare idx = i4 with protect, noconstant(0)
     declare mockTableCount = i4 with protect, noconstant(0)
-    record mockTables(1 item[*] 2 name = vc)
-    record cclut_drop_table_reply(1 status_data 2 status = c1)
-    set cclut_drop_table_reply->status_data.status = "S"
-
-    declare executeParams = vc with protect, constant("10,^test param^")
-    declare executeNamespace = vc with protect, constant("cclutEPWM_group1_tdb")
-    declare testNameSpace = vc with protect, constant("cclutEPWM_group1_tdb")
-
-    record cclut_drop_table_reply(1 status_data 2 status = c1)
-    set cclut_drop_table_reply->status_data.status = "S"
-
-    declare etcfKickoff = vc with protect, constant("cclutEPWM_group1_tdb::etcfKickoff")
-    call common_test_cclutExecuteProgramWithMocks(null)
-
     set mockTableCount = size(mockTables->item, 5)
     call cclutAssertI4GreaterThan(CURREF, "mock table count", mockTableCount, 0)
     select into 'nl:' from dprotect dp where dp.platform = 'H0000' and dp.rcode = '5' and dp.group = 0 and dp.object = 'T' and
@@ -488,6 +529,17 @@ subroutine test_mock_tables_dropped_via_tdbexecute_for_group1_user(null)
     for (idx = 1 to mockTableCount)
         call parser(concat("drop table ", mockTables->item[idx].name, " go"))
     endfor
+end ;group1_mock_table_cleanup
+
+
+/**
+    Confirms that tdbexecute is used to drop mock tables for a group1 user.
+*/
+subroutine test_mock_tables_dropped_via_tdbexecute_for_group1_user(null)
+    record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
+    set cclut_drop_table_reply->status_data.status = "Z"
+    set cclut_drop_table_reply->document = ^{"CCLUTDROPMOCKTABLEREPLY": {"STATUS": "S", "MESSAGE": "" }}^
+    declare testNamespace = vc with protect, constant("cclutEPWM_group1_tdb")
 end; test_group1_user_can_drop_mocked_table
 subroutine cclutEPWM_group1_tdb::cclutGetCurrentGroup(null)
     return (1)
@@ -513,15 +565,127 @@ subroutine tdbexecuteA(app, task, request, reqType, req, repType, rep)
     return (0)
 end ;tdbexecuteA
 subroutine cclutEPWM_group1_tdb::execute_mocks_happy_validations(null)
-    declare idx = i4 with protect, noconstant(0)
-    declare stat = i4 with protect, noconstant(0)
-    declare mockTableCount = i4 with protect, noconstant(0)
-    set mockTableCount = size(cclutEPWM_group1_tdb::cclut_mockTables->tables, 5)
-    set stat = alterlist(mockTables->item, mockTableCount)
-    for (idx = 1 to mockTableCount)
-        set mockTables->item[idx].name = cclutEPWM_group1_tdb::cclut_mockTables->tables[idx].replaceName
-    endfor
-end ;cclutEPWM_namespace::execute_mocks_happy_validations
+    call group1_collect_tables(null)
+end ;execute_mocks_happy_validations
+
+
+/**
+    Confirms the exceptions raised when a failure occurs in the tdbexecute call used to drop mock tables for a group1 user.
+*/
+subroutine test_tdbexecute_error_during_group1_user_table_drop(null)
+    declare testNamespace = vc with protect, constant("cclutEPWM_group1_tdb_error")
+    record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
+    call group1_mock_table_test(null)
+end; test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_tdb_error::cclutGetCurrentGroup(null)
+    return (1)
+end ;test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_tdb_error::etcfKickoff(null)
+    execute cclut_execute_test_case_file with
+        replace("CCLUTREQUEST", ucetcf_request, 0),
+        replace("CCLUTREPLY", ucetcf_reply, 0),
+        replace("CCLUTTESTCASERESULTS", ucetcf_testCaseResults, 0),
+        replace("TDBEXECUTE", tdbexecuteB),
+        curnamespace = testNamespace
+end
+subroutine tdbexecuteB(app, task, request, reqType, req, repType, rep)
+    declare retVal = i4 with protect, noconstant(0)
+    set retVal = rand(curtime)
+    set retVal = 1 + mod(rand(0), 25)
+    return (retVal)
+end ;tdbexecuteB
+subroutine cclutEPWM_group1_tdb_error::execute_mocks_happy_validations(null)
+    call group1_collect_tables(null)
+end ;execute_mocks_happy_validations
+subroutine cclutEPWM_group1_tdb_error::cclutRemoveMockTable(tableName)
+    call public::cclutRemoveMockTable(tableName)
+    call group1_collect_errors(null)
+
+    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
+        call cclutAssertContains(CURREF, "remove table failure a1",
+            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
+        call cclutAssertContains(CURREF, "tdbexecute failure a", "TDBEXECUTE error (status =", errors->item[2].message)
+        call cclutAssertVcOperator(CURREF, "tdbexecute failure", errors->item[2].message, "regexplike",
+            "%CCL-E-392-PRG_[0-9_(),:]+\{CCLEXCEPTION\(\)\}Exception\(100\): TDBEXECUTE error \(status = [0-9]+\).")
+    endif
+end ;cclutRemoveMockTable
+
+
+/**
+    Confirms the exceptions raised if vccl_run_program fails when trying to drop mock tables for a group1 user.
+*/
+subroutine test_run_program_fails_during_group1_user_table_drop(null)
+    declare testNamespace = vc with protect, constant("cclutEPWM_group1_vrp_fail")
+    record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
+    set cclut_drop_table_reply->status_data.status = "F"
+    call group1_mock_table_test(null)
+end; test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_vrp_fail::cclutGetCurrentGroup(null)
+    return (1)
+end ;test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_vrp_fail::etcfKickoff(null)
+    execute cclut_execute_test_case_file with
+        replace("CCLUTREQUEST", ucetcf_request, 0),
+        replace("CCLUTREPLY", ucetcf_reply, 0),
+        replace("CCLUTTESTCASERESULTS", ucetcf_testCaseResults, 0),
+        replace("TDBEXECUTE", tdbexecuteC),
+        curnamespace = testNamespace
+end
+subroutine tdbexecuteC(app, task, request, reqType, req, repType, rep)
+    return (0)
+end ;tdbexecuteC
+subroutine cclutEPWM_group1_vrp_fail::execute_mocks_happy_validations(null)
+    call group1_collect_tables(null)
+end ;execute_mocks_happy_validations
+subroutine cclutEPWM_group1_vrp_fail::cclutRemoveMockTable(tableName)
+    call public::cclutRemoveMockTable(tableName)
+    call group1_collect_errors(null)
+
+    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
+        call cclutAssertContains(CURREF, "tdbexecute failure",
+            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
+        call cclutAssertContains(CURREF, "tdbexecute failure", "VCCL_RUN_PROGRAM failure.", errors->item[2].message)
+    endif
+end ;cclutRemoveMockTable
+
+
+/**
+    Confirms the exceptions raised if cclut_drop_mock_table_def fails to drop mock tables for a group1 user.
+*/
+subroutine test_script_fails_during_group1_user_table_drop(null)
+    declare testNamespace = vc with protect, constant("cclutEPWM_group1_script_fail")
+    record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
+    set cclut_drop_table_reply->status_data.status = "Z"
+    set cclut_drop_table_reply->document = ^{"CCLUTDROPMOCKTABLEREPLY": {"STATUS": "F", "MESSAGE": "table not found" }}^
+    call group1_mock_table_test(null)
+end; test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_script_fail::cclutGetCurrentGroup(null)
+    return (1)
+end ;test_group1_user_can_drop_mocked_table
+subroutine cclutEPWM_group1_script_fail::etcfKickoff(null)
+    execute cclut_execute_test_case_file with
+        replace("CCLUTREQUEST", ucetcf_request, 0),
+        replace("CCLUTREPLY", ucetcf_reply, 0),
+        replace("CCLUTTESTCASERESULTS", ucetcf_testCaseResults, 0),
+        replace("TDBEXECUTE", tdbexecuteC),
+        curnamespace = testNamespace
+end
+subroutine tdbexecuteD(app, task, request, reqType, req, repType, rep)
+    return (0)
+end ;tdbexecuteD
+subroutine cclutEPWM_group1_script_fail::execute_mocks_happy_validations(null)
+    call group1_collect_tables(null)
+end ;execute_mocks_happy_validations
+subroutine cclutEPWM_group1_script_fail::cclutRemoveMockTable(tableName)
+    call public::cclutRemoveMockTable(tableName)
+    call group1_collect_errors(null)
+
+    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
+        call cclutAssertContains(CURREF, "tdbexecute failure",
+            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
+        call cclutAssertContains(CURREF, "tdbexecute failure", "table not found", errors->item[2].message)
+    endif
+end ;cclutRemoveMockTable
 
 
 /**
@@ -534,10 +698,10 @@ subroutine test_table_replace_pre_9_3(null)
     call table_replace_version(null)
 end ;test_table_replace_pre_9_3
 subroutine test_table_replace_pre_9_3::cclutGetCurrentRevision(null)
-    return(9)
+    return (9)
 end
 subroutine test_table_replace_pre_9_3::cclutGetCurrentVersion(null)
-    return(90299)
+    return (90299)
 end
 subroutine test_table_replace_pre_9_3::cclutInvokeParser(strParser)
     call cclutAssertVcOperator(CURREF, "test_table_replace_pre_9_3 parser",
@@ -555,7 +719,7 @@ subroutine test_table_replace_9_3(null)
     call table_replace_version(null)
 end ;test_table_replace_9_3
 subroutine test_table_replace_9_3::cclutGetCurrentVersion(null)
-    return(90300)
+    return (90300)
 end
 subroutine test_table_replace_9_3::cclutInvokeParser(strParser)
     call cclutAssertVcOperator(CURREF, "test_table_replace_9_3 parser",
@@ -573,10 +737,10 @@ subroutine test_table_replace_pre_8_1_5(null)
     call table_replace_version(null)
 end ;test_table_replace_pre_8_1_5
 subroutine test_table_replace_pre_8_1_5::cclutGetCurrentRevision(null)
-    return(8)
+    return (8)
 end
 subroutine test_table_replace_pre_8_1_5::cclutGetCurrentVersion(null)
-    return(81499)
+    return (81499)
 end
 subroutine test_table_replace_pre_8_1_5::cclutInvokeParser(strParser)
     call cclutAssertVcOperator(CURREF, "test_table_replace_pre_8_1_5 parser",
@@ -594,10 +758,10 @@ subroutine test_table_replace_8_1_5(null)
     call table_replace_version(null)
 end ;test_table_replace_8_1_5
 subroutine test_table_replace_pre_8_1_5::cclutGetCurrentRevision(null)
-    return(8)
+    return (8)
 end
 subroutine test_table_replace_pre_8_1_5::cclutGetCurrentVersion(null)
-    return(81500)
+    return (81500)
 end
 subroutine test_table_replace_8_1_5::cclutInvokeParser(strParser)
     call cclutAssertVcOperator(CURREF, "test_table_replace_8_1_5 parser",
@@ -613,7 +777,7 @@ subroutine table_replace_version(null)
     if (curcclver < 81500 or (currev = 9 and curcclver < 90300))
         ;skip this test because the current CCL version is too old to test new functionality.
         call echo(build2("skipping test ", cclut::testName, " - the CCL version is ", curcclver)) ;intentional
-        return(null)
+        return (null)
     endif
 
     record ucetcf_request (

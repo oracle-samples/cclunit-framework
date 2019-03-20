@@ -77,7 +77,7 @@ subroutine test_cclutDoArraySplit_pipe_one(null)
 end
 
 /**
-    verifies the behavior for cclutDoArraySplit for a pipe delimited with trhee pipes.
+    verifies the behavior for cclutDoArraySplit for a pipe delimited with three pipes.
 */
 subroutine test_cclutDoArraySplit_pipe_three(null)
     record myRec(1 qual[*] 2 str = vc) with protect
@@ -95,7 +95,7 @@ end
 
 /**
     verifies the behavior for cclutDoArraySplit for a pipe delimited string with three pipes but nothing
-    before the first or afgter the last.
+    before the first or after the last.
 */
 subroutine test_cclutDoArraySplit_pipe_three_empty_ends(null)
     record yourRec(1 qual[*] 2 str = vc) with protect
