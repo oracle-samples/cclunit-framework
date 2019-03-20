@@ -723,7 +723,6 @@ subroutine public::cclutConstructDBSetStatement(cclutTableIndex, cclutColumnInde
 
     if (cclutColumnIndex > CCLUT_COLUMN_COUNT)
         call parser(" reset")
-        call parser(" reset")
         call parser("execute null go")
         call cclexception(100, "E", concat("cclutConstructDBSetStatement(",
             cclut_mockTables->tables[cclutTableIndex].originalName, ") - Too many columns of data added to table."))
