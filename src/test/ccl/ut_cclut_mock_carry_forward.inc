@@ -3,14 +3,14 @@
 ;** explicitly removed.  The framework removes all mocks at the end of every test case.
 ;**********************************************************************************************************************************
 
-declare setupOnce(dummyVar = i2) = null
-declare tearDownOnce(dummyVar = i2) = null
+declare setupOnce(null) = null
+declare tearDownOnce(null) = null
 
-subroutine setupOnce(dummyVar)
+subroutine setupOnce(null)
     call cclutAddMockImplementation("setup_once_subroutine", "mock_setup_once_subroutine")
 end ;setupOnce
 
-subroutine tearDownOnce(dummyVar)
+subroutine tearDownOnce(null)
     declare mockIndex = i4 with protect, noconstant(0)
     declare mockPos = i4 with protect, noconstant(0)
 

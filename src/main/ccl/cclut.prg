@@ -25,7 +25,7 @@ prompt
   "Test Name Pattern [.*]: " = ".*",
   "Optimizer Mode (CBO, RBO) [current]: " = "",
   "Deprecated Flag (E, W, L, I, D) [E]: " = "",
-  "FailFast [TRUE]: " = TRUE
+  "FailFast [FALSE]: " = FALSE
 with outputDestination, testCaseDirectory,
     testCaseFileName, testNamePattern, optimizerMode, deprecatedFlag, failFast
 
@@ -36,7 +36,6 @@ declare cclut1::executeTestCase(null) = null with protect
 declare cclut1::processTestCaseResponse(cclutDestination = vc, cclutReq = vc(ref), 
     cclutResp = vc(ref), cclutRawResults = vc(ref), cclutResults = vc(ref)) = null with protect
 declare cclut1::transferTestCaseResults(cclutSource = vc(ref), cclutTarget = vc(ref)) = null with protect
-	
 declare cclut1::generateResultsReport(cclutDestination = vc, cclutReq = vc(ref), cclutResults = vc(ref)) = i2 with protect
 declare cclut1::generateErrorReport(cclutDestination = vc, testCaseFileName = vc, cclutErrorCode = vc) = i2 with protect
 
@@ -136,7 +135,7 @@ subroutine cclut1::main(null)
   set cclut1TestCaseRequest->failFast = cclut1::failFast
 
   call cclut1::executeTestCase(null)
-    
+
   call cclut1::processTestCaseResponse(
       cclut1::outputDestination, cclut1TestCaseRequest, cclut1TestCaseReply, cclut1TestCaseResults, cclut1TestResults)
   call cclut1::errorCheck(null)

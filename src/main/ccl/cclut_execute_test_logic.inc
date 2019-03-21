@@ -45,18 +45,19 @@ subroutine cclut::evaluateAsserts(cclutTestIndex, cclutPPReplyStruct, cclutPPAss
   declare cclutErrorCount = i4 with protect, noconstant(0)
   declare cclutErrorMessage = vc with protect, noconstant("")
   declare cclutStat = i4 with protect, noconstant(0) 
-  
+
   if (cclut::errorOccurred(cclutErrorMessage))
     set cclutErrorCount = size(cclutPPReplyStruct->tests[cclutTestIndex].errors, 5) + 1
     set cclutStat = alterlist(cclutPPReplyStruct->tests[cclutTestIndex].errors, cclutErrorCount)
-    set cclutPPReplyStruct->tests[cclutTestIndex].errors[cclutErrorCount].lineNumber = 
+    set cclutPPReplyStruct->tests[cclutTestIndex].errors[cclutErrorCount].lineNumber =
         cclut::getCclErrorLineNumber(cclutErrorMessage)
     set cclutPPReplyStruct->tests[cclutTestIndex].errors[cclutErrorCount].errorText = cclutErrorMessage
+
     set cclutResultValue = FALSE
   endif
-  
+
   set cclutStat = alterlist(cclutPPReplyStruct->tests[cclutTestIndex].asserts, cclutReplyAssertIndex + cclutAssertCount)
- 
+
   ;Append all assert to the reply structure.
   for (cclutAssertIndex = 1 to cclutAssertCount)
     set cclutReplyAssertIndex = cclutReplyAssertIndex + 1
@@ -230,14 +231,14 @@ subroutine cclut::executeTestLogic(null)
   set cclutRegistryTestCount = size(cclut_testRegistryReply->tests, 5)
    
   if (cclutRegistryTestCount > 0)
-    call echo("Starting Test Case execution...")
+    call echo("Starting Test Case execution...") ;intentional
    
     if (checkfun("SETUPONCE") = CCLUT_FUN_TYPE_SUBROUTINE)
       set cclutReplyTestCount = 1
       set cclutStat = alterlist(cclutReply->tests, cclutReplyTestCount)
       set cclutReply->tests[cclutReplyTestCount].name = "SETUPONCE"
       call cclut::exitOnError("pre-executeTestLogic-2", cclut::testCaseFileName, cclutReply)
-      call echo("Executing setupOnce...")
+      call echo("Executing setupOnce...") ;intentional
       call setupOnce(null)
       set cclutReply->resultInd = band(cclutReply->resultInd, 
           cclut::evaluateTestResults(cclutReplyTestCount, cclutReply, cclut_runResult, cclut_timerList))
@@ -253,13 +254,13 @@ subroutine cclut::executeTestLogic(null)
         set cclutReplyTestCount = cclutReplyTestCount + 1
         set cclutStat = alterlist(cclutReply->tests, cclutReplyTestCount)
         set cclutReply->tests[cclutReplyTestCount].name = cclut::testName
-       
-        call echo(build2("running test ", cclut::testName))
+
+        call echo(build2("running test ", cclut::testName)) ;intentional
         if (checkfun("SETUP") = CCLUT_FUN_TYPE_SUBROUTINE)
           if (cclutReplyTestCount = 1) ;there is no setupOnce
             call cclut::exitOnError("pre-executeTestLogic-3", cclut::testCaseFileName, cclutReply)
           endif
-          call echo("Executing setup...")
+          call echo("Executing setup...") ;intentional
           call setup(null)
         endif
         set cclutReply->resultInd = band(cclutReply->resultInd, 
@@ -268,12 +269,12 @@ subroutine cclut::executeTestLogic(null)
         if (cclutReplyTestCount = 1 and checkfun("SETUP") != CCLUT_FUN_TYPE_SUBROUTINE) ;there is no setupOnce or setup
           call cclut::exitOnError("pre-executeTestLogic-4", cclut::testCaseFileName, cclutReply)
         endif
-        call echo(build2("Executing ", cclut::testName, "..."))
+        call echo(build2("Executing ", cclut::testName, "...")) ;intentional
         call parser(concat("call ", cclut::testName, "(null) go"))
         set cclutReply->resultInd = band(cclutReply->resultInd, 
             cclut::evaluateTestResults(cclutReplyTestCount, cclutReply, cclut_runResult, cclut_timerList))
         if (checkfun("TEARDOWN") = CCLUT_FUN_TYPE_SUBROUTINE)
-          call echo("Executing teardown...")
+          call echo("Executing teardown...") ;intentional
           call teardown(null)
         endif
         set cclutReply->resultInd = band(cclutReply->resultInd, 
@@ -285,7 +286,7 @@ subroutine cclut::executeTestLogic(null)
     endfor
       
     if (checkfun("TEARDOWNONCE") = CCLUT_FUN_TYPE_SUBROUTINE)
-      call echo("Executing teardownOnce...")
+      call echo("Executing teardownOnce...") ;intentional
       set cclutReplyTestCount = cclutReplyTestCount + 1
       set cclutStat = alterlist(cclutReply->tests, cclutReplyTestCount)
       set cclutReply->tests[cclutReplyTestCount].name = "TEARDOWNONCE"

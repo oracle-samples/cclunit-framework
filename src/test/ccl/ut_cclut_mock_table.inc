@@ -1,7 +1,6 @@
-declare setup(dummyVar = i2) = null
-declare tearDown(dummyVar = i2) = null
+declare tearDown(null) = null
 
-subroutine tearDown(dummyVar)
+subroutine tearDown(null)
     call cclutRemoveAllMocks(null)
     rollback
 end ;tearDown
@@ -201,7 +200,7 @@ subroutine test_cclutDefineMockTable_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_tableName 002", mockTable, "")
 end ;test_cclutDefineMockTable_missing_tableName
@@ -220,7 +219,7 @@ subroutine test_cclutDefineMockTable_missing_columnNames(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_columnNames 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - columnNames is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - columnNames is a required field."))
 
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_columnNames 002", mockTable, "")
 end ;test_cclutDefineMockTable_missing_columnNames
@@ -239,7 +238,7 @@ subroutine test_cclutDefineMockTable_missing_columnTypes(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_columnTypes 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - columnTypes is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - columnTypes is a required field."))
 
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_columnTypes 002", mockTable, "")
 end ;test_cclutDefineMockTable_missing_columnTypes
@@ -360,7 +359,7 @@ subroutine test_cclutAddMockIndex_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 end ;test_cclutAddMockIndex_missing_tableName
 
 /* test_cclutAddMockIndex_missing_columnNames ***************************************************************
@@ -375,7 +374,7 @@ subroutine test_cclutAddMockIndex_missing_columnNames(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_missing_columnNames 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - columnNames is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - columnNames is a required field."))
 end ;test_cclutAddMockIndex_missing_columnNames
 
 /* test_cclutAddMockIndex_unmocked_table ********************************************************************
@@ -390,7 +389,7 @@ subroutine test_cclutAddMockIndex_unmocked_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_unmocked_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsDefined\(SAMPLE_TABLE\) - Table has not been mocked."))
+            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
 end ;test_cclutAddMockIndex_unmocked_table
 
 /* test_cclutAddMockIndex_created_table *********************************************************************
@@ -408,7 +407,7 @@ subroutine test_cclutAddMockIndex_created_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_created_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsNotCreated\(SAMPLE_TABLE\) - Table has already been created."))
+            " cclutAssertMockTableIsNotCreated\(SAMPLE_TABLE\) - Table has already been created."))
 end ;test_cclutAddMockIndex_created_table
 
 /* test_cclutAddMockIndex_invalid_column ********************************************************************
@@ -486,7 +485,7 @@ subroutine test_cclutCreateMockTable_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutCreateMockTable_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 end ;test_cclutCreateMockTable_missing_tableName
 
 /* test_cclutCreateMockTable_unmocked_table *****************************************************************
@@ -501,7 +500,7 @@ subroutine test_cclutCreateMockTable_unmocked_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutCreateMockTable_unmocked_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsDefined\(SAMPLE_TABLE\) - Table has not been mocked."))
+            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
 end ;test_cclutCreateMockTable_unmocked_table
 
 /* test_cclutCreateMockTable_created_table ******************************************************************
@@ -606,7 +605,7 @@ subroutine test_cclutRemoveMockTable_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutRemoveMockTable_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 end ;test_cclutRemoveMockTable_missing_tableName
 
 ;**********************************************************************************************************************************
@@ -1166,7 +1165,7 @@ subroutine test_cclutAddMockData_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 end ;test_cclutAddMockData_missing_tableName
 
 /* test_cclutAddMockData_unmocked_table *********************************************************************
@@ -1181,7 +1180,7 @@ subroutine test_cclutAddMockData_unmocked_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_unmocked_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsDefined\(SAMPLE_TABLE\) - Table has not been mocked."))
+            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
 end ;test_cclutAddMockData_unmocked_table
 
 /* test_cclutAddMockData_uncreated_table ********************************************************************
@@ -1198,7 +1197,7 @@ subroutine test_cclutAddMockData_uncreated_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_uncreated_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
+            " cclutAssertMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
 end ;test_cclutAddMockData_uncreated_table
 
 /* test_cclutAddMockData_too_many_columns *******************************************************************
@@ -1214,7 +1213,7 @@ subroutine test_cclutAddMockData_too_many_columns(null)
 
     set errorCode = error(errorMessage, 0)
 
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_many_columns 001", trim(errorMessage, 3),
+    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_many_columns 001", errorMessage,
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
             " cclutConstructDBSetStatement\(SAMPLE_TABLE\) - Too many columns of data added to table."))
 end ;test_cclutAddMockData_too_many_columns
@@ -1324,7 +1323,7 @@ subroutine test_cclutClearMockData_missing_tableName(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_missing_tableName 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateParameterIsNotEmpty\(\) - tableName is a required field."))
+            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
 end ;test_cclutClearMockData_missing_tableName
 
 /* test_cclutClearMockData_unmocked_table *******************************************************************
@@ -1339,7 +1338,7 @@ subroutine test_cclutClearMockData_unmocked_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_unmocked_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsDefined\(SAMPLE_TABLE\) - Table has not been mocked."))
+            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
 end ;test_cclutClearMockData_unmocked_table
 
 /* test_cclutClearMockData_uncreated_table ******************************************************************
@@ -1356,5 +1355,5 @@ subroutine test_cclutClearMockData_uncreated_table(null)
 
     call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_uncreated_table 001", trim(errorMessage, 3),
         "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutValidateMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
+            " cclutAssertMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
 end ;test_cclutClearMockData_uncreated_table

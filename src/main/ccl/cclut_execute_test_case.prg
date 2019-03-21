@@ -159,7 +159,7 @@ set cclutReply->status_data.subeventstatus[1].targetObjectName = cclut_reply->st
 set cclutReply->status_data.subeventstatus[1].targetObjectValue = cclut_reply->status_data.subeventstatus[1].targetObjectValue
 
 if (validate(cclut::debug, FALSE) = TRUE)
-  call echorecord(cclutReply)
+  call echorecord(cclutReply) ;intentional
 endif
  
 end go

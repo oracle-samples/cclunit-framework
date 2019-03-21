@@ -42,13 +42,17 @@ with outdev, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode
   declare cclut_ff::stat = i4 with protect, noconstant(0)
   declare cclut_ff::output = vc with protect, noconstant(trim(""))
 
+  if (validate(_memory_reply_string) = FALSE)
+    declare _memory_reply_string = vc with protect, noconstant("")
+  endif  
+
   /**
     Echoes text and append it to the cclut_ff::output variable which will set in _memory_reply_string on program exit.
     @param cclutMsg
       The text to echo/append.
   */
   subroutine cclut_ff::doOutput(cclutMsg)    
-    call echo(cclutMsg)
+    call echo(cclutMsg) ;intentional
     if (cclut_ff::output = "")
       set cclut_ff::output = cclutMsg
     else
@@ -159,9 +163,7 @@ with outdev, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode
 
 call cclut_ff::errorCheck(1, FALSE)
 
-if (validate(_memory_reply_string) = TRUE)
-  set _memory_reply_string = cclut_ff::output
-endif  
+set _memory_reply_string = cclut_ff::output
 
 ;prevent loads of useless code coverage data from being dumped at the end of the output.
 if ($outdev = "MINE")

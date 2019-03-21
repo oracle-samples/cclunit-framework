@@ -59,12 +59,12 @@ declare cclutLineOfSpaces = vc with protect, constant(concat("*", fillStr(cclutL
 set reply->state = concat("<STATE><VERSION><![CDATA[", cclut::FRAMEWORK_VERSION, "]]></VERSION>",
 "<REQUIRED_CCL>", cclut::MINIMUM_REQUIRED_CCL_VERSION, "</REQUIRED_CCL></STATE>")
 
-call echo(cclutLineOfStars)
-call echo(cclutLineOfSpaces)
-call echo(generateOutputLine(cclutVersionDisplay))
-call echo(generateOutputLine(cclutCclVersionDisplay))
-call echo(cclutLineOfSpaces)
-call echo(cclutLineOfStars)
+call echo(cclutLineOfStars) ;intentional
+call echo(cclutLineOfSpaces) ;intentional
+call echo(generateOutputLine(cclutVersionDisplay)) ;intentional
+call echo(generateOutputLine(cclutCclVersionDisplay)) ;intentional
+call echo(cclutLineOfSpaces) ;intentional
+call echo(cclutLineOfStars) ;intentional
 
 
 if (validate(_memory_reply_string) = TRUE)

@@ -40,7 +40,7 @@ subroutine captureEcho(msg)
   set messageCount = 1 + size(testing::echoMessages->message, 5)
   set stat = alterlist(testing::echoMessages->message, messageCount)
   set testing::echoMessages->message[messageCount].value = msg
-  call echo(msg)
+  call echo(msg) ;intentional
   return (null)
 end ;;;captureEcho
 

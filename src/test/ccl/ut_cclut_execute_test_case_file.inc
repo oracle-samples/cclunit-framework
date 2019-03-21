@@ -829,7 +829,7 @@ subroutine testLoadingErrors(null)
       ucetcf_testCaseResults->status_data.subeventstatus[1].targetObjectName, "ut_cclut_suo_su_td_tdo")
   set matches = operator(ucetcf_testCaseResults->status_data.subeventstatus[1].targetObjectValue, "regexplike", 
 "%CCL-E-94-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{GUARANTEEDERROR\}\
-Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.");^
+Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   call cclutAssertI4Equal(CURREF, "execute success 5", matches, TRUE)
   call cclutAssertI2Equal(CURREF, "test case failure", ucetcf_testCaseResults->resultInd, FALSE)
 end ;;;testLoadingErrors
@@ -1046,7 +1046,7 @@ subroutine testErrorThenExitScript(null)
   call cclutAssertI4Equal(CURREF, "testOne assert count", size(ucetcf_testCaseResults->tests[2].asserts, 5), 0)
   call cclutAssertI4Equal(CURREF, "testOne error count", size(ucetcf_testCaseResults->tests[2].errors, 5), 1)
   call cclutAssertVcOperator(CURREF, "testOne error text", ucetcf_testCaseResults->tests[2].errors.errorText, "regexplike",
-    "%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\): forced error.");^
+    "%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\): forced error.")
 end ;;;testErrorThenExitScript
 
 

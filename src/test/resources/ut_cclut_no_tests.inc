@@ -3,5 +3,5 @@
 */
 declare notATest(null) = null
 subroutine notATest(null)
-  call echo("I am not a test")
+  call echo("I am not a test")  ;intentional
 end ;;;notATest

@@ -18,7 +18,7 @@ An illustration of the concept can be seen [here](./examples/basic_example.inc).
 
 ## Mocking Things
 
-In general, there are two ways to mock objects in CCL unit tests.  Generally speaking, use "with replace" to mock things that are defined outside the script or called directly by the script (CCL subroutines, UARs, other scripts), and use "with curnamespace" to mock subroutines executed by the subroutine being tested.  When using "with curnamespace", add the PUBLIC namespace to the real thing and use an alternate namespace to define an override.  Execute the script using the option `with curnamespace = "<alternate namespace>".`  In practice, it is convenient to use the name of the test for the alternate namespace.
+In general, there are two ways to mock objects in CCL unit tests.  Generally speaking, use "with replace" to mock things that are defined outside the script or called directly by the script (CCL subroutines, UARs, other scripts), and use "with curnamespace" to mock subroutines executed by the subroutine being tested.  When using "with curnamespace", add the PUBLIC namespace to the real thing and use an alternate namespace to define an override.  Execute the script using the option `with curnamespace = "<alternate namespace>".`  In practice, it is convenient to use the name of the test for the alternate namespace. Beware, however, that there is a forty chararcter limit on namespaces.
     
 The CCL Unit Testing framework provides an abstraction for creating mocks.  The purpose is to make it easier to define mock tables and other mock objects to be used when executing a script.  Details on the API can be found at [CCL Unit Mocking][CCL Unit Mocking].
 

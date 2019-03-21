@@ -11,7 +11,7 @@ declare testItC(null) = null with protect
   Mock no-op for the parser function.
 */
 subroutine mockParser(instruction)
-  call echo("mockParser")
+    null
 end 
 
 /**

@@ -67,7 +67,7 @@ subroutine captureEcho(msg)
   set messageCount = 1 + size(testing::echoMessages->message, 5)
   set stat = alterlist(testing::echoMessages->message, messageCount)
   set testing::echoMessages->message[messageCount].value = msg
-  call echo(msg)
+  call echo(msg) ;intentional
   return(null)
 end ;;;captureEcho
 
@@ -307,7 +307,7 @@ subroutine testSetupError(null)
   set testing::expectedMessages->message[3].value = "Executing setup..."
   set testing::expectedMessages->message[4].value = "CCL error in setup"
   set testing::expectedMessages->message[5].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[5].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[6].value = "Executing teardown..."
@@ -336,7 +336,7 @@ subroutine testSetupOnceErrorFailTest(null)
   set testing::expectedMessages->message[1].value = "Executing setupOnce..."
   set testing::expectedMessages->message[2].value = "CCL error in setupOnce"
   set testing::expectedMessages->message[3].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[3].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[4].value = "Executing teardownOnce..."
@@ -411,7 +411,7 @@ subroutine testFrameworkFailure(null)
 
   set stat = alterlist(testing::expectedMessages->message, 1)
   set testing::expectedMessages->message[1].value = 
-      "%CCL-E-151-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{Z_SET.\}TRACE_NOT is not previously defined.";^
+      "%CCL-E-151-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{Z_SET.\}TRACE_NOT is not previously defined."
   set testing::expectedMessages->message[1].type = testing::ASSERT_TYPE_MATCH
 
   execute cclut_ff "ut_cclut_output", "cclsource", "ut_cclut_suo_su_td_tdo" with
@@ -515,13 +515,13 @@ subroutine testTeardownAndTeardownOnceError(null)
   set testing::expectedMessages->message[5].value = "Executing teardown..."
   set testing::expectedMessages->message[6].value = "CCL error in teardown"
   set testing::expectedMessages->message[7].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[7].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[8].value = "Executing teardownOnce..."
   set testing::expectedMessages->message[9].value = "CCL error in teardownOnce"    
   set testing::expectedMessages->message[10].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[10].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[11].value = "**********************************"
@@ -555,12 +555,12 @@ subroutine testErroredTests(null)
   set testing::expectedMessages->message[8].value = "Executing TESTTHREE..."
   set testing::expectedMessages->message[9].value = "CCL error in TESTTHREE"    
   set testing::expectedMessages->message[10].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[10].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[11].value = "CCL error in TESTTHREE"    
   set testing::expectedMessages->message[12].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[12].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[13].value = "Executing teardown..."
@@ -634,12 +634,12 @@ subroutine testErroredAndFailedTestsB(null)
       "FAILURE: line number \[[0-9]+\]; context \[testThree failure A\]; condition \[0 = 1.*"
   set testing::expectedMessages->message[10].value = "CCL error in TESTTHREE"    
   set testing::expectedMessages->message[11].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[11].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[12].value = "CCL error in TESTTHREE"    
   set testing::expectedMessages->message[13].value = concat(
-    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+    "%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
     "\{GUARANTEEDERROR\}Assignment of Report expression \(GUARANTEEDERROR\) to incompatible type.")
   set testing::expectedMessages->message[13].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[14].value = "Executing teardown..."
@@ -684,7 +684,7 @@ subroutine testCclutffErrorsLate(null)
   set testing::expectedMessages->message[13].value = "*   cclut_ff:      SUCCESS       *"
   set testing::expectedMessages->message[14].value = "*                                *"
   set testing::expectedMessages->message[15].value = "**********************************"
-  set testing::expectedMessages->message[16].value = concat("%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",;^
+  set testing::expectedMessages->message[16].value = concat("%CCL-E-94-CCLUT_[0-9]+\([^)]+\)[0-9]+:[0-9]+",
       "\{CONTRIVEDERROR\}Assignment of Report expression \(CONTRIVEDERROR\) to incompatible type.") 
   set testing::expectedMessages->message[16].type = testing::ASSERT_TYPE_MATCH
       
@@ -704,10 +704,10 @@ subroutine testFailedCompile(null)
 
   set stat = alterlist(testing::expectedMessages->message, 4)
   set testing::expectedMessages->message[1].value = 
-      "%CCL-E-51-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{COMPILE\(\)\}This is an invalid \(COMPILE\).";^
+      "%CCL-E-51-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{COMPILE\(\)\}This is an invalid \(COMPILE\)."
   set testing::expectedMessages->message[1].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[2].value = 
-      "%CCL-E-9-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{DECLARE\}Unexpected symbol found.";^
+      "%CCL-E-9-CCLUT_FF\([^)]+\)[0-9]+:[0-9]+\{DECLARE\}Unexpected symbol found."
   set testing::expectedMessages->message[2].type = testing::ASSERT_TYPE_MATCH
   set testing::expectedMessages->message[3].value = "Failed to generate the test case program."
   set testing::expectedMessages->message[4].value = "Check the listing file cclut_[0-9]+\.lis"
@@ -726,7 +726,6 @@ subroutine testMockTableCleanup(null)
   declare cclutMockTableName = vc with protect, noconstant("uninitialized")
 
   execute cclut_ff "ut_cclut_output", "cclsource", "ut_cclut_mock_table_misbehaving_cleanup"
-call echo(build2("cclutMockTableName after: ", cclutMockTableName))        
 
   call cclutAssertStartsWith(CURREF, "testMockTableCleanup 001", "CUST_CCLUT", cclutMockTableName)
 

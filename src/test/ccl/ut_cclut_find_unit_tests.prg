@@ -14,33 +14,33 @@ create program ut_cclut_find_unit_tests:dba
   declare retesting::testingOne(null) = null
       
   subroutine testOne(null)
-    call echo("testOne")
+    call echo("testOne") ;intentional
   end
   subroutine testing::testTwo(null)
-    call echo("testTwo")
+    call echo("testTwo") ;intentional
   end
   subroutine testThree(null)
-    call echo("testThree")
+    call echo("testThree") ;intentional
   end
   subroutine testing::testFour(null)
-    call echo("testFour")
+    call echo("testFour") ;intentional
   end
   subroutine (testFive(null) = null)
-    call echo("testFive")
+    call echo("testFive") ;intentional
   end
   subroutine (testing::testSix(null) = null)
-    call echo("testSix")
+    call echo("testSix") ;intentional
   end
   subroutine testing::thisIsNotATest(null)
-    call echo("this is not a test")
+    call echo("this is not a test") ;intentional
   end
   subroutine (testing::thisIsNotATestEither(null) = null)
-    call echo("this is not a test either")
+    call echo("this is not a test either") ;intentional
   end
   subroutine ns::testSeven(null)
-    call echo("ns::testSeven")
+    call echo("ns::testSeven") ;intentional
   end
   subroutine (ns::testEight(null) = null)
-    call echo("ns::testEight")
+    call echo("ns::testEight") ;intentional
   end
 end go

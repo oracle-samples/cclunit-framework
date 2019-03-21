@@ -11,20 +11,20 @@ create program ut_cclut_cc_exclusions:dba
   subroutine sub1(null)
     declare idx = i4 with protect, noconstant(0)
     for (idx = 1 to 2)
-      call echo("executing sub1")
+      call echo("executing sub1") ;intentional
 ;;;CCLUNIT:OFF
-      call echo("not sub2")
-      call echo("not sub2")    
+      call echo("not sub2") ;intentional
+      call echo("not sub2") ;intentional
 ;;;CCLUNIT:ON
     endfor
   end ;;;sub1
   subroutine sub2(null)
     declare idx = i4 with protect, noconstant(0)
     for (idx = 1 to 2)
-      call echo("executing sub2")
-      call echo("executing sub2")
+      call echo("executing sub2") ;intentional
+      call echo("executing sub2") ;intentional
 ;;;CCLUNIT:OFF
-      call echo("not sub1")
+      call echo("not sub1") ;intentional
 ;;;CCLUNIT:ON
     endfor
   end ;;;sub2
@@ -34,10 +34,10 @@ create program ut_cclut_cc_exclusions:dba
     head cv.display
 ;this will be ignored because it comes before the corresponding ON
 ;;;CCLUNIT:OFF
-      call echo(cv.display)
+      call echo(cv.display) ;intentional
 ;;;CCLUNIT:ON
     detail
-      call echo(build2(cv.display_key, ": ", cv.display))
+      call echo(build2(cv.display_key, ": ", cv.display)) ;intentional
   end ;;;sub3
   
   call sub4(null)
@@ -49,6 +49,6 @@ create program ut_cclut_cc_exclusions:dba
   
 ;this will be ignored because there is not a corresponding ON.
 ;;;CCLUNIT:OFF
-call echo("done")
+call echo("done") ;intentional
   
 end go
