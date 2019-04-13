@@ -186,6 +186,7 @@ subroutine public::cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, c
 
     ;Add namespace
     set cclutParserText = concat(cclutParserText, ^ curnamespace = "^, CCLUT_NAMESPACE, ^" go^)
+    call cclut::stashErrors(null)
     call cclutInvokeparser(cclutParserText)
 end ;cclutExecuteProgramWithMocks
 

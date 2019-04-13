@@ -8,14 +8,23 @@
 ;**********************************************************************************************************************************
 
 
-declare cclut::getErrorList(cclutPErrorList = vc(ref)) = i4
+declare cclut::getErrorList(cclutPPErrorList = vc(ref)) = i4
+declare cclut::getErrorStackErrors(cclutPErrorList = vc(ref)) = i4
+declare cclut::stashErrors(null) = null
 declare cclut::errorOccurred(cclutPErrorMessage = vc(ref)) = i2
 declare cclut::getCclErrorLineNumber(cclutPErrorMessage = vc) = i4
 declare cclut::exitOnError(cclutOperation = vc, cclutObject = vc, cclutStruct = vc(ref)) = null
 
+record cclutErrorStash(
+  1 error[*]
+    2 errorCode = i4
+    2 errorMessage = vc
+    2 lineNumber = i4
+) with protect
+
 
 /**
-  Retrievs the errors for the error queue and clears it.
+  Retrievs all errors from cclutErrorStash and the current error stack appending them to a provided buffer and clearing both.
   @param errorList
     A return buffer for the error list
     <pre>
@@ -27,14 +36,41 @@ declare cclut::exitOnError(cclutOperation = vc, cclutObject = vc, cclutStruct = 
       ) with protect
     </pre>
   @returns
-    A boolean flag indicating whether there were any errors: TRUE there were errors; FALSE there were not.
+    The number of errors in the return buffer when complete.
 */
-subroutine cclut::getErrorList(cclutPErrorList)
+subroutine cclut::getErrorList(cclutPPErrorList)
+  declare cclutStashedErrorCount = i4 with protect, constant(size(cclutErrorStash->error, 5))
+  declare cclutTotalErrorCount = i4 with protect, noconstant(0)
+  declare cclutStat = i4 with protect, noconstant(0)
+  if (cclutStashedErrorCount > 0)
+    set cclutStat = moveRecList(
+        cclutErrorStash->error, cclutPPErrorList->error, 1, size(cclutPPErrorList->error, 5), cclutStashedErrorCount, TRUE)
+    set cclutStat = alterlist(cclutErrorStash->error, 0)
+  endif
+  return (cclut::getErrorStackErrors(cclutPPErrorList))
+end ;getErrorList
+
+/**
+  Retrievs all errors from the current error stack clearing it and appending the errors to a provided buffer.
+  @param errorList
+    A return buffer for the error list
+    <pre>
+      record errorList(
+        1 error[*]
+          2 errorCode = i4
+          2 errorMessage = vc
+          2 lineNumber = i4
+      ) with protect
+    </pre>
+  @returns
+    The number of errors in the return buffer when complete.
+*/
+subroutine cclut::getErrorStackErrors(cclutPErrorList)
   declare cclutErrorMessage = vc with protect, noconstant("")
   declare cclutErrorCode = i2 with protect, noconstant(0)
   declare cclutErrorCount = i4 with protect, noconstant(size(cclutPErrorList->error, 5))
   declare cclutStat = i4 with protect, noconstant(0)
-  
+
   set cclutErrorCode = error(cclutErrorMessage, 0)
   while (cclutErrorCode > 0)
     set cclutErrorCount = cclutErrorCount + 1
@@ -48,8 +84,28 @@ subroutine cclut::getErrorList(cclutPErrorList)
 end ;getErrorList
 
 /**
+  Stashes the current error stack into the cclutErrorStash record structure and clears the error stack.
+*/
+subroutine cclut::stashErrors(null)
+  record cclutErrorList(
+    1 error[*]
+      2 errorCode = i4
+      2 errorMessage = vc
+      2 lineNumber = i4
+  ) with protect
+
+  declare cclutErrorCount = i4 with protect, noconstant(0)
+  declare cclutStat = i4 with protect, noconstant(0)
+  set cclutErrorCount = cclut::getErrorList(cclutErrorList)
+  if (cclutErrorCount > 0)
+    set cclutStat =
+        moveRecList(cclutErrorList->error, cclutErrorStash->error, 1, size(cclutErrorStash->error, 5), cclutErrorCount, TRUE)
+  endif
+end ;getErrorList
+
+/**
   Determines if CCL errors occurred and clears the error queue.
-  @param cclutPErrorMessage 
+  @param cclutPErrorMessage
     Return buffer for the error message if an error has occurred.
   @returns
     A boolean flag indicating whether a CCL error has occurred.
@@ -57,7 +113,7 @@ end ;getErrorList
       At least one CCL error has occurred.
     @value FALSE
       No CCL errors have occurred.
-*/ 
+*/
 subroutine cclut::errorOccurred(cclutPErrorMessage)
   declare cclutErrorMessage = vc with protect, noconstant("")
   declare cclutErrorCode = i2 with protect, noconstant(0)
@@ -69,11 +125,11 @@ subroutine cclut::errorOccurred(cclutPErrorMessage)
   endif
   return (FALSE)
 end ;errorOccurred
- 
+
 /**
-  Parse a CCL error message to determine the line number on which the error message says the error occurred. 
+  Parse a CCL error message to determine the line number on which the error message says the error occurred.
   The CCL program in which the error occured  must have been compiled in debug mode for a non-zero value to be returned.
-  @param cclutPErrorMessage 
+  @param cclutPErrorMessage
     The CCL error message.
   @returns
     The line number at which the message indicates the error occurred.
@@ -106,7 +162,7 @@ end ;;;getCclErrorLineNumber
     The operationName to set. Generally this will be the operation being performed at the time the function is called.
   @param cclutObject
     The targetOhjectName to set. Generally this will be the object on which the operation is being performed.
-  @param cclutStruct 
+  @param cclutStruct
     A record structure that includes the standard status_block.inc to be populated if there are errors.
 */
 subroutine cclut::exitOnError(cclutOperation, cclutObject, cclutStruct)
