@@ -948,6 +948,8 @@ subroutine test_cclutExecuteProgramWithMocks_errors(null)
 end ;testExecuteProgramWithMocksErrors
 subroutine cclutEPWM_errors::cclutExecuteProgramWithMocks(pgm, params, ns)
     call cclexception(555, "E", "forced CCL error")
+    call cclexception(556, "E", "forced CCL error")
+    call cclexception(557, "E", "forced CCL error")
     call public::cclutExecuteProgramWithMocks(pgm, params)
 end ;testExecuteProgramWithMocksErrors::cclutExecuteProgramWithMocks
 subroutine cclutEPWM_errors::execute_mocks_happy_validations(null)
@@ -955,7 +957,11 @@ subroutine cclutEPWM_errors::execute_mocks_happy_validations(null)
 end ;execute_mocks_happy_validations
 subroutine cclutEPWM_errors::postProcess(null)
     call cclutAssertI4Equal(CURREF, "test count", size(ucetcf_testCaseResults->tests, 5), 1)
-    call cclutAssertI4Equal(CURREF, "error count", size(ucetcf_testCaseResults->tests[1]->errors, 5), 1)
+    call cclutAssertI4Equal(CURREF, "error count", size(ucetcf_testCaseResults->tests[1]->errors, 5), 3)
     call cclutAssertContains(
-        CURREF, "error message", "Exception(555): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[1].errorText)
+        CURREF, "error message one", "Exception(557): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[1].errorText)
+    call cclutAssertContains(
+        CURREF, "error message two", "Exception(556): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[2].errorText)
+    call cclutAssertContains(
+        CURREF, "error message three", "Exception(555): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[3].errorText)
 end ;test_cclutExecuteProgramWithMocks_happy::unitTestSpecificValidations
