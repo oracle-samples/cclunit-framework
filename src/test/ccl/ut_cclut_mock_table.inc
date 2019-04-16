@@ -191,18 +191,15 @@ end ;test_cclutDefineMockTable_existing_created_mock
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_missing_tableName(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("     ", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
-
+    call cclutAssertI4Equal(CURREF, "test_cclutDefineMockTable_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_missing_tableName error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_tableName 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_missing_tableName
 
 /* test_cclutDefineMockTable_missing_columnNames ************************************************************
@@ -210,18 +207,16 @@ end ;test_cclutDefineMockTable_missing_tableName
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_missing_columnNames(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "     ", "f8|vc|dq8")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_columnNames 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - columnNames is a required field."))
-
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_missing_columnNames error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_missing_columnNames error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - columnNames is a required field.")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_columnNames 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_missing_columnNames
 
 /* test_cclutDefineMockTable_missing_columnTypes ************************************************************
@@ -229,18 +224,16 @@ end ;test_cclutDefineMockTable_missing_columnNames
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_missing_columnTypes(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "     ")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_columnTypes 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - columnTypes is a required field."))
-
-    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_columnTypes 002", mockTable, "")
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_missing_columnTypes error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_missing_columnTypes error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - columnTypes is a required field.")
+    call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_mismatch_column_count 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_missing_columnTypes
 
 /* test_cclutDefineMockTable_mismatch_column_count **********************************************************
@@ -248,18 +241,17 @@ end ;test_cclutDefineMockTable_missing_columnTypes
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_mismatch_column_count(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_mismatch_column_count 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutDefineMockTable\(SAMPLE_TABLE\) - Size mismatch. 3 columnNames vs. 2 columnTypes"))
-
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_mismatch_column_count error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_mismatch_column_count error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutDefineMockTable(SAMPLE_TABLE) - Size mismatch. 3 columnNames vs. 2 columnTypes.")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_mismatch_column_count 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_mismatch_column_count
 
 /* test_cclutDefineMockTable_missing_column_name ************************************************************
@@ -267,19 +259,18 @@ end ;test_cclutDefineMockTable_mismatch_column_count
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_missing_column_name(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|     |sample_table_date", "f8|vc|dq8")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_column_name 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutDefineMockTable\(\) - Empty columnName found in columnNames. columnNames: ",
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_missing_column_name error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_missing_column_name error message",
+        cclutErrorStash->error[1].errorMessage,
+        concat("cclutDefineMockTable(SAMPLE_TABLE) - Empty columnName found in columnNames. columnNames: ",
             "SAMPLE_TABLE_ID|     |SAMPLE_TABLE_DATE."))
-
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_column_name 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_missing_column_name
 
 /* test_cclutDefineMockTable_missing_column_type ************************************************************
@@ -287,19 +278,18 @@ end ;test_cclutDefineMockTable_missing_column_name
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_missing_column_type(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|     |dq8")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_missing_column_type 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutDefineMockTable\(\) - Empty columnType found in columnTypes. columnTypes: ",
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_missing_column_type error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_missing_column_type error message",
+        cclutErrorStash->error[1].errorMessage,
+        concat("cclutDefineMockTable(SAMPLE_TABLE) - Empty columnType found in columnTypes. columnTypes: ",
             "F8|     |DQ8."))
-
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_missing_column_type 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_missing_column_type
 
 /* test_cclutDefineMockTable_duplicate_column_name **********************************************************
@@ -307,19 +297,18 @@ end ;test_cclutDefineMockTable_missing_column_type
 ************************************************************************************************************/
 subroutine test_cclutDefineMockTable_duplicate_column_name(null)
     declare mockTable = vc with protect, noconstant("")
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date|SAMPLE_table_text",
             "f8|vc|dq8|vc")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutDefineMockTable_duplicate_column_name 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutDefineMockTable\(SAMPLE_TABLE\) - Duplicate columnName found. columnName: SAMPLE_TABLE_TEXT"))
-
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutDefineMockTable_duplicate_column_name error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutDefineMockTable_duplicate_column_name error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutDefineMockTable(SAMPLE_TABLE) - Duplicate columnName found. columnName: SAMPLE_TABLE_TEXT.")
     call cclutAssertvcEqual(CURREF, "test_cclutDefineMockTable_duplicate_column_name 002", mockTable, "")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutDefineMockTable_duplicate_column_name
 
 ;**********************************************************************************************************************************
@@ -351,97 +340,89 @@ end ;test_cclutAddMockIndex_happy
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockIndex("     ", "sample_table_id", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_missing_tableName error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_missing_tableName
 
 /* test_cclutAddMockIndex_missing_columnNames ***************************************************************
 *  Scenario: Throws an error when an empty columnNames is supplied to the function (after trimming)         *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_missing_columnNames(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockIndex("sample_table", "     ", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_missing_columnNames 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - columnNames is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_missing_columnNames error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_missing_columnNames error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - columnNames is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_missing_columnNames
 
 /* test_cclutAddMockIndex_unmocked_table ********************************************************************
 *  Scenario: Throws an error when the tableName specified has not been mocked through cclutDefineMockTable  *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_unmocked_table(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockIndex("sample_table", "sample_table_id", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_unmocked_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_unmocked_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_unmocked_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockDefinedForTable(SAMPLE_TABLE) - Table has not been mocked.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_unmocked_table
 
 /* test_cclutAddMockIndex_created_table *********************************************************************
 *  Scenario: Throws an error when the tableName specified has already been created                          *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_created_table(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockIndex("sample_table", "sample_table_id", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_created_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockTableIsNotCreated\(SAMPLE_TABLE\) - Table has already been created."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_created_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_created_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockTableIsNotCreated(SAMPLE_TABLE) - Table has already been created.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_created_table
 
 /* test_cclutAddMockIndex_invalid_column ********************************************************************
 *  Scenario: Throws an error when the column is not a valid column on the mocked table                      *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_invalid_column(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockIndex("sample_table", "wrong_column", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_invalid_column 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockIndex\(SAMPLE_TABLE\) - WRONG_COLUMN is not mocked on table."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_invalid_column error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_invalid_column error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAddMockIndex(SAMPLE_TABLE) - WRONG_COLUMN is not mocked on table.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_invalid_column
 
 /* test_cclutAddMockIndex_duplicate_column_name *************************************************************
 *  Scenario: Throws an error if any of the column names are duplicated (names are case-insensitive)         *
 ************************************************************************************************************/
 subroutine test_cclutAddMockIndex_duplicate_column_name(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockIndex("sample_table", "sample_table_text|sample_table_id|sample_table_text", 1)
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockIndex_duplicate_column_name 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockIndex\(SAMPLE_TABLE\) - Duplicate columnName found. columnName: SAMPLE_TABLE_TEXT."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockIndex_duplicate_column_name error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockIndex_duplicate_column_name error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutAddMockIndex(SAMPLE_TABLE) - Duplicate columnName found. columnName: SAMPLE_TABLE_TEXT.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockIndex_duplicate_column_name
 
 ;**********************************************************************************************************************************
@@ -477,30 +458,29 @@ end ;test_cclutCreateMockTable_happy
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
 ************************************************************************************************************/
 subroutine test_cclutCreateMockTable_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutCreateMockTable("     ")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutCreateMockTable_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutCreateMockTable_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutCreateMockTable_missing_tableName message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutCreateMockTable_missing_tableName
 
 /* test_cclutCreateMockTable_unmocked_table *****************************************************************
 *  Scenario: Throws an error when the tableName specified has not been mocked through cclutDefineMockTable  *
 ************************************************************************************************************/
 subroutine test_cclutCreateMockTable_unmocked_table(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutCreateMockTable("sample_table")
 
-    set errorCode = error(errorMessage, 0)
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutCreateMockTable_unmocked_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutCreateMockTable_unmocked_table message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockDefinedForTable(SAMPLE_TABLE) - Table has not been mocked.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 
-    call cclutAssertVcOperator(CURREF, "test_cclutCreateMockTable_unmocked_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
 end ;test_cclutCreateMockTable_unmocked_table
 
 /* test_cclutCreateMockTable_created_table ******************************************************************
@@ -597,15 +577,14 @@ end ;test_cclutRemoveMockTable_created_table
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
 ************************************************************************************************************/
 subroutine test_cclutRemoveMockTable_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutRemoveMockTable("     ")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutRemoveMockTable_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutRemoveMockTable_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutRemoveMockTable_missing_tableName error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutRemoveMockTable_missing_tableName
 
 ;**********************************************************************************************************************************
@@ -1157,120 +1136,111 @@ end ;test_cclutAddMockData_null_tests
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockData("     ", "1.0|test text|27-NOV-2018 08:00")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_missing_tableName error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_missing_tableName
 
 /* test_cclutAddMockData_unmocked_table *********************************************************************
 *  Scenario: Throws an error when the tableName specified has not been mocked through cclutDefineMockTable  *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_unmocked_table(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_unmocked_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_unmocked_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_unmocked_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockDefinedForTable(SAMPLE_TABLE) - Table has not been mocked.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_unmocked_table
 
 /* test_cclutAddMockData_uncreated_table ********************************************************************
 *  Scenario: Throws an error when the tableName specified has not been created through cclutCreateMockTable *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_uncreated_table(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_uncreated_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_uncreated_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_uncreated_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockTableIsCreated(SAMPLE_TABLE) - Table has not been created.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_uncreated_table
 
 /* test_cclutAddMockData_too_many_columns *******************************************************************
 *  Scenario: Throws an error when there are more columns in the rowData than are defined for the table      *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_too_many_columns(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|test text|27-NOV-2018 08:00|extra")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_many_columns 001", errorMessage,
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutConstructDBSetStatement\(SAMPLE_TABLE\) - Too many columns of data added to table."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_too_many_columns error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_too_many_columns error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutConstructDBSetStatement(SAMPLE_TABLE) - Too many columns of data added to table.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_too_many_columns
 
 /* test_cclutAddMockData_too_few_columns ********************************************************************
 *  Scenario: Throws an error when there are fewer columns in the rowData than are defined for the table     *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_too_few_columns(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|test text")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_too_few_columns 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutParseColumn\(\) - Too few columns of data. rowData: 1.0|test text."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_too_few_columns error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_too_few_columns error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutAddMockData(SAMPLE_TABLE) - Too few columns of data. rowData: 1.0|test text.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_too_few_columns
 
 /* test_cclutAddMockData_invalid_escape_sequence ************************************************************
 *  Scenario: Throws an error when the sequence after the escape character is not valid per the API          *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_invalid_escape_sequence(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|\a|27-NOV-2018 08:00")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_invalid_escape_sequence 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockData\(\) - Invalid escape sequence. rowData: 1.0|\a|27-NOV-2018 08:00."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_invalid_escape_sequence error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_invalid_escape_sequence error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutAssertNoInvalidEscapes() - Invalid escape sequence. rowData: 1.0|\a|27-NOV-2018 08:00|.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_invalid_escape_sequence
 
 /* test_cclutAddMockData_invalid_null ***********************************************************************
 *  Scenario: Throws an error if the null escape sequence is not by itself in a column                       *
 ************************************************************************************************************/
 subroutine test_cclutAddMockData_invalid_null(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
     call cclutCreateMockTable("sample_table")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutAddMockData("sample_table", "1.0|\nulla|27-NOV-2018 08:00")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockData_invalid_null 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockData\(\) - \null column must have no other characters.",
-            " rowData: 1.0|\nulla|27-NOV-2018 08:00."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockData_invalid_null error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutAddMockData_invalid_null error message",
+        cclutErrorStash->error[1].errorMessage,
+        "cclutValidateNotNulls() - \null column must have no other characters. rowData: \nulla.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockData_invalid_null
 
 ;**********************************************************************************************************************************
@@ -1315,45 +1285,41 @@ end ;test_cclutClearMockData_happy
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
 ************************************************************************************************************/
 subroutine test_cclutClearMockData_missing_tableName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutClearMockData("     ")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_missing_tableName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertStringIsNonEmpty\(\) - tableName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutClearMockData_missing_tableName error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutClearMockData_missing_tableName error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertStringIsNonEmpty() - tableName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutClearMockData_missing_tableName
 
 /* test_cclutClearMockData_unmocked_table *******************************************************************
 *  Scenario: Throws an error when the tableName specified has not been mocked through cclutDefineMockTable  *
 ************************************************************************************************************/
 subroutine test_cclutClearMockData_unmocked_table(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutClearMockData("sample_table")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_unmocked_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockDefinedForTable\(SAMPLE_TABLE\) - Table has not been mocked."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutClearMockData_unmocked_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutClearMockData_unmocked_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockDefinedForTable(SAMPLE_TABLE) - Table has not been mocked.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutClearMockData_unmocked_table
 
 /* test_cclutClearMockData_uncreated_table ******************************************************************
 *  Scenario: Throws an error when the tableName specified has not been created through cclutCreateMockTable *
 ************************************************************************************************************/
 subroutine test_cclutClearMockData_uncreated_table(null)
+    declare stat = i4 with protect, noconstant(0)
     call cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
-
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
     call cclutClearMockData("sample_table")
 
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutClearMockData_uncreated_table 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAssertMockTableIsCreated\(SAMPLE_TABLE\) - Table has not been created."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutClearMockData_uncreated_table error count", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF, "test_cclutClearMockData_uncreated_table error message",
+        cclutErrorStash->error[1].errorMessage, "cclutAssertMockTableIsCreated(SAMPLE_TABLE) - Table has not been created.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutClearMockData_uncreated_table

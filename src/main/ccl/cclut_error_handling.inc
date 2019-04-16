@@ -11,6 +11,7 @@
 declare cclut::getErrorList(cclutPPErrorList = vc(ref)) = i4
 declare cclut::getErrorStackErrors(cclutPErrorList = vc(ref)) = i4
 declare cclut::stashErrors(null) = null
+declare cclut::addStashedError(cclutErrorCode = i4, cclutErrorMessage = vc, cclutLineNumber = i4) = null
 declare cclut::errorOccurred(cclutPErrorMessage = vc(ref)) = i2
 declare cclut::getCclErrorLineNumber(cclutPErrorMessage = vc) = i4
 declare cclut::exitOnError(cclutOperation = vc, cclutObject = vc, cclutStruct = vc(ref)) = null
@@ -102,6 +103,25 @@ subroutine cclut::stashErrors(null)
         moveRecList(cclutErrorList->error, cclutErrorStash->error, 1, size(cclutErrorStash->error, 5), cclutErrorCount, TRUE)
   endif
 end ;getErrorList
+
+/**
+    Adds an error to cclutErrorStash.
+    @param cclutErrorCode
+        The error code for the error.
+    @param cclutErrorMessage
+        The message for the error.
+    @param cclutLineNumber
+        The line number where the error occured, usually CURREF.
+*/
+subroutine cclut::addStashedError(cclutErrorCode, cclutErrorMessage, cclutLineNumber)
+  declare cclutErrorCount = i4 with protect, noconstant(1 + size(cclutErrorStash->error, 5))
+  declare cclutStat = i4 with protect, noconstant(0)
+
+  set cclutStat = alterlist(cclutErrorStash->error, cclutErrorCount)
+  set cclutErrorStash->error[cclutErrorCount].errorCode = cclutErrorCode
+  set cclutErrorStash->error[cclutErrorCount].errorMessage = cclutErrorMessage
+  set cclutErrorStash->error[cclutErrorCount].lineNumber = cclutLineNumber
+end ;addStashedError
 
 /**
   Determines if CCL errors occurred and clears the error queue.
