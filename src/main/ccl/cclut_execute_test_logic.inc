@@ -154,9 +154,9 @@ subroutine cclut::evaluateTestResults(cclutTestIndex, cclutPReplyStruct, cclutPA
   declare cclutErrorIndex = i4 with protect, noconstant(0)
   declare cclutReplyErrorCount = i4 with protect, noconstant(0)
   declare cclutStat = i4 with protect, noconstant(0)
-  declare testSuccess = i2 with protect, noconstant(TRUE)
+  declare cclutTestSuccess = i2 with protect, noconstant(TRUE)
 
-  record errorList(
+  record cclutErrorList(
     1 error[*]
       2 errorCode = i4
       2 errorMessage = vc
@@ -166,23 +166,23 @@ subroutine cclut::evaluateTestResults(cclutTestIndex, cclutPReplyStruct, cclutPA
   if (cclutTestIndex <= 0)
     return (FALSE)
   endif
-  call cclut::getErrorList(errorList)
+  call cclut::getErrorList(cclutErrorList)
   call cclut::evaluateTimers(cclutPTimerStruct)
-  set cclutErrorCount = cclut::getErrorList(errorList)
+  set cclutErrorCount = cclut::getErrorList(cclutErrorList)
   set cclutReplyErrorCount = size(cclutPReplyStruct->tests[cclutTestIndex].errors, 5)  
   for (cclutErrorIndex = 1 to cclutErrorCount)
     set cclutReplyErrorCount = cclutReplyErrorCount + 1
     set cclutStat = alterList(cclutPReplyStruct->tests[cclutTestIndex].errors, cclutReplyErrorCount)
     set cclutPReplyStruct->tests[cclutTestIndex].errors[cclutReplyErrorCount].lineNumber = 
-        errorList->error[cclutErrorIndex].lineNumber 
+        cclutErrorList->error[cclutErrorIndex].lineNumber 
     set cclutPReplyStruct->tests[cclutTestIndex].errors[cclutReplyErrorCount].errorText = 
-        errorList->error[cclutErrorIndex].errorMessage
-    set testSuccess = FALSE;
+        cclutErrorList->error[cclutErrorIndex].errorMessage
+    set cclutTestSuccess = FALSE;
   endfor
   
-  set testSuccess = band(testSuccess, cclut::evaluateAsserts(cclutTestIndex, cclutPReplyStruct, cclutPAssertStruct))
+  set cclutTestSuccess = band(cclutTestSuccess, cclut::evaluateAsserts(cclutTestIndex, cclutPReplyStruct, cclutPAssertStruct))
   set cclutStat = initRec(cclutPTimerStruct)
-  return (testSuccess)
+  return (cclutTestSuccess)
 end ;;;evaluateTestResults
   
 
@@ -304,7 +304,7 @@ call cclut::executeTestLogic(null)
 #exit_script
 ;Clean up any mocks that were not cleaned up by the tests.
 call cclutRemoveAllMocks(null)
-;Record any dangling errors and asserts in case the last executed unit test called go to exit_script.
+;Record any dangling errors and asserts in case 'go to exit_script' was called by the last executed unit test.
 set cclutReply->resultInd = band(cclutReply->resultInd, 
     cclut::evaluateTestResults(size(cclutReply->tests, 5), cclutReply, cclut_runResult, cclut_timerList))
   
