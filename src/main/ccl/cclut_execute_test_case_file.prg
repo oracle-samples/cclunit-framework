@@ -6,16 +6,26 @@ create program cclut_execute_test_case_file:dba
   providing the cclutTestCaseResults structure. 
 */
 
+set modify maxvarlen 20000000
+
 %i cclsource:cclut_error_handling.inc
+
 %i cclsource:cclut_compile_subs.inc
+
 %i cclsource:cclut_code_coverage.inc
+
 %i cclsource:cclut_env_utils.inc
+
 %i cclsource:cclut_framework_version.inc
+
 %i cclsource:cclut_get_file_as_string.inc
     
 declare cclut::getTestCaseResultsXml(
     cclutTestCaseResults = vc(ref), cclutTestCaseFileName = vc, cclutLegacyResultsFormat = i2) = vc with protect
+declare cclut::getIncludeName(includeLine = vc) = vc with protect
+declare cclut::tagFileIncludes(sourceFile = vc, targetFile = vc) = null with protect
 declare cclut::tagProgramIncludeFiles(cclutProgramDirectoryLogical = vc, cclutProgramName = vc) = vc with protect
+declare cclut::addIncludeToProcessList(includeFileName = vc) = null with protect
 declare cclut::setOptimizerMode(cclutOptimizerMode = vc) = i2 with protect
 declare cclut::escapeCData(cclutSource = vc) = vc with protect
 declare cclut::writeFileData(cclutDirectory = vc, cclutFileName = vc, cclutData = vc) = i4 with protect
@@ -32,7 +42,8 @@ declare cclut::testCaseId               = vc with protect, noconstant("")
 declare cclut::testCaseObjectName       = vc with protect, noconstant("")
 declare cclut::testCaseListingName      = vc with protect, noconstant("")
 declare cclut::listingName              = vc with protect, noconstant("")
-declare cclut::programCount             = i4 with protect, noconstant(0)
+declare cclut::includeIndex             = i4 with protect, noconstant(0)
+declare cclut::programIndex             = i4 with protect, noconstant(0)
 declare cclut::coverageXml              = vc with protect, noconstant("")
 declare cclut::xmlBeginPos              = i4 with protect, noconstant(0)
 declare cclut::xmlEndPos                = i4 with protect, noconstant(0)
@@ -43,6 +54,7 @@ declare cclut::deprecatedFlag           = vc with protect, noconstant(validate(c
 declare cclut::enforcePredeclare        = i2 with protect, noconstant(validate(cclutRequest->enforcePredeclare, TRUE))
 declare cclut::legacyResultsFormat      = i2 with protect, noconstant(validate(cclutRequest->legacyResultsFormat, FALSE))
 declare cclut::stat                     = i2 with protect, noconstant(0) 
+
 
 /**
   The primary input for the CCL Testing Framework.
@@ -56,7 +68,7 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
     (optional) A case-insensitive regular expression to limit which tests are executed. 
       Only tests with a matching name will be executed.
   @field programs
-    A list of programs whose code coverage is to be recorded after each test execution.
+    The list of programs whose code coverage is to be recorded after each test execution.
     @field programName
       The name of the program whose code coverage data is to be retrieved.
     @field compile
@@ -65,6 +77,10 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
       set this to 1 on the first execution and then 0 in subsequent executions.
       @value 0 Do not compile the program in debug mode.
       @value 1 Compile the program in debug mode.
+  @field inlcudes
+    The list of include files included in the build.
+    @field name
+      The name of the include file.
   @field optimizerMode
     (optional: system default) The Oracle optimizer mode under which the tests will be executed.
   @field enforcePredeclare
@@ -84,6 +100,8 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
     @value D Debug
   @field legacyResultsFormat
     (optional) A boolean flag indidcating whether the results should be returned using the legacy format.
+  @field coveragePerTest
+    (optional) A boolean flag indidcating whether to collect coverage data on a per test basis.
   @field failFast
     (optional) A boolean flag indidcating whether to stop executing tests once a test failure or error has been encountered.
 
@@ -94,10 +112,13 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
     1 programs[*]
       2 programName = vc
       2 compile = i2
+    1 includes[*]
+      2 name = vc
     1 optimizerMode = vc
     1 enforcePredeclare = i2
     1 deprecatedFlag = vc
     1 legacyResultsFormat = i2
+    1 coveragePerTest = i2
     1 failFast = i2
   ) with protect
 */
@@ -143,13 +164,28 @@ declare cclut::stat                     = i2 with protect, noconstant(0)
   @field testNamePattern
     A case-insensitive regular expression for filtering which tests within the test case file to execute. 
     Only tests with a matching name will be executed.
+  @field coveragePerTest
+    A boolean flag indicating whether to generate code coverage data on a per test basis.
   @field failFast
     A boolean flag indicating whether to stop running additional tests after a single test has failed or produced an error.
 */
 record cclutTestCaseRequest (
   1 testNamePattern = vc
+  1 coveragePerTest = i2
   1 failFast = i2
 ) with protect
+
+/**
+  A structure for keeping track of already processed include files.
+  @field includes
+    The list of include files.
+    @field name
+      The name of the include file.
+*/
+record processedIncludes (
+  1 includes[*]
+    2 name = vc
+)
 
 /**
   The reply structure for executing a test program generated from a test case file.
@@ -184,6 +220,12 @@ record cclutTestCaseRequest (
         The line number where the error occurred.
       @field errorText
         The error message for the error that occurred.
+    @field duration
+      The duration of the test run in milliseconds.
+    @field lineCoverage
+      The line coverage for the test.
+  @field coverageXml
+    The aggregateed coverageXml for the test case.
 */
 ;allow the calling program access to the structured results.
 if (validate(cclutTestCaseResults) = FALSE)
@@ -198,7 +240,10 @@ if (validate(cclutTestCaseResults) = FALSE)
         3 condition = vc
       2 errors[*]
         3 lineNumber = i4
-        3 errorText = vc        
+        3 errorText = vc
+      2 duration = i4
+      2 lineCoverage = vc
+    1 coverageXml = vc
 %i cclsource:status_block.inc
   ) with protect
 endif
@@ -221,6 +266,9 @@ endif
           2 errors[*]
             3 lineNumber = i4
             3 errorText = vc
+          2 duration = i4
+          2 lineCoverage = vc
+        1 coverageXml = vc
       %i cclsource:status_block.inc
       ) with protect
     </pre>
@@ -307,6 +355,8 @@ subroutine cclut::getTestCaseResultsXml(cclutTestCaseResults, cclutTestCaseFileN
     else
       set cclutReturnVal = build(cclutReturnVal, "<RESULT>", evaluate(cclutOverallResultInd, TRUE, "PASSED", "FAILED"), "</RESULT>")
     endif
+    set cclutReturnVal = build(cclutReturnVal, "<DURATION>", cclutTestCaseResults->tests[cclutTestIndex].duration, "</DURATION>")
+    set cclutReturnVal = build(cclutReturnVal, cclutTestCaseResults->tests[cclutTestIndex].lineCoverage)
  
     set cclutReturnVal = build(cclutReturnVal, "</TEST>")
   endfor ;;;cclutTestIndex
@@ -316,10 +366,109 @@ subroutine cclut::getTestCaseResultsXml(cclutTestCaseResults, cclutTestCaseFileN
   return (cclutReturnVal)
 end ;;;getTestCaseResultsXml
 
+
 /**
-  Parses a specified program file to identify all included files, tags each one with ";;;;CCLUT_START_INC_FILE"
-  and ";;;;CCLUT_END_INC_FILE" and writes the result to a temporary file in CCLUSERDIR.  The name
-  of the temporary file is returned.
+  Adds an include file to the processedIncludes list if it is not already in the list.
+*/
+subroutine cclut::addIncludeToProcessList(includeFileName)
+  declare includeIdx = i4 with protect, noconstant(0)
+  declare includePos = i4 with protect, noconstant(0)
+  declare includeCnt = i4 with protect, noconstant(0)
+  declare stat = i4 with protect, noconstant(0)
+  
+  set includeCnt = size(processedIncludes->includes, 5)
+  set includePos = locateval(includeIdx, 1, includeCnt, includeFileName, processedIncludes->includes[includeIdx].name)
+  if (includePos = 0)
+    set includeCnt = includeCnt + 1
+    set stat = alterlist(processedIncludes->includes, includeCnt)
+    set processedIncludes->includes[includeCnt].name = includeFileName
+  endif
+end ;;;addIncludeToProcessList
+
+
+/*
+  Identifies and returns the name of the include file being included by a %i directive.
+*/
+subroutine cclut::getIncludeName(includeLine)
+  declare incPos = i4 with protect, noconstant(0)
+  declare colonPos = i4 with protect, noconstant(0)
+  declare includeName = vc with protect, noconstant("")
+
+  set incPos = findstring(".inc", includeLine)
+  set includeName = substring(4, incPos, includeLine)
+  set colonPos = findstring(":", includeName)
+  if (colonPos > 0)
+    set includeName = substring(colonPos+1, textlen(includeName) - colonPos, includeName)
+  endif
+  return(trim(includeName, 3))  
+end ;;;getIncludeName
+
+
+/**
+  Parses a specified source file to identify all included files, tags each one with ";;;;CCLUT_START_INC_FILE"
+  and ";;;;CCLUT_END_INC_FILE" and writes the result to a specified file.
+  <p />
+  <b>Note</b>: The program file cannot have lines that exceed 132 characters.
+ 
+  @param sourceFile
+    The source file to read.
+  @param targetFile
+    The file to which the results will be written.
+*/
+subroutine cclut::tagFileIncludes(sourceFile, targetFile)
+  declare cclutIncludeIdx = i4 with protect, noconstant(0)
+  declare cclutIncludePos = i4 with protect, noconstant(0)
+  declare cclutIncludeName = vc with protect, noconstant("")
+  declare cclutLineLower = vc with protect, noconstant("")
+  
+  free define rtl2
+  set logical file_location sourceFile
+  define rtl2 is "file_location"
+
+call echo(build2('sourceFile: ', sourceFile))
+call echo(build2('targetFile: ', targetFile))
+call echorecord(cclutRequest)
+ 
+  select into value(targetFile)
+      r.line
+  from rtl2t r
+  head report
+  value = FILLSTRING(132, " ")
+  detail
+      cclutLineLower = cnvtlower(r.line)
+      if (cclutLineLower = "%i *")
+          value = trim(concat(";;;;CCLUT_START_INC_FILE ", r.line), 3)
+          col 0 value
+          row + 1
+          cclutIncludeName = cclut::getIncludeName(cclutLineLower)
+call echo(build2('cclutIncludeName: ', cclutIncludeName))
+          cclutIncludePos = locateVal(cclutIncludeIdx, 1, 
+              size(cclutRequest->includes, 5), cclutIncludeName, cclutRequest->includes[cclutIncludeIdx].name)
+          if (cclutIncludePos > 0)
+call echo('using replacement')
+            call cclut::addIncludeToProcessList(cclutIncludeName)
+            value = concat("%i cer_temp:", cclutIncludeName)
+          else
+call echo('using original')
+            value = r.line
+          endif
+          col 0 value
+          row + 1
+          value = trim(concat(";;;;CCLUT_END_INC_FILE ", r.line), 3)
+          col 0 value
+          row + 1
+      else
+          value = r.line
+          col 0 value
+          row + 1
+      endif
+  with nocounter, maxcol = 133, maxrow = 1, formfeed = none
+end ;;;tagFileIncludes
+
+
+/**
+  Parses a specified program file to identify and tag all included files. Writes the result to a temporary file in CCLUSERDIR and
+  returns the name of the temporary file. Triggers similar processing of each include file listed as a source file.
   <p />
   <b>Note</b>: The program file cannot have lines that exceed 132 characters.
  
@@ -333,39 +482,37 @@ end ;;;getTestCaseResultsXml
 subroutine cclut::tagProgramIncludeFiles(cclutProgramDirectoryLogical, cclutProgramName)
   declare cclutProgramFileLocation = vc with protect, noconstant("")
   declare cclutModifiedProgramName = vc with protect, noconstant("")
- 
+  
   set cclutProgramFileLocation = concat(trim(logical(cnvtupper(cclutProgramDirectoryLogical)), 3), "/")
   set cclutProgramFileLocation = cnvtlower(concat(cclutProgramFileLocation, cclutProgramName, ".prg"))
-  set cclutModifiedProgramName = concat("temp", cnvtlower(cclutProgramName), ".dat")
- 
-  free define rtl2
-  set logical file_location cclutProgramFileLocation
-  define rtl2 is "file_location"
- 
-  select into value(cclutModifiedProgramName)
-      r.line
-  from rtl2t r
-  head report
-  value = FILLSTRING(132, " ")
-  detail
-      if (cnvtlower(r.line) = "%i *")
-          value = trim(concat(";;;;CCLUT_START_INC_FILE ", r.line), 3)
-          col 0 value
-          row + 1
-          value = r.line
-          col 0 value
-          row + 1
-          value = trim(concat(";;;;CCLUT_END_INC_FILE ", r.line), 3)
-          col 0 value
-          row + 1
-      else
-          value = r.line
-          col 0 value
-          row + 1
-      endif
-  with nocounter, maxcol = 133, formfeed = none
+  set cclutModifiedProgramName = concat("temp_", cnvtlower(cclutProgramName), ".dat")
+
+  call cclut::tagFileIncludes(cclutProgramFileLocation, cclutModifiedProgramName)
   return (cclutModifiedProgramName)
 end ;;;tagProgramIncludeFiles
+
+
+/**
+  Parses a specified include file to identify and tag all included files. Writes the result to $cer_temp using the same file name.
+  Triggers similar processing of each include file listed as a source file.
+  <p />
+  <b>Note</b>: The file cannot have lines that exceed 132 characters.
+ 
+  @param cclutProgramDirectoryLogical
+    A logical for the directory in which the file resides
+  @param cclutProgramName
+    The name of the file to be parsed.
+*/
+subroutine cclut::tagIncludeFileIncludes(cclutSourceDirectoryLogical, cclutIncludeName)
+  declare source = vc with protect, noconstant("")
+  declare destination = vc with protect, noconstant("")
+  
+  set source = concat(trim(logical(cnvtupper(cclutSourceDirectoryLogical)), 3), "/", cclutIncludeName)
+  set destination = concat(trim(logical(cclut::CER_TEMP)), "/", cclutIncludeName)
+
+  call cclut::tagFileIncludes(source, destination)
+end ;;;tagIncludeFileIncludes
+
 
 /**
   Sets the optimizer mode as specified. If no optimizer mode is specified, then the current session 
@@ -462,7 +609,7 @@ subroutine cclut::retrieveListingData(cclutDirectory, cclutProgramName)
     set listingDateSring = substring(listingDateStart, listingDateEnd - listingDateStart, listingData)
     set listingDate = cnvtdatetime(listingDateSring)
     select into 'nl:' from dprotect d where d.platform = 'H0000' and d.rcode = '5' and d.group = curgroup and d.object = 'P'
-      and d.object_name = cnvtupper(cclutProgramName) and d.user_name = curuser 
+      and d.object_name = cnvtupper(cclutProgramName) and d.user_name = curuser
     detail
       compileDate = cnvtdatetime(d.datestamp, d.timestamp)
     with nocounter
@@ -473,7 +620,6 @@ subroutine cclut::retrieveListingData(cclutDirectory, cclutProgramName)
   return ("")
 end ;;;retrieveListingData
 
-set modify maxvarlen 10000000
 set cclutReply->status_data.status = "S"
 
 if (cclut::compareCclVersion(cclut::currentCclVersion, cclut::MINIMUM_REQUIRED_CCL_VERSION) = TRUE)
@@ -490,27 +636,35 @@ set cclut::testCaseId = concat(trim(currdbhandle, 3), "_", trim(cnvtstring(cnvti
 set cclut::testCaseObjectName = concat("prg_", cclut::testCaseId)
 set cclut::testCaseListingName = concat("cclut_inc_", cclut::testCaseId, ".lis")
 
+call echorecord(cclutRequest)
+
+for (cclut::includeIndex = 1 to size(cclutRequest->includes, 5))
+  set cclutRequest->includes[cclut::includeIndex].name = cnvtlower(cclutRequest->includes[cclut::includeIndex].name)
+endfor
+for (cclut::includeIndex = 1 to size(cclutRequest->includes, 5))
+  call cclut::tagIncludeFileIncludes(cclut::CCLSOURCE, cclutRequest->includes[cclut::includeIndex].name)
+endfor
+
 set cclut::stat = alterlist(cclutReply->programs, size(cclutRequest->programs, 5))
-for (cclut::programCount = 1 to size(cclutRequest->programs, 5))
-  set cclutReply->programs[cclut::programCount].programName = cclutRequest->programs[cclut::programCount].programName
- 
-  if (cclutRequest->programs[cclut::programCount].compile = TRUE)
-    ;Identify the .inc files included by the program.
-    
-    set cclut::tempProgramName = cclut::tagProgramIncludeFiles(cclut::CCLSOURCE, 
-        cclutReply->programs[cclut::programCount].programName)
+for (cclut::programIndex = 1 to size(cclutRequest->programs, 5))
+  set cclutReply->programs[cclut::programIndex].programName = cclutRequest->programs[cclut::programIndex].programName
+
+set compile nooptimize 
+  if (cclutRequest->programs[cclut::programIndex].compile = TRUE)
+    set cclut::tempProgramName = cclut::tagProgramIncludeFiles(cclut::CCLSOURCE,
+        cclutReply->programs[cclut::programIndex].programName)
     set cclut::tempProgramName = cnvtlower(cclut::tempProgramName)
- 
-    set cclut::listingName = concat("cclut_prg_", cclut::testCaseId, trim(cnvtstring(cclut::programCount, 100), 3), ".lis")
+    set cclut::listingName = 
+        concat("cclut_prg_", cclut::testCaseId, "_", cclutReply->programs[cclut::programIndex].programName, ".lis")
     ;;prevent error mis-interpretation by compileProgram
-    call cclut::exitOnError("pre-compile", cclutReply->programs[cclut::programCount].programName, cclutReply)
+    call cclut::exitOnError("pre-compile", cclutReply->programs[cclut::programIndex].programName, cclutReply)
     if (cclut::compileProgram(
         cclut::CCLUSERDIR, cclut::tempProgramName, cclut::CCLUSERDIR, cclut::listingName, cclut::errorMessage) = TRUE)
-      set cclutReply->programs[cclut::programCount].listingXml =
-          cclut::getListingXml(cclutReply->programs[cclut::programCount].programName, cclut::outputDirectory, cclut::listingName)
-      call cclut::writeFileData(trim(logical(cclut::CER_TEMP),3), 
-          concat(cclutReply->programs[cclut::programCount].programName, ".listing.xml"), 
-          concat(cclutReply->programs[cclut::programCount].listingXml, char(10), char(13)))
+      set cclutReply->programs[cclut::programIndex].listingXml =
+          cclut::getListingXml(cclutReply->programs[cclut::programIndex].programName, cclut::outputDirectory, cclut::listingName)
+      call cclut::writeFileData(trim(logical(cclut::CER_TEMP),3),
+          concat(cclutReply->programs[cclut::programIndex].programName, ".listing.xml"),
+          concat(cclutReply->programs[cclut::programIndex].listingXml, char(10), char(13)))
       set cclut::stat = remove(concat(cclut::outputDirectory, cclut::listingName))
       set cclut::stat = remove(concat(cclut::outputDirectory, cclut::tempProgramName))
     else
@@ -519,14 +673,16 @@ for (cclut::programCount = 1 to size(cclutRequest->programs, 5))
       set cclutReply->status_data.subeventstatus[1].operationStatus = "F"
       set cclutReply->status_data.subeventstatus[1].targetObjectName = cclut::tempProgramName
       set cclutReply->status_data.subeventstatus[1].targetObjectValue =
-            concat("compileProgram ", cclutReply->programs[cclut::programCount].programName, " failed: ", cclut::errorMessage)
+            concat("compileProgram ", cclutReply->programs[cclut::programIndex].programName, " failed: ", cclut::errorMessage)
       go to exit_script
     endif
   else
-    set cclutReply->programs[cclut::programCount].listingXml = 
-        cclut::retrieveListingData(trim(logical(cclut::CER_TEMP),3), cclutReply->programs[cclut::programCount].programName)
+    set cclutReply->programs[cclut::programIndex].listingXml = 
+        cclut::retrieveListingData(trim(logical(cclut::CER_TEMP),3), cclutReply->programs[cclut::programIndex].programName)
   endif
 endfor
+set compile optimize 
+
 
 ;create a test program object from the test case file that executes the tests in the test case when it is executed.
 set cclut::testCaseFileName = trim(cnvtlower(cclutRequest->testCaseFileName), 3)
@@ -571,12 +727,12 @@ endif
 
 set cclutTestCaseRequest->testNamePattern = validate(cclutRequest->testNamePattern, "")
 set cclutTestCaseRequest->failFast = validate(cclutRequest->failFast, FALSE)
+set cclutTestCaseRequest->coveragePerTest = validate(cclutRequest->coveragePerTest, FALSE)
 
 call cclut::exitOnError("pre-execute", cclut::testCaseObjectName, cclutReply)
-execute value(cnvtupper(cclut::testCaseObjectName)) with
-    replace ("CCLUTREQUEST", cclutTestCaseRequest),
-    replace ("CCLUTREPLY", cclutTestCaseResults),
-    replace ("TDBEXECUTE", tdbexecute)
+execute value(cnvtupper(cclut::testCaseObjectName)) with 
+    replace ("CCLUTREQUEST", cclutTestCaseRequest), 
+    replace ("CCLUTREPLY", cclutTestCaseResults)
 
 set modify nopredeclare
 set trace nodeprecated
@@ -590,12 +746,17 @@ set cclutReply->resultsXml =
     cclut::getTestCaseResultsXml(cclutTestCaseResults, cclut::testCaseFileName, cclut::legacyResultsFormat)
  
 call cclut::exitOnError("pre-coverage", cclut::testCaseObjectName, cclutReply)
-set cclut::coverageXml = cclut::getCoverageXml(null)
+
+if (cclutTestCaseRequest->coveragePerTest = TRUE and cclutTestCaseResults->coverageXml != "")
+  set cclut::coverageXml = cclutTestCaseResults->coverageXml
+else
+  set cclut::coverageXml = cclut::getCoverageXml(null)
+endif
 call cclut::filterCoverageXml(cclut::coverageXml, cclutReply)
 
-for (cclut::programCount = 1 to size(cclutRequest->programs, 5))
-  if (cclutRequest->programs[cclut::programCount].compile = FALSE)
-    set cclutReply->programs[cclut::programCount].listingXml = ""
+for (cclut::programIndex = 1 to size(cclutRequest->programs, 5))
+  if (cclutRequest->programs[cclut::programIndex].compile = FALSE)
+    set cclutReply->programs[cclut::programIndex].listingXml = ""
   endif
 endfor
 
@@ -646,7 +807,6 @@ if (cclutReply->status_data.status = "S")
 endif
 
 if (validate(cclut::debug, FALSE) = TRUE)
-  call echorecord(cclutReply) ;intentional
+  call echorecord(cclutReply)
 endif
-   
 end go

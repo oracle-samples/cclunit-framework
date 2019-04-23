@@ -2,13 +2,15 @@
 %#def CCLUT_CODE_COVERAGE_INC
 
 %i cclsource:cclut_constants.inc
+
+%i cclsource:cclut_get_coverage.inc
+
 ;**********************************************************************************************************************************
 ;
 ; Contains subroutines for obtaining code coverage information
 ;
 ;**********************************************************************************************************************************
 
-declare cclut::getCoverageXml(null) = vc
 declare cclut::filterCoverageXml(cclutCoverageXml = vc, cclutProgramList = vc(ref)) = null
 declare cclut::getEnvironmentDataXml(null) = vc
 declare cclut::getListingXml(cclutProgramName = vc, cclutListingDirectory = vc, cclutListingFileName = vc) = vc
@@ -19,79 +21,7 @@ declare cclut::getNextCoverageToggleLineNumber(
     cclutListingXml = vc, cclutSearchStart = i4, cclutToggleType = vc, cclutNextStart = i4(ref)) = i4
 declare cclut::excludeCoverage(cclutCoverageXml = vc, cclutExclusions = vc(ref)) = vc
 
-/**
-  Obtains the coverage information of all coverage in CCLs memory bank for the current run. 
-  Outputs to a file in $cer_temp as well as the return value.
 
-  @returns
-    The coverage as an XML string, or "" if not successful
-*/    
-subroutine cclut::getCoverageXml(null)
-  declare cclutStat         = i4 with protect, noconstant(0)
-  declare cclutGciPath      = vc with protect, constant(build(trim(logical("cer_temp")), "/"))
-  declare cclutGciFilename  = vc with protect, constant(build("cclut_cvg_", currdbhandle, ".out"))
-  declare cclutErrorMsg     = vc with protect, noconstant("")
-
-  if (curimage = "CCL")
-    set trace codecover 5; all lines
-  endif
-   
-  ;Record to hold file descriptor information
-  record frec (
-    1 file_desc   = h
-    1 file_offset = i4
-    1 file_dir    = i4
-    1 file_name   = vc
-    1 file_buf    = vc
-  ) with protect
- 
-  record tcRequest (
-    1 path = vc
-    1 filename = vc
-  ) with protect
- 
-  record tcReply (
-    1 xml = vc
-  ) with protect
- 
-  ;Initialize the return variable
-  set frec->file_name = build(cclutGciPath, cclutGciFilename)
-  set frec->file_buf  = "w+" ;Open for read/write, create new file
- 
-  set cclutStat = cclio("OPEN", frec)
-  if (error(cclutErrorMsg, 1) > 0)
-    return ("Error during open")
-  endif
- 
-  set cclutStat = cclio("CODECOVER", frec)  ;write codecover info to user file
-  if (error(cclutErrorMsg, 1) > 0)
-    return ("Error during codecover")
-  endif
- 
-  set cclutStat = cclio("CLOSE", frec)
-  if (error(cclutErrorMsg, 1) > 0)
-    return ("Error during close")
-  endif
- 
-  set tcRequest->path = cclutGciPath
-  set tcRequest->filename = cclutGciFilename
- 
-  call cclut::exitOnError("pre-xform-coverage", "cclut_parse_source", cclutReply)
-  execute cclut_transform_coverage with replace("CCLUTREQUEST", tcRequest), replace("CCLUTREPLY", tcReply)
- 
-  if (error(cclutErrorMsg, 1) > 0)
-    return ("Error during cclut_transform_coverage")
-  endif
-  set cclutStat = remove(frec->file_name)
-
-  if (curimage = "CCL")
-    set trace codecover 0; summary  
-  endif
-  return (tcReply->xml)
-end ;;;getCoverageXml
- 
- 
- 
 /**
   Extracts the XML coverage data for a specified list of programs from the full XML coverage data for a test case execution.
   @param cclutCoverageXml 
@@ -129,7 +59,7 @@ subroutine cclut::filterCoverageXml(cclutCoverageXml, cclutProgramList)
   set pcRequest->coverageXml = cclutCoverageXml
  
   for (cclutXmlIndex = 1 to size(cclutProgramList->programs, 5))
-    ;filter each program out of the coverage XML and place that programs coverage in the cclutProgramList->programs[].coverageXml
+    ;filter each program out of the coverage XML and place that program's coverage in the cclutProgramList->programs[].coverageXml
     set pcRequest->programName = cclutProgramList->programs[cclutXmlIndex].programName
     call cclut::exitOnError("pre-parse-coverages", "cclut_parse_source", cclutReply)
     execute cclut_parse_coverages with replace("CCLUTREQUEST", pcRequest), replace("CCLUTREPLY", pcReply)
@@ -283,8 +213,8 @@ subroutine cclut::getTestCaseListingXml(cclutTestCaseProgramName, cclutListingDi
   set cclutHeadXmlEndPosition = findstring("</COMPILE_DATE>", cclutTestCaseProgramListingXml, 1, 0) + 14
   set cclutHeadXml = substring(1, cclutHeadXmlEndPosition, cclutTestCaseProgramListingXml)
  
-  set cclutStartMarkerPosition = findstring(";;;CCLUT_START_TEST_INC_FILE", cclutTestCaseProgramListingXml, 1, 0)
-  set cclutEndMarkerPosition = findstring(";;;CCLUT_END_TEST_INC_FILE", cclutTestCaseProgramListingXml, 1, 1)
+  set cclutStartMarkerPosition = findstring(CCLUT_CC_TC_START_MARKER, cclutTestCaseProgramListingXml, 1, 0)
+  set cclutEndMarkerPosition = findstring(CCLUT_CC_TC_END_MARKER, cclutTestCaseProgramListingXml, 1, 1)
  
   set cclutTestCaseStartPosition = findstring("<LINE>", cclutTestCaseProgramListingXml, cclutStartMarkerPosition, 0)
   set cclutListingXML = 

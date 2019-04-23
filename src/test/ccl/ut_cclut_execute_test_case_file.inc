@@ -64,10 +64,13 @@ record ucetcf_request (
   1 programs[*]
     2 programName = vc
     2 compile = i2
+  1 includes[*]
+    2 name = vc
   1 optimizerMode = vc
   1 enforcePredeclare = i2
   1 deprecatedFlag = vc
   1 legacyResultsFormat = i2
+  1 coveragePerTest = i2
   1 failFast = i2
 ) with protect
 

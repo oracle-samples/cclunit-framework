@@ -16,7 +16,7 @@ declare cclut::count = i4 with protect, noconstant(0)
   @field testINCName
     The name of the test include file to be executed.
   @field programs
-    A list of programs whose code coverage is to be recorded after each test execution.
+    The list of programs whose code coverage is to be recorded after each test execution.
     @field programName
       The name of the program whose code coverage data is to be retrieved.
     @field compile
@@ -25,6 +25,10 @@ declare cclut::count = i4 with protect, noconstant(0)
       set this to 1 on the first execution and then 0 in subsequent executions.
       @value 0 Do not compile the program in debug mode.
       @value 1 Compile the program in debug mode.
+  @field includes
+    The list of include files included in the build.
+    @field name
+      The name of the include file.
   @field optimizerMode
     The Oracle optimizer mode under which the tests should be executed.
   @field enforcePredeclare
@@ -41,6 +45,8 @@ declare cclut::count = i4 with protect, noconstant(0)
     1 programs[*]
       2 programName = vc
       2 compile = i2
+    1 includes[*]
+      2 name = vc
     1 optimizerMode = vc
     1 enforcePredeclare = i2
     1 deprecatedFlag = vc
@@ -93,10 +99,13 @@ record cclut_request (
   1 programs[*]
     2 programName = vc
     2 compile = i2
+  1 includes[*]
+    2 name = vc
   1 optimizerMode = vc
   1 enforcePredeclare = i2
   1 deprecatedFlag = vc
   1 legacyResultsFormat = i2
+  1 coveragePerTest = i2
   1 failFast = i2
 ) with protect
 
@@ -120,14 +129,14 @@ record cclut_reply (
 if (curimage = "CCL")
   set trace codecover 0; summary
 endif
-set modify maxvarlen 10000000
+set modify maxvarlen 20000000
 
 set cclut_request->testCaseDirectory = "CCLSOURCE"
-set cclut_request->testCaseFileName = validate(cclutRequest->testIncName, "")
-set cclut_request->testNamePattern = validate(cclutRequest->testSubroutineName, "")
 set cclut_request->optimizerMode = validate(cclutRequest->optimizerMode, "")
 set cclut_request->enforcePredeclare = validate(cclutRequest->enforcePredeclare, TRUE)
 set cclut_request->deprecatedFlag = validate(cclutRequest->deprecatedFlag, "E")
+set cclut_request->coveragePerTest = validate(cclutRequest->coveragePerTest, TRUE)
+set cclut_request->failFast = validate(cclutRequest->failFast, FALSE)
 set cclut_request->legacyResultsFormat = TRUE
 set cclut::count = size(cclutRequest->programs, 5)
 set cclut::stat = alterList(cclut_request->programs, cclut::count)
@@ -135,6 +144,13 @@ for (cclut::index = 1 to cclut::count)
   set cclut_request->programs[cclut::index].programName = cclutRequest->programs[cclut::index].programName
   set cclut_request->programs[cclut::index].compile = cclutRequest->programs[cclut::index].compile
 endfor
+set cclut::count = size(cclutRequest->includes, 5)
+set cclut::stat = alterList(cclut_request->includes, cclut::count)
+for (cclut::index = 1 to cclut::count)
+  set cclut_request->includes[cclut::index].name = cclutRequest->includes[cclut::index].name
+endfor
+set cclut_request->testCaseFileName = validate(cclutRequest->testIncName, "")
+set cclut_request->testNamePattern = validate(cclutRequest->testSubroutineName, "")
 
 execute cclut_execute_test_case_file with 
     replace("CCLUTREQUEST", cclut_request), 

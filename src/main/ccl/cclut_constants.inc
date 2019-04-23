@@ -6,6 +6,9 @@
 ;
 ;**********************************************************************************************************************************
 
+declare CCLUT_CC_TC_START_MARKER  = vc with protect, constant(";;;CCLUT_START_TEST_INC_FILE")
+declare CCLUT_CC_TC_END_MARKER    = vc with protect, constant(";;;CCLUT_END_TEST_INC_FILE")
+
 declare CCLUT_UNCOVERED         = c1 with protect, constant("U")
 declare CCLUT_NOT_EXECUTABLE    = c1 with protect, constant("N")
 declare CCLUT_COVERED           = c1 with protect, constant("C")

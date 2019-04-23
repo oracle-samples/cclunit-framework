@@ -17,6 +17,8 @@ create program cclut:dba
     @default E
   @arg (i2) A boolean flag indicating whether to fail fast.
     @default FALSE
+  @arg (i2) A boolean flag indicating whether to generate code coverage for individual tests.
+    @default FALSE
 */
 prompt 
   "Ouput Destination [MINE]: " = "MINE",
@@ -25,9 +27,10 @@ prompt
   "Test Name Pattern [.*]: " = ".*",
   "Optimizer Mode (CBO, RBO) [current]: " = "",
   "Deprecated Flag (E, W, L, I, D) [E]: " = "",
-  "FailFast [FALSE]: " = FALSE
+  "FailFast [FALSE]: " = FALSE,
+  "Generate Coverage per Test [FALSE]: " = FALSE
 with outputDestination, testCaseDirectory,
-    testCaseFileName, testNamePattern, optimizerMode, deprecatedFlag, failFast
+    testCaseFileName, testNamePattern, optimizerMode, deprecatedFlag, failFast, coveragePerTest
 
 declare cclut1::main(null) = null with protect
 declare cclut1::errorCheck(null) = null with protect
@@ -36,6 +39,7 @@ declare cclut1::executeTestCase(null) = null with protect
 declare cclut1::processTestCaseResponse(cclutDestination = vc, cclutReq = vc(ref), 
     cclutResp = vc(ref), cclutRawResults = vc(ref), cclutResults = vc(ref)) = null with protect
 declare cclut1::transferTestCaseResults(cclutSource = vc(ref), cclutTarget = vc(ref)) = null with protect
+	
 declare cclut1::generateResultsReport(cclutDestination = vc, cclutReq = vc(ref), cclutResults = vc(ref)) = i2 with protect
 declare cclut1::generateErrorReport(cclutDestination = vc, testCaseFileName = vc, cclutErrorCode = vc) = i2 with protect
 
@@ -51,6 +55,7 @@ declare cclut1::testNamePattern = vc with protect, noconstant(trim($testNamePatt
 declare cclut1::optimizerMode = vc with protect, noconstant(trim(cnvtupper($optimizerMode), 3))
 declare cclut1::deprecatedFlag = vc with protect, noconstant(trim($deprecatedFlag, 3))
 declare cclut1::failFast = i2 with protect, noconstant($failFast)
+declare cclut1::coveragePerTest = i2 with protect, noconstant($coveragePerTest)
 
 
 ;allow the calling program to supply this
@@ -62,9 +67,12 @@ if (validate(cclut1TestCaseRequest) = FALSE)
     1 programs[*]
       2 programName = vc
       2 compile = i2
+    1 includes[*]
+      2 name = vc
     1 optimizerMode = vc
     1 deprecatedFlag = vc
     1 failFast = i2
+    1 coveragePerTest = i2
   ) with protect
 endif
 
@@ -97,6 +105,9 @@ if (validate(cclut1TestCaseResults) = FALSE)
       2 errors[*]
         3 lineNumber = i4
         3 errorText = vc
+      2 duration = i4
+      2 lineCoverage = vc
+    1 coverageXml = vc
 %i cclsource:status_block.inc
   ) with protect
 endif
@@ -132,10 +143,11 @@ subroutine cclut1::main(null)
   set cclut1TestCaseRequest->testNamePattern = cclut1::testNamePattern
   set cclut1TestCaseRequest->optimizerMode = cclut1::optimizerMode
   set cclut1TestCaseRequest->deprecatedFlag = cclut1::deprecatedFlag
+  set cclut1TestCaseRequest->coveragePerTest = cclut1::coveragePerTest
   set cclut1TestCaseRequest->failFast = cclut1::failFast
 
   call cclut1::executeTestCase(null)
-
+    
   call cclut1::processTestCaseResponse(
       cclut1::outputDestination, cclut1TestCaseRequest, cclut1TestCaseReply, cclut1TestCaseResults, cclut1TestResults)
   call cclut1::errorCheck(null)

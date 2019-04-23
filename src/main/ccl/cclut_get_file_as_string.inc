@@ -21,7 +21,7 @@ if (validate(CCLUT_GET_FILE_AS_STRING_INC) = FALSE)
     with image_axp="decc$shr", uar_axp="decc$fclose", image_aix="libc.a(shr.o)", uar_aix="fclose"
 endif
 
-set modify maxvarlen 10000000
+set modify maxvarlen 20000000
 
 
 /**
