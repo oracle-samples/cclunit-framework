@@ -180,6 +180,7 @@ subroutine testFailureOfVCNotEqualAssert(null)
   declare value1 = vc with protect, noconstant("")
   declare value2 = vc with protect, noconstant("")
   declare assertReturn = i2 with protect, noconstant(99)
+  declare cclut::ignoreCclStringLogic = i2 with protect, noconstant(TRUE)
   
   set value1 = notrim("Fantastic   ")
   set value2 = "Fantastic"

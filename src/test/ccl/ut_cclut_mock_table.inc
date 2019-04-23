@@ -547,9 +547,13 @@ subroutine test_cclutRemoveMockTable_happy(null)
 end ;test_cclutRemoveMockTable_happy
 
 /* test_cclutRemoveMockTable_created_table ******************************************************************
-*  Scenario: Removes a mock table that has been created yet and drops it from the RDBMS                     *
+*  Scenario: Removes a mock table that has been created and drops it from the RDBMS                     *
 ************************************************************************************************************/
 subroutine test_cclutRemoveMockTable_created_table(null)
+    if (cclutGetCurrentGroup(null) = 1 and reqinfo->updt_id = 0.0)
+        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
+        return(null)
+    endif
     declare mockTable = vc with protect, noconstant("")
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")
@@ -784,7 +788,7 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
         mockText3 = m.SAMPLE_TABLE_TEXT_3
     with nocounter
 
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 001", mockText1, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 001", mockText1, trim(""))
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 002", mockText2, "test")
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 003", mockText3, "test 2")
 
@@ -800,7 +804,7 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
     with nocounter
 
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 004", mockText1, "test")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 005", mockText2, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 005", mockText2, trim(""))
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 006", mockText3, "test 2")
 
     call cclutClearMockData("sample_table")
@@ -816,7 +820,7 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
 
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 007", mockText1, "test")
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 008", mockText2, "test 2")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 009", mockText3, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 009", mockText3, trim(""))
 
     call cclutClearMockData("sample_table")
     call cclutAddMockData("sample_table", "||test")
@@ -829,8 +833,8 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
         mockText3 = m.SAMPLE_TABLE_TEXT_3
     with nocounter
 
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 010", mockText1, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 011", mockText2, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 010", mockText1, trim(""))
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 011", mockText2, trim(""))
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 012", mockText3, "test")
 
     call cclutClearMockData("sample_table")
@@ -844,9 +848,9 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
         mockText3 = m.SAMPLE_TABLE_TEXT_3
     with nocounter
 
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 013", mockText1, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 013", mockText1, trim(""))
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 014", mockText2, "test")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 015", mockText3, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 015", mockText3, trim(""))
 
     call cclutClearMockData("sample_table")
     call cclutAddMockData("sample_table", "test||")
@@ -860,8 +864,8 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
     with nocounter
 
     call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 016", mockText1, "test")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 017", mockText2, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 018", mockText3, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 017", mockText2, trim(""))
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 018", mockText3, trim(""))
 
     call cclutClearMockData("sample_table")
     call cclutAddMockData("sample_table", "||")
@@ -874,9 +878,9 @@ subroutine test_cclutAddMockData_empty_string_tests(null)
         mockText3 = m.SAMPLE_TABLE_TEXT_3
     with nocounter
 
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 019", mockText1, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 020", mockText2, "")
-    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 021", mockText3, "")
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 019", mockText1, trim(""))
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 020", mockText2, trim(""))
+    call cclutAssertvcEqual(CURREF, "test_cclutAddMockData_empty_string_tests 021", mockText3, trim(""))
 end ;test_cclutAddMockData_empty_string_tests
 
 /* test_cclutAddMockData_backslash_tests ********************************************************************

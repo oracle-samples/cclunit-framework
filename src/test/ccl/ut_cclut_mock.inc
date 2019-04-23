@@ -431,10 +431,14 @@ end ;execute_mocks_happy_validations
 /**
     Confirms that mock tables get dropped for a group1 user.
 
-    Note that in conjuction with test_mock_tables_dropped_via_tdbexecute_for_group1_user this test demonstrates that the
+    Note that in conjunction with test_mock_tables_dropped_via_tdbexecute_for_group1_user this test demonstrates that the
     tdbexecute call gets performed successfully.
 */
 subroutine test_mock_tables_dropped_for_group1_user(null)
+    if (reqinfo->updt_id = 0.0)
+        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
+        return(null)
+    endif
     declare idx = i4 with protect, noconstant(0)
     record mockTables(1 item[*] 2 name = vc)
 
