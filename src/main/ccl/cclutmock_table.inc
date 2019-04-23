@@ -20,6 +20,7 @@ declare public::cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames =
 declare public::cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
     cclutIsUnique = i4(val)) = null with protect
 declare public::cclutCreateMockTable(cclutTableName = vc(val)) = null with protect
+declare public::cclutCreateMockIndexes(cclutTablePosition = i4) = null with protect
 declare public::cclutRemoveMockTable(cclutTableName = vc(val)) = null with protect
 declare public::cclutRemoveAllMockTables(null) = null with protect
 declare public::cclutAddMockData(cclutTableName = vc(val), cclutRowData = vc(val)) = null with protect
@@ -422,20 +423,42 @@ subroutine public::cclutCreateMockTable(cclutTableName)
             concat(cclutParserText, ^ ^, cclutColumnName,
             ^ = type("^, cclut_mockTables->tables[cclutMockTablePos].columns[cclutMockColumnIndex].columnType, ^")^)
     endfor
-    set cclutParserText = concat(cclutParserText, ^ with organization="P"^)
-    for (cclutMockIndexIndex = 1 to size(cclut_mockTables->tables[cclutMockTablePos].indexes, 5))
-        set cclutParserText = concat(cclutParserText,
-            evaluate(cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexIndex].isUnique, TRUE,
-            " , indexunique(", " , index("),
-            replace(cclut_mockTables->tables[cclutMockTablePos].indexes[cclutMockIndexIndex].indexColumns, CCLUT_PIPE,
-                ","), ")")
-    endfor
-
-    set cclutParserText = concat(cclutParserText, " go")
+    set cclutParserText = concat(cclutParserText, ^ with organization="P" go^)
     call parser(cclutParserText)
+    call cclut::stashErrors(null)
+
+    call cclutCreateMockIndexes(cclutMockTablePos)
+    call cclut::stashErrors(null)
 
     set cclut_mockTables->tables[cclutMockTablePos].isFinalized = TRUE
 end ;cclutCreateMockTable
+
+subroutine public::cclutCreateMockIndexes(cclutTablePosition)
+    declare CCLUT_TABLE_NAME = vc with protect, constant(cnvtupper(cclut_mockTables->tables[cclutTablePosition].replaceName))
+    declare cclutMockIndexIndex = i4 with protect, noconstant(0)
+    declare cclutMockIndexNbr = vc with protect, noconstant("")
+    declare cclutParserText = vc with protect, noconstant("")
+
+    for (cclutMockIndexIndex = 1 to size(cclut_mockTables->tables[cclutTablePosition].indexes, 5))
+        set cclutParserText = "rdb create"
+        if (cclut_mockTables->tables[cclutTablePosition].indexes[cclutMockIndexIndex].isUnique = TRUE)
+            set cclutParserText = concat(cclutParserText, " unique")
+        endif
+        set cclutMockIndexNbr = trim(cnvtstring(cclutMockIndexIndex, 4), 3)
+        set cclutParserText = concat(cclutParserText, " index X", cclutMockIndexNbr)
+        if (currdbver < 12.2)
+            set cclutParserText = concat(cclutParserText, " ", substring(1, 30-textlen(cclutMockIndexNbr)-1, CCLUT_TABLE_NAME))
+        else
+            set cclutParserText = concat(cclutParserText, " ", CCLUT_TABLE_NAME)
+        endif
+        set cclutParserText = concat(cclutParserText, " on ", CCLUT_TABLE_NAME)
+        set cclutParserText = concat(cclutParserText, "(",
+            replace(cclut_mockTables->tables[cclutTablePosition].indexes[cclutMockIndexIndex].indexColumns, CCLUT_PIPE, ","),
+            ") go")
+        call parser(cclutParserText)
+        call cclut::stashErrors(null)
+    endfor
+end
 
 /**
 Removes a mock table.  If the table was already created, it will also be dropped.  If the table is not currently
@@ -469,6 +492,7 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
             if (cclutGetCurrentGroup(null) = 0)
                 set cclutParserText = concat(" drop table ", cclutMockTableName, " go")
                 call parser(cclutParserText)
+                call cclut::stashErrors(null)
             else
                 declare dropSuccess = i2 with protect, noconstant(FALSE)
                 free record cclut_drop_table_request
@@ -623,6 +647,7 @@ subroutine public::cclutAddMockData(cclutTableName, cclutRowData)
     endif
 
     call parser(" go")
+    call cclut::stashErrors(null)
 end ;cclutAddMockData
 
 /**
@@ -784,6 +809,7 @@ subroutine public::cclutClearMockData(cclutTableName)
     endif
 
     call parser(concat(" delete from ", cclut_mockTables->tables[cclutMockTablePos].replaceName, " where seq = 1 go"))
+    call cclut::stashErrors(null)
 end ;cclutClearMockData
 
 %#endif CCLUTMOCK_TABLE_INC
