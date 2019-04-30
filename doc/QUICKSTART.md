@@ -73,6 +73,6 @@ Example:
 - Execute `mvn clean test -P<profile-name>`
 
 
-[framework-installation]:https://github.com/cerner/ccl-testing/blob/master/doc/FRAMEWORK.md
+[framework-installation]:FRAMEWORKINSTALL.md
 [configure-maven]:CONFIGUREMAVEN.md
 [cclutAsserts]:CCLUTASSERTS.md
