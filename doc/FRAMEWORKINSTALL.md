@@ -34,7 +34,7 @@ Here are instructions for installing the framework **using maven**.
 - [Configure maven][configure-maven] for CCL Unit testing in the environment
 - Download and unzip the [cclunit-framework][cclunit-framework] project.
 - Open a command prompt and navigate the current directory to the top level folder of the downloaded cclunit-framework project.
-- Execute `mvn clean install -P<profile id>` using the domain specific profile id created in the `configure maven` step.
+- Execute `mvn clean test -P<profile id>` using the domain specific profile id created in the `configure maven` step.
 
 
 Here are instructions for installing the framework **manually**.
