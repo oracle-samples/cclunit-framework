@@ -35,8 +35,8 @@ with outdev, testCaseDirectoryLogical, testCaseFileName
 %i cclsource:status_block.inc
     ) with protect
 
-    execute cclut_compile_test_case_file
-    call echorecord(cclutReply)
+    execute cclut_compile_test_case_file with replace("CCLUTREQUEST", cclutRequest), replace("CCLUTREPLY", cclutReply)
+    call echorecord(cclutReply) ;intentional
     set _memory_reply_string = cnvtrectojson(cclutReply)
 
 #exit_script

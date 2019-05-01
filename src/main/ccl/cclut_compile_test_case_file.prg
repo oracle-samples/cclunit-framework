@@ -2,6 +2,7 @@ drop program cclut_compile_test_case_file:dba go
 create program cclut_compile_test_case_file:dba
 /**
     This program will compile a specfied CCL Unit Test Case file and return the compiled object name if successful.
+    The calling process is expected to provide cclutRequest and cclutReply defined below.
 */
 
 set modify maxvarlen 20000000
@@ -50,13 +51,16 @@ declare cclut::stat                     = i4 with protect, noconstant(0)
 %i cclsource:cclut_compile_subs.inc
 
 ;create a test program object from the test case file that executes the tests in the test case when it is executed.
-set cclut::testCaseId = concat(trim(currdbhandle, 3), "_", trim(cnvtstring(cnvtint(curtime3)), 3))
+set cclut::testCaseId = concat(trim(cnvtstring(currdbhandle), 3), "_", trim(cnvtstring(cnvtint(curtime3)), 3))
 set cclut::testCaseObjectName = concat("prg_", cclut::testCaseId)
-set cclut::testCaseListingName = concat("cclut_inc_", cclut::testCaseId, ".lis")
+set cclut::testCaseListingName = concat(cclut::testCaseObjectName, ".lis")
 set cclut::testCaseFileName = trim(cnvtlower(cclutRequest->testCaseFileName), 3)
-set cclut::testCaseDirectory = trim(validate(cclutRequest->testCaseDirectory, cclut::CER_TEMP), 3)
+set cclut::testCaseDirectory = trim(validate(cclutRequest->testCaseDirectory, ""), 3)
+if (textlen(trim(cclut::testCaseDirectory)) = 0)
+  set cclut::testCaseDirectory = cclut::CER_TEMP
+endif
 
-if (cclut::generateTestCaseProgram(cclut::testCaseDirectory, cclut::testCaseFileName,
+if (cclutGenerateTestCaseProgram(cclut::testCaseDirectory, cclut::testCaseFileName,
     cclut::CCLUSERDIR, cclut::testCaseListingName, cclut::testCaseObjectName, cclut::errorMessage) = FALSE)
   set cclutReply->status_data.status = "F"
   set cclutReply->status_data.subeventstatus[1].operationName = "generateTestCaseProgram"
