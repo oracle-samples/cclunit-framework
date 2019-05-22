@@ -27,7 +27,7 @@ subroutine setupOnce(null)
   declare success = i2 with protect, noconstant(FALSE)
   declare errorMessage = vc with protect, noconstant("")
  
-  set success = cclut::compileProgram(CCLSOURCE, programFileName, CCLUSERDIR, listingName, errorMessage)
+  set success = cclutCompileProgram(CCLSOURCE, programFileName, CCLUSERDIR, listingName, errorMessage)
   call cclutAssertI2Equal(CURREF, "compileProgram", success, TRUE)
   set sourceListingXml = cclut::getListingXml(programName, listingDirectory, listingName)
 end ;;;setupOnce

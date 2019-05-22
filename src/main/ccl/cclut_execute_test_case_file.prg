@@ -504,7 +504,7 @@ for (cclut::programCount = 1 to size(cclutRequest->programs, 5))
     set cclut::listingName = concat("cclut_prg_", cclut::testCaseId, trim(cnvtstring(cclut::programCount, 100), 3), ".lis")
     ;;prevent error mis-interpretation by compileProgram
     call cclut::exitOnError("pre-compile", cclutReply->programs[cclut::programCount].programName, cclutReply)
-    if (cclut::compileProgram(
+    if (cclutCompileProgram(
         cclut::CCLUSERDIR, cclut::tempProgramName, cclut::CCLUSERDIR, cclut::listingName, cclut::errorMessage) = TRUE)
       set cclutReply->programs[cclut::programCount].listingXml =
           cclut::getListingXml(cclutReply->programs[cclut::programCount].programName, cclut::outputDirectory, cclut::listingName)
@@ -531,12 +531,12 @@ endfor
 ;create a test program object from the test case file that executes the tests in the test case when it is executed.
 set cclut::testCaseFileName = trim(cnvtlower(cclutRequest->testCaseFileName), 3)
 set cclut::testCaseDirectory = trim(validate(cclutRequest->testCaseDirectory, cclut::CER_TEMP), 3)
-;;prevent error mis-interpretation by generateTestCaseProgram
+;;prevent error mis-interpretation by cclutGenerateTestCaseProgram
 call cclut::exitOnError("pre-generate", cclut::testCaseFileName, cclutReply)
-if (cclut::generateTestCaseProgram(cclut::testCaseDirectory, cclut::testCaseFileName, 
+if (cclutGenerateTestCaseProgram(cclut::testCaseDirectory, cclut::testCaseFileName, 
     cclut::CCLUSERDIR, cclut::testCaseListingName, cclut::testCaseObjectName, cclut::errorMessage) = FALSE)
   set cclutReply->status_data.status = "F"
-  set cclutReply->status_data.subeventstatus[1].operationName = "generateTestCaseProgram"
+  set cclutReply->status_data.subeventstatus[1].operationName = "generateTestCaseProgram "
   set cclutReply->status_data.subeventstatus[1].operationStatus = "F"
   set cclutReply->status_data.subeventstatus[1].targetObjectName = cclut::testCaseFileName
   set cclutReply->status_data.subeventstatus[1].targetObjectValue = cclut::errorMessage

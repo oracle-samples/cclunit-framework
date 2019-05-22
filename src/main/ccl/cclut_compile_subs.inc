@@ -8,11 +8,11 @@
 
 %i cclsource:cclut_error_handling.inc
 
-declare cclut::generateTestCaseProgram(cclutDirectoryLogical = vc, cclutFileName = vc, cclutListingLogical = vc,
+declare public::cclutGenerateTestCaseProgram(cclutDirectoryLogical = vc, cclutFileName = vc, cclutListingLogical = vc,
     cclutListingName = vc, cclutProgramName = vc, cclutFailureMessage = vc(ref)) = i2
-declare cclut::compileProgram(cclutDirectoryLogical = vc, cclutFileName = vc, cclutListingLogical = vc,
+declare public::cclutCompileProgram(cclutDirectoryLogical = vc, cclutFileName = vc, cclutListingLogical = vc,
     cclutListingName = vc, cclutFailureMessage = vc(ref)) = i2
-declare cclut::listingHasErrors(cclutProgramFileName = vc, cclutListingLocation = vc) = i2
+declare public::cclutListingHasErrors(cclutProgramFileName = vc, cclutListingLocation = vc) = i2
 
 /**
   Creates a program from a test case file.
@@ -35,7 +35,7 @@ declare cclut::listingHasErrors(cclutProgramFileName = vc, cclutListingLocation 
     @value FALSE
       The test case compile failed.
 */
-subroutine cclut::generateTestCaseProgram(
+subroutine public::cclutGenerateTestCaseProgram(
     cclutDirectoryLogical, cclutFileName, cclutListingLogical, cclutListingName, cclutProgramName, cclutFailureMessage)
   declare CCLUT_CCLUSERDIR = vc with protect, constant("CCLUSERDIR")
   declare cclutCcluserDirectory = vc with protect, noconstant("")
@@ -110,7 +110,7 @@ subroutine cclut::generateTestCaseProgram(
     return (FALSE)
   endif
 
-  if (not cclut::compileProgram(
+  if (not cclutCompileProgram(
     CCLUT_CCLUSERDIR, concat(cclutProgramName, ".dat"), cclutListingLogical, cclutListingName, cclutFailureMessage))
     if (validate(cclut::noRemove, FALSE) = FALSE)
       set cclutStat = remove(cclutProgramFileLocation)
@@ -125,7 +125,7 @@ subroutine cclut::generateTestCaseProgram(
     return (TRUE)
   endif
   return (FALSE)
-end ;;;generateTestCaseProgram
+end ;;;cclutGenerateTestCaseProgram
 
 
 /**
@@ -147,7 +147,8 @@ end ;;;generateTestCaseProgram
     @value FALSE
       The program compile failed.
  */
-subroutine cclut::compileProgram(cclutDirectoryLogical, cclutFileName, cclutListingLogical, cclutListingName, cclutFailureMessage)
+subroutine public::cclutCompileProgram(
+    cclutDirectoryLogical, cclutFileName, cclutListingLogical, cclutListingName, cclutFailureMessage)
   declare cclutProgramDirectory = vc with protect, noconstant("")
   declare cclutProgramFileLocation = vc with protect, noconstant("")
   declare cclutListingFileLocation = vc with protect, noconstant("")
@@ -174,7 +175,7 @@ subroutine cclut::compileProgram(cclutDirectoryLogical, cclutFileName, cclutList
   call compile(value(cclutProgramFileLocation), value(cclutListingFileLocation), 1)
   set COMPILE = NODEBUG
 
-  if (cclut::listingHasErrors(cclutProgramFileLocation, cclutListingFileLocation) = FALSE)
+  if (cclutListingHasErrors(cclutProgramFileLocation, cclutListingFileLocation) = FALSE)
     set cclutFailureMessage = concat("compile errors detected in ", cclutListingFileLocation,
       ". Search for a line that does not start with a number using ^[^0-9] or an equivalent regular expression.")
     return (FALSE)
@@ -191,7 +192,7 @@ end ;;;compileProgram
   This covers for a CCL compile issue where something like "set rec->item[idx]. = value" does not generate an error.
   The problen is fixed in 8.13.3.
 */
-subroutine cclut::listingHasErrors(cclutProgramFileName, cclutListingLocation)
+subroutine public::cclutListingHasErrors(cclutProgramFileName, cclutListingLocation)
   declare cclutCommand = vc with protect, noconstant("")
   declare cclutCommandLen = i4 with protect, noconstant(0)
   declare cclutStatus = i4 with protect, noconstant(0)

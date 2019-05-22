@@ -20,9 +20,9 @@ declare testTestCaseFileDoesNotExist(null) = null with protect
 declare testCclMinimumNotMet(null) = null with protect
 declare cclut::getOutdatedCclVersion(null) = vc with protect
 declare testCompileProgramFailure(null) = null with protect
-declare cclut::compileProgramFailure(fileDir = vc, fileName = vc, listingDir = vc, listingName = vc, errMsg = vc(ref)) = i2
+declare public::compileProgramFailure(fileDir = vc, fileName = vc, listingDir = vc, listingName = vc, errMsg = vc(ref)) = i2
 declare testGenerateTestCaseProgramFailure(null) = null with protect
-declare cclut::generateTestCaseProgramFailure(fileDir = vc, fileName = vc, listingDir = vc, listingName = vc, 
+declare public::generateTestCaseProgramFailure(fileDir = vc, fileName = vc, listingDir = vc, listingName = vc, 
     objName = vc, errorMessage = vc(ref)) = i2
 declare testCheckPrgFailure(null) = null with protect
 declare checkPrgFailure(prgName = vc) = i4 with protect
@@ -853,7 +853,7 @@ subroutine testTestCaseFileDoesNotExist(null)
 
   call cclutAssertVCEqual(CURREF, "execute success 1", ucetcf_reply->status_data.status, "F")
   call cclutAssertVCEqual(CURREF, "execute success 2", 
-      ucetcf_reply->status_data.subeventstatus[1].operationName, "generateTestCaseProgram")
+      ucetcf_reply->status_data.subeventstatus[1].operationName, "generateTestCaseProgram ")
   call cclutAssertVCEqual(CURREF, "execute success 3", 
       ucetcf_reply->status_data.subeventstatus[1].operationStatus, "F")
   call cclutAssertVCEqual(CURREF, "execute success 4", 
@@ -905,7 +905,7 @@ subroutine testCompileProgramFailure(null)
       replace("CCLUTREQUEST", ucetcf_request1), 
       replace("CCLUTREPLY", ucetcf_reply),
       replace("CCLUTTESTCASERESULTS", ucetcf_testCaseResults),
-      replace("COMPILEPROGRAM", compileProgramFailure)
+      replace("CCLUTCOMPILEPROGRAM", compileProgramFailure)
       
   call cclutAssertVCEqual(CURREF, "execute success", ucetcf_reply->status_data.status, "F")
   call cclutAssertVCEqual(CURREF, "execute success", ucetcf_reply->status_data.subeventstatus[1].operationName, "compileProgram")
@@ -915,7 +915,7 @@ subroutine testCompileProgramFailure(null)
   call cclutAssertEndsWith(CURREF, "execute success", "compileProgram failure forced by unit test", tov)
   call cclutAssertI2Equal(CURREF, "test case failure", ucetcf_testCaseResults->resultInd, FALSE)
 end
-subroutine cclut::compileProgramFailure(fileDir, fileName, listingDir, listingName, errMsg)
+subroutine public::compileProgramFailure(fileDir, fileName, listingDir, listingName, errMsg)
   set errMsg = "compileProgram failure forced by unit test"
   return (FALSE)
 end ;;;testCompileProgramFailure
@@ -931,17 +931,17 @@ subroutine testGenerateTestCaseProgramFailure(null)
       replace("CCLUTREQUEST", ucetcf_request), 
       replace("CCLUTREPLY", ucetcf_reply),
       replace("CCLUTTESTCASERESULTS", ucetcf_testCaseResults),
-      replace("GENERATETESTCASEPROGRAM", generateTestCaseProgramFailure)
+      replace("CCLUTGENERATETESTCASEPROGRAM", generateTestCaseProgramFailure)
       
   call cclutAssertVCEqual(CURREF, "execute success", ucetcf_reply->status_data.status, "F")
   call cclutAssertVCEqual(CURREF, "execute success", 
-      ucetcf_reply->status_data.subeventstatus[1].operationName, "generateTestCaseProgram")
+      ucetcf_reply->status_data.subeventstatus[1].operationName, "generateTestCaseProgram ")
   call cclutAssertVCEqual(CURREF, "execute success", ucetcf_reply->status_data.subeventstatus[1].operationStatus, "F")
   call cclutAssertVCEqual(CURREF, "execute success", ucetcf_reply->status_data.subeventstatus[1].targetObjectValue,
       "generateTestCaseProgram failure forced by unit test")
   call cclutAssertI2Equal(CURREF, "test case failure", ucetcf_testCaseResults->resultInd, FALSE)
 end
-subroutine cclut::generateTestCaseProgramFailure(fileDir, fileName, listingDir, listingName, objName, errorMessage)
+subroutine public::generateTestCaseProgramFailure(fileDir, fileName, listingDir, listingName, objName, errorMessage)
   set errorMessage = "generateTestCaseProgram failure forced by unit test"
   return (FALSE)
 end ;;;testGenerateTestCaseProgramFailure
