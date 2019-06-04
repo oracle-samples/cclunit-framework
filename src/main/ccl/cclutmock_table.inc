@@ -15,6 +15,8 @@ declare CCLUT_PIPE = vc with protect, constant("|")
 declare CCLUT_ESCAPED_PIPE = vc with protect, constant("\|")
 declare CCLUT_ESCAPED_NULL = vc with protect, constant("\null")
 
+declare cclutMockTableNumber = i4 with persist, noconstant(0)
+
 declare public::cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames = vc(val),
     cclutFieldTypes = vc(val), cclutIsAccessedViaRdbCommands= i2(val, FALSE)) = vc with protect
 declare public::cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
@@ -156,9 +158,15 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
     set cclutStat = alterlist(cclut_mockTables->tables, cclutMockTablePos)
 
     ;Create the mock name and fill out the columns
+    if (mod(cclutMockTableNumber, 10000) = 0)
+        set cclutMockTableNumber = 1
+    else
+        set cclutMockTableNumber = cclutMockTableNumber + 1
+    endif
+
     set cclut_mockTables->tables[cclutMockTablePos].originalName = CCLUT_TABLE_NAME
     set cclut_mockTables->tables[cclutMockTablePos].replaceName = cnvtupper(trim(substring(1, 30, concat("CUST_CCLUT_",
-        trim(cnvtstring(cclutMockTablePos, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
+        trim(cnvtstring(cclutMockTableNumber, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
     set cclut_mockTables->tables[cclutMockTablePos].isFinalized = FALSE
 
     set cclutStat = alterlist(cclut_mockTables->tables[cclutMockTablePos].columns, cclutColumnCount)
