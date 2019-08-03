@@ -1,0 +1,630 @@
+Apache Maven 3.6.1 (d66c9c0b3152b2e69ee9bac180bb8fcc8e6af555; 2019-04-04T14:00:29-05:00)
+Maven home: Q:\apache\maven\3.6.1\apache-maven-3.6.1\bin\..
+Java version: 1.8.0_211, vendor: Oracle Corporation, runtime: C:\Progra~1\Java\jdk1.8.0_211\jre
+Default locale: en_US, platform encoding: Cp1252
+OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: javax.annotation.* < plexus.core
+[DEBUG]   Imported: javax.annotation.security.* < plexus.core
+[DEBUG]   Imported: javax.enterprise.inject.* < plexus.core
+[DEBUG]   Imported: javax.enterprise.util.* < plexus.core
+[DEBUG]   Imported: javax.inject.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.classrealm < plexus.core
+[DEBUG]   Imported: org.apache.maven.cli < plexus.core
+[DEBUG]   Imported: org.apache.maven.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.exception < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution.scope < plexus.core
+[DEBUG]   Imported: org.apache.maven.lifecycle < plexus.core
+[DEBUG]   Imported: org.apache.maven.model < plexus.core
+[DEBUG]   Imported: org.apache.maven.monitor < plexus.core
+[DEBUG]   Imported: org.apache.maven.plugin < plexus.core
+[DEBUG]   Imported: org.apache.maven.profiles < plexus.core
+[DEBUG]   Imported: org.apache.maven.project < plexus.core
+[DEBUG]   Imported: org.apache.maven.reporting < plexus.core
+[DEBUG]   Imported: org.apache.maven.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.rtinfo < plexus.core
+[DEBUG]   Imported: org.apache.maven.settings < plexus.core
+[DEBUG]   Imported: org.apache.maven.toolchain < plexus.core
+[DEBUG]   Imported: org.apache.maven.usability < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.events < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.observers < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.resource < plexus.core
+[DEBUG]   Imported: org.codehaus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.* < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.component < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.configuration < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.container < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.context < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.logging < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.personality < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.* < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.artifact < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.collection < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.deployment < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.graph < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.installation < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.internal.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.metadata < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.repository < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.resolution < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.spi < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.transfer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.version < plexus.core
+[DEBUG]   Imported: org.fusesource.jansi.* < plexus.core
+[DEBUG]   Imported: org.slf4j.* < plexus.core
+[DEBUG]   Imported: org.slf4j.event.* < plexus.core
+[DEBUG]   Imported: org.slf4j.helpers.* < plexus.core
+[DEBUG]   Imported: org.slf4j.spi.* < plexus.core
+[DEBUG] Populating class realm maven.api
+[INFO] Error stacktraces are turned on.
+[DEBUG] Message scheme: color
+[DEBUG] Message styles: debug info warning error success failure strong mojo project
+[DEBUG] Reading global settings from Q:\apache\maven\3.6.1\apache-maven-3.6.1\bin\..\conf\settings.xml
+[DEBUG] Reading user settings from q:\users\fe2417\.m2\settings.xml
+[DEBUG] Reading global toolchains from Q:\apache\maven\3.6.1\apache-maven-3.6.1\bin\..\conf\toolchains.xml
+[DEBUG] Reading user toolchains from q:\users\fe2417\.m2\toolchains.xml
+[DEBUG] Using local repository at q:\users\fe2417\.m2\repository
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for q:\users\fe2417\.m2\repository
+[INFO] Scanning for projects...
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=1067300, ConflictMarker.markTime=378500, ConflictMarker.nodeCount=156, ConflictIdSorter.graphTime=504700, ConflictIdSorter.topsortTime=420600, ConflictIdSorter.conflictIdCount=63, ConflictIdSorter.conflictIdCycleCount=1, ConflictResolver.totalTime=5376100, ConflictResolver.conflictItemCount=152, DefaultDependencyCollector.collectTime=361353500, DefaultDependencyCollector.transformTime=9436200}
+[DEBUG] com.cerner.ccl.testing:ccl-maven-plugin:jar:3.2:
+[DEBUG]    com.cerner.ccl.comm:j4ccl:jar:3.1:compile
+[DEBUG]       commons-discovery:commons-discovery:jar:20040218.194635:compile
+[DEBUG]       commons-lang:commons-lang:jar:2.6:compile
+[DEBUG]       commons-logging:commons-logging:jar:1.2:compile
+[DEBUG]       org.slf4j:slf4j-api:jar:1.8.0-beta2:compile
+[DEBUG]    com.cerner.ccl.comm:j4ccl-ssh:jar:4.2:compile
+[DEBUG]       com.cerner.ftp:ftp-util:jar:2.0:compile
+[DEBUG]       com.cerner.ftp:jsch-util:jar:2.0.0:compile
+[DEBUG]          net.sf.ehcache:ehcache-core:jar:2.6.11:compile
+[DEBUG]          commons-codec:commons-codec:jar:1.11:compile
+[DEBUG]       com.github.cverges:expect4j:jar:1.9:compile
+[DEBUG]          org.apache.servicemix.bundles:org.apache.servicemix.bundles.oro:jar:2.0.8_6:compile
+[DEBUG]          commons-net:commons-net:jar:3.3:compile
+[DEBUG]          net.sourceforge.tcljava:com.springsource.tcl.lang.jacl:jar:1.4.1:compile
+[DEBUG]             net.sourceforge.tcljava:com.springsource.tcl.lang:jar:1.4.1:compile
+[DEBUG]       com.jcraft:jsch:jar:0.1.54:compile
+[DEBUG]       com.google.code.jetm:jetm-reporting-utilities:jar:1.0.1:compile
+[DEBUG]          org.jdom:jdom:jar:1.1:compile
+[DEBUG]       fm.void.jetm:jetm:jar:1.2.3:compile
+[DEBUG]       joda-time:joda-time:jar:2.10:compile
+[DEBUG]       net.sf.json-lib:json-lib:jar:jdk15:2.4:compile
+[DEBUG]          commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[DEBUG]          commons-collections:commons-collections:jar:3.2.1:compile
+[DEBUG]          net.sf.ezmorph:ezmorph:jar:1.0.6:compile
+[DEBUG]    org.apache.maven:maven-artifact:jar:3.5.3:compile
+[DEBUG]       org.apache.commons:commons-lang3:jar:3.7:compile
+[DEBUG]    org.apache.maven:maven-compat:jar:3.5.3:compile
+[DEBUG]       org.apache.maven:maven-model-builder:jar:3.5.3:compile
+[DEBUG]       org.apache.maven:maven-settings-builder:jar:3.5.3:compile
+[DEBUG]          org.sonatype.plexus:plexus-sec-dispatcher:jar:1.4:compile
+[DEBUG]             org.sonatype.plexus:plexus-cipher:jar:1.4:compile
+[DEBUG]       org.apache.maven:maven-resolver-provider:jar:3.5.3:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:3.5.3:compile
+[DEBUG]       org.apache.maven.resolver:maven-resolver-api:jar:1.1.1:compile
+[DEBUG]       org.apache.maven.resolver:maven-resolver-util:jar:1.1.1:compile
+[DEBUG]       org.apache.maven.resolver:maven-resolver-impl:jar:1.1.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.24:compile
+[DEBUG]       org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.3:compile
+[DEBUG]          javax.enterprise:cdi-api:jar:1.0:compile
+[DEBUG]             javax.annotation:jsr250-api:jar:1.0:compile
+[DEBUG]       org.codehaus.plexus:plexus-component-annotations:jar:1.7.1:compile
+[DEBUG]       org.apache.maven.wagon:wagon-provider-api:jar:3.0.0:compile
+[DEBUG]    org.apache.maven:maven-core:jar:3.5.3:compile
+[DEBUG]       org.apache.maven:maven-builder-support:jar:3.5.3:compile
+[DEBUG]       org.apache.maven.resolver:maven-resolver-spi:jar:1.1.1:compile
+[DEBUG]       org.apache.maven.shared:maven-shared-utils:jar:3.2.1:compile
+[DEBUG]       org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.3:compile
+[DEBUG]       com.google.inject:guice:jar:no_aop:4.0:compile
+[DEBUG]          aopalliance:aopalliance:jar:1.0:compile
+[DEBUG]       com.google.guava:guava:jar:20.0:compile
+[DEBUG]       javax.inject:javax.inject:jar:1:compile
+[DEBUG]       org.codehaus.plexus:plexus-classworlds:jar:2.5.2:compile
+[DEBUG]    org.apache.maven:maven-model:jar:3.5.3:compile
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.5.3:compile
+[DEBUG]    org.apache.maven:maven-settings:jar:3.5.3:compile
+[DEBUG]    org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.5.2:compile
+[DEBUG]    commons-io:commons-io:jar:2.6:compile
+[DEBUG]    dom4j:dom4j:jar:1.6.1:compile
+[DEBUG]       xml-apis:xml-apis:jar:1.0.b2:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.1.0:compile
+[DEBUG]    org.jdom:jdom2:jar:2.0.6:compile
+[DEBUG]    jaxen:jaxen:jar:1.1.6:runtime
+[DEBUG] Created new class realm extension>com.cerner.ccl.testing:ccl-maven-plugin:3.2
+[DEBUG] Importing foreign packages into class realm extension>com.cerner.ccl.testing:ccl-maven-plugin:3.2
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm extension>com.cerner.ccl.testing:ccl-maven-plugin:3.2
+[DEBUG]   Included: com.cerner.ccl.testing:ccl-maven-plugin:jar:3.2
+[DEBUG]   Included: com.cerner.ccl.comm:j4ccl:jar:3.1
+[DEBUG]   Included: commons-discovery:commons-discovery:jar:20040218.194635
+[DEBUG]   Included: commons-lang:commons-lang:jar:2.6
+[DEBUG]   Included: commons-logging:commons-logging:jar:1.2
+[DEBUG]   Included: com.cerner.ccl.comm:j4ccl-ssh:jar:4.2
+[DEBUG]   Included: com.cerner.ftp:ftp-util:jar:2.0
+[DEBUG]   Included: com.cerner.ftp:jsch-util:jar:2.0.0
+[DEBUG]   Included: net.sf.ehcache:ehcache-core:jar:2.6.11
+[DEBUG]   Included: commons-codec:commons-codec:jar:1.11
+[DEBUG]   Included: com.github.cverges:expect4j:jar:1.9
+[DEBUG]   Included: org.apache.servicemix.bundles:org.apache.servicemix.bundles.oro:jar:2.0.8_6
+[DEBUG]   Included: commons-net:commons-net:jar:3.3
+[DEBUG]   Included: net.sourceforge.tcljava:com.springsource.tcl.lang.jacl:jar:1.4.1
+[DEBUG]   Included: net.sourceforge.tcljava:com.springsource.tcl.lang:jar:1.4.1
+[DEBUG]   Included: com.jcraft:jsch:jar:0.1.54
+[DEBUG]   Included: com.google.code.jetm:jetm-reporting-utilities:jar:1.0.1
+[DEBUG]   Included: org.jdom:jdom:jar:1.1
+[DEBUG]   Included: fm.void.jetm:jetm:jar:1.2.3
+[DEBUG]   Included: joda-time:joda-time:jar:2.10
+[DEBUG]   Included: net.sf.json-lib:json-lib:jar:jdk15:2.4
+[DEBUG]   Included: commons-beanutils:commons-beanutils:jar:1.8.0
+[DEBUG]   Included: commons-collections:commons-collections:jar:3.2.1
+[DEBUG]   Included: net.sf.ezmorph:ezmorph:jar:1.0.6
+[DEBUG]   Included: org.apache.commons:commons-lang3:jar:3.7
+[DEBUG]   Included: org.sonatype.plexus:plexus-sec-dispatcher:jar:1.4
+[DEBUG]   Included: org.sonatype.plexus:plexus-cipher:jar:1.4
+[DEBUG]   Included: org.apache.maven.resolver:maven-resolver-util:jar:1.1.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.24
+[DEBUG]   Included: javax.enterprise:cdi-api:jar:1.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.7.1
+[DEBUG]   Included: org.apache.maven:maven-builder-support:jar:3.5.3
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.2.1
+[DEBUG]   Included: org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.3
+[DEBUG]   Included: com.google.inject:guice:jar:no_aop:4.0
+[DEBUG]   Included: aopalliance:aopalliance:jar:1.0
+[DEBUG]   Included: com.google.guava:guava:jar:20.0
+[DEBUG]   Included: org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.5.2
+[DEBUG]   Included: commons-io:commons-io:jar:2.6
+[DEBUG]   Included: dom4j:dom4j:jar:1.6.1
+[DEBUG]   Included: xml-apis:xml-apis:jar:1.0.b2
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.1.0
+[DEBUG]   Included: org.jdom:jdom2:jar:2.0.6
+[DEBUG]   Included: jaxen:jaxen:jar:1.1.6
+[DEBUG] Extension realms for project com.cerner.ccl:cclunit-framework-source:ccl:3.4-SNAPSHOT: [ClassRealm[extension>com.cerner.ccl.testing:ccl-maven-plugin:3.2, parent: sun.misc.Launcher$AppClassLoader@4e25154f]]
+[DEBUG] Created new class realm project>com.cerner.ccl:cclunit-framework-source:3.4-SNAPSHOT
+[DEBUG] Populating class realm project>com.cerner.ccl:cclunit-framework-source:3.4-SNAPSHOT
+[DEBUG] Looking up lifecycle mappings for packaging ccl from ClassRealm[project>com.cerner.ccl:cclunit-framework-source:3.4-SNAPSHOT, parent: ClassRealm[maven.api, parent: null]]
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: com.cerner.ccl:cclunit-framework-source:ccl:3.4-SNAPSHOT
+[DEBUG] Tasks:   [clean, test]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] --------------< com.cerner.ccl:cclunit-framework-source >---------------
+[INFO] Building CCL Testing Framework 3.4-SNAPSHOT
+[INFO] --------------------------------[ ccl ]---------------------------------
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       com.cerner.ccl:cclunit-framework-source:3.4-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): []
+[DEBUG] Repositories (dependencies): [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] Repositories (plugins)     : [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-clean-plugin:3.0.0:clean (default-clean)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <directory default-value="${project.build.directory}"/>
+  <excludeDefaultDirectories default-value="false">${maven.clean.excludeDefaultDirectories}</excludeDefaultDirectories>
+  <failOnError default-value="true">${maven.clean.failOnError}</failOnError>
+  <followSymLinks default-value="false">${maven.clean.followSymLinks}</followSymLinks>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <reportDirectory default-value="${project.build.outputDirectory}"/>
+  <retryOnError default-value="true">${maven.clean.retryOnError}</retryOnError>
+  <skip default-value="false">${maven.clean.skip}</skip>
+  <testOutputDirectory default-value="${project.build.testOutputDirectory}"/>
+  <verbose>${maven.clean.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources (default-process-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <cclLoginFailurePromptPatterns default-value="">${ccl-cclLoginFailurePromptPatterns}</cclLoginFailurePromptPatterns>
+  <cclLoginPromptPattern default-value="">${ccl-cclLoginPromptPattern}</cclLoginPromptPattern>
+  <cclLoginSuccessPromptPattern default-value="">${ccl-cclLoginSuccessPromptPattern}</cclLoginSuccessPromptPattern>
+  <cclPromptPattern default-value="">${ccl-cclPromptPattern}</cclPromptPattern>
+  <domain>${ccl-domain}</domain>
+  <domainPassword>${ccl-domainPassword}</domainPassword>
+  <domainUsername>${ccl-domainUsername}</domainUsername>
+  <enableFullDebug>${ccl-enableFullDebug}</enableFullDebug>
+  <environment>${ccl-environment}</environment>
+  <expectationTimeout default-value="20000">${ccl-expectationTimeout}</expectationTimeout>
+  <frontendCredentialsId>${ccl-frontendCredentialsId}</frontendCredentialsId>
+  <host>${ccl-host}</host>
+  <hostCredentialsId>${ccl-hostCredentialsId}</hostCredentialsId>
+  <hostPassword>${ccl-hostPassword}</hostPassword>
+  <hostUsername>${ccl-hostUsername}</hostUsername>
+  <logFile>Q:\development\ccl-unit\cclunit-framework\target/output.log</logFile>
+  <osPromptPattern default-value="">${ccl-osPromptPattern}</osPromptPattern>
+  <resources default-value="${project.resources}"/>
+  <settings default-value="${settings}"/>
+  <skipEnvset default-value="false">${ccl-skipEnvset}</skipEnvset>
+  <skipProcessResources default-value="${ccl-skipProcessing}">${ccl-skipProcessResources}</skipProcessResources>
+  <skipProcessing default-value="false">${ccl-skipProcessing}</skipProcessing>
+  <specifyDebugCcl default-value="true">${ccl-specifyDebugCcl}</specifyDebugCcl>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          com.cerner.ccl.testing:ccl-maven-plugin:3.2:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <cclLoginFailurePromptPatterns default-value="">${ccl-cclLoginFailurePromptPatterns}</cclLoginFailurePromptPatterns>
+  <cclLoginPromptPattern default-value="">${ccl-cclLoginPromptPattern}</cclLoginPromptPattern>
+  <cclLoginSuccessPromptPattern default-value="">${ccl-cclLoginSuccessPromptPattern}</cclLoginSuccessPromptPattern>
+  <cclPromptPattern default-value="">${ccl-cclPromptPattern}</cclPromptPattern>
+  <domain>${ccl-domain}</domain>
+  <domainPassword>${ccl-domainPassword}</domainPassword>
+  <domainUsername>${ccl-domainUsername}</domainUsername>
+  <enableFullDebug>${ccl-enableFullDebug}</enableFullDebug>
+  <environment>${ccl-environment}</environment>
+  <expectationTimeout default-value="20000">${ccl-expectationTimeout}</expectationTimeout>
+  <frontendCredentialsId>${ccl-frontendCredentialsId}</frontendCredentialsId>
+  <host>${ccl-host}</host>
+  <hostCredentialsId>${ccl-hostCredentialsId}</hostCredentialsId>
+  <hostPassword>${ccl-hostPassword}</hostPassword>
+  <hostUsername>${ccl-hostUsername}</hostUsername>
+  <logFile>Q:\development\ccl-unit\cclunit-framework\target/output.log</logFile>
+  <osPromptPattern default-value="">${ccl-osPromptPattern}</osPromptPattern>
+  <settings default-value="${settings}"/>
+  <skipCompile default-value="${ccl-skipProcessing}">${ccl-skipCompile}</skipCompile>
+  <skipEnvset default-value="false">${ccl-skipEnvset}</skipEnvset>
+  <skipProcessing default-value="false">${ccl-skipProcessing}</skipProcessing>
+  <sourceDirectory default-value="src/main/ccl">${ccl-sourceDirectory}</sourceDirectory>
+  <specifyDebugCcl default-value="true">${ccl-specifyDebugCcl}</specifyDebugCcl>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-test-resources (default-process-test-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <cclLoginFailurePromptPatterns default-value="">${ccl-cclLoginFailurePromptPatterns}</cclLoginFailurePromptPatterns>
+  <cclLoginPromptPattern default-value="">${ccl-cclLoginPromptPattern}</cclLoginPromptPattern>
+  <cclLoginSuccessPromptPattern default-value="">${ccl-cclLoginSuccessPromptPattern}</cclLoginSuccessPromptPattern>
+  <cclPromptPattern default-value="">${ccl-cclPromptPattern}</cclPromptPattern>
+  <domain>${ccl-domain}</domain>
+  <domainPassword>${ccl-domainPassword}</domainPassword>
+  <domainUsername>${ccl-domainUsername}</domainUsername>
+  <enableFullDebug>${ccl-enableFullDebug}</enableFullDebug>
+  <environment>${ccl-environment}</environment>
+  <expectationTimeout default-value="20000">${ccl-expectationTimeout}</expectationTimeout>
+  <frontendCredentialsId>${ccl-frontendCredentialsId}</frontendCredentialsId>
+  <host>${ccl-host}</host>
+  <hostCredentialsId>${ccl-hostCredentialsId}</hostCredentialsId>
+  <hostPassword>${ccl-hostPassword}</hostPassword>
+  <hostUsername>${ccl-hostUsername}</hostUsername>
+  <logFile>Q:\development\ccl-unit\cclunit-framework\target/output.log</logFile>
+  <osPromptPattern default-value="">${ccl-osPromptPattern}</osPromptPattern>
+  <settings default-value="${settings}"/>
+  <skipEnvset default-value="false">${ccl-skipEnvset}</skipEnvset>
+  <skipProcessTestResources default-value="${ccl-skipProcessing}">${ccl-skipProcessTestResources}</skipProcessTestResources>
+  <skipProcessing default-value="false">${ccl-skipProcessing}</skipProcessing>
+  <specifyDebugCcl default-value="true">${ccl-specifyDebugCcl}</specifyDebugCcl>
+  <testResources default-value="${project.testResources}"/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          com.cerner.ccl.testing:ccl-maven-plugin:3.2:test-compile (default-test-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <cclLoginFailurePromptPatterns default-value="">${ccl-cclLoginFailurePromptPatterns}</cclLoginFailurePromptPatterns>
+  <cclLoginPromptPattern default-value="">${ccl-cclLoginPromptPattern}</cclLoginPromptPattern>
+  <cclLoginSuccessPromptPattern default-value="">${ccl-cclLoginSuccessPromptPattern}</cclLoginSuccessPromptPattern>
+  <cclPromptPattern default-value="">${ccl-cclPromptPattern}</cclPromptPattern>
+  <cclTestSourceDirectory default-value="src/test/ccl">${ccl-testSourceDirectory}</cclTestSourceDirectory>
+  <domain>${ccl-domain}</domain>
+  <domainPassword>${ccl-domainPassword}</domainPassword>
+  <domainUsername>${ccl-domainUsername}</domainUsername>
+  <enableFullDebug>${ccl-enableFullDebug}</enableFullDebug>
+  <environment>${ccl-environment}</environment>
+  <expectationTimeout default-value="20000">${ccl-expectationTimeout}</expectationTimeout>
+  <frontendCredentialsId>${ccl-frontendCredentialsId}</frontendCredentialsId>
+  <host>${ccl-host}</host>
+  <hostCredentialsId>${ccl-hostCredentialsId}</hostCredentialsId>
+  <hostPassword>${ccl-hostPassword}</hostPassword>
+  <hostUsername>${ccl-hostUsername}</hostUsername>
+  <logFile>Q:\development\ccl-unit\cclunit-framework\target/output.log</logFile>
+  <osPromptPattern default-value="">${ccl-osPromptPattern}</osPromptPattern>
+  <settings default-value="${settings}"/>
+  <skipEnvset default-value="false">${ccl-skipEnvset}</skipEnvset>
+  <skipProcessing default-value="false">${ccl-skipProcessing}</skipProcessing>
+  <skipTestCompile default-value="${ccl-skipProcessing}">${ccl-skipTestCompile}</skipTestCompile>
+  <specifyDebugCcl default-value="true">${ccl-specifyDebugCcl}</specifyDebugCcl>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          com.cerner.ccl.testing:ccl-maven-plugin:3.2:test (default-test)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <cclLoginFailurePromptPatterns default-value="">${ccl-cclLoginFailurePromptPatterns}</cclLoginFailurePromptPatterns>
+  <cclLoginPromptPattern default-value="">${ccl-cclLoginPromptPattern}</cclLoginPromptPattern>
+  <cclLoginSuccessPromptPattern default-value="">${ccl-cclLoginSuccessPromptPattern}</cclLoginSuccessPromptPattern>
+  <cclPromptPattern default-value="">${ccl-cclPromptPattern}</cclPromptPattern>
+  <cclSourceDirectory default-value="src/main/ccl">${ccl-sourceDirectory}</cclSourceDirectory>
+  <cclTestSourceDirectory default-value="src/test/ccl">${ccl-testSourceDirectory}</cclTestSourceDirectory>
+  <deprecatedFlag default-value="E">${ccl-deprecatedFlag}</deprecatedFlag>
+  <domain>${ccl-domain}</domain>
+  <domainPassword>${ccl-domainPassword}</domainPassword>
+  <domainUsername>${ccl-domainUsername}</domainUsername>
+  <enableFullDebug>${ccl-enableFullDebug}</enableFullDebug>
+  <enforcePredeclare default-value="true">${ccl-enforcePredeclare}</enforcePredeclare>
+  <environment>${ccl-environment}</environment>
+  <expectationTimeout default-value="20000">${ccl-expectationTimeout}</expectationTimeout>
+  <failOnTestFailures default-value="true">${ccl-failOnTestFailures}</failOnTestFailures>
+  <frontendCredentialsId>${ccl-frontendCredentialsId}</frontendCredentialsId>
+  <host>${ccl-host}</host>
+  <hostCredentialsId>${ccl-hostCredentialsId}</hostCredentialsId>
+  <hostPassword>${ccl-hostPassword}</hostPassword>
+  <hostUsername>${ccl-hostUsername}</hostUsername>
+  <logFile>Q:\development\ccl-unit\cclunit-framework\target/output.log</logFile>
+  <optimizerMode>${ccl-optimizerMode}</optimizerMode>
+  <osPromptPattern default-value="">${ccl-osPromptPattern}</osPromptPattern>
+  <outputDirectory default-value="${project.build.directory}">${ccl-outputDirectory}</outputDirectory>
+  <settings default-value="${settings}"/>
+  <skipEnvset default-value="false">${ccl-skipEnvset}</skipEnvset>
+  <skipProcessing default-value="false">${ccl-skipProcessing}</skipProcessing>
+  <skipTest>${ccl-skipTest}</skipTest>
+  <specifyDebugCcl default-value="true">${ccl-specifyDebugCcl}</specifyDebugCcl>
+  <testCase>${ccl-testCase}</testCase>
+</configuration>
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] --- maven-clean-plugin:3.0.0:clean (default-clean) @ cclunit-framework-source ---
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=72600, ConflictMarker.markTime=40000, ConflictMarker.nodeCount=15, ConflictIdSorter.graphTime=10000, ConflictIdSorter.topsortTime=10400, ConflictIdSorter.conflictIdCount=13, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=211900, ConflictResolver.conflictItemCount=15, DefaultDependencyCollector.collectTime=40573400, DefaultDependencyCollector.transformTime=355800}
+[DEBUG] org.apache.maven.plugins:maven-clean-plugin:jar:3.0.0:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model:jar:3.0:compile
+[DEBUG]          org.codehaus.plexus:plexus-utils:jar:2.0.4:compile
+[DEBUG]       org.apache.maven:maven-artifact:jar:3.0:compile
+[DEBUG]       org.sonatype.sisu:sisu-inject-plexus:jar:1.4.2:compile
+[DEBUG]          org.codehaus.plexus:plexus-component-annotations:jar:1.5.5:compile
+[DEBUG]          org.codehaus.plexus:plexus-classworlds:jar:2.2.3:compile
+[DEBUG]          org.sonatype.sisu:sisu-inject-bean:jar:1.4.2:compile
+[DEBUG]             org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7:compile
+[DEBUG]    org.apache.maven.shared:maven-shared-utils:jar:3.0.0:compile
+[DEBUG]       commons-io:commons-io:jar:2.4:compile
+[DEBUG]       com.google.code.findbugs:jsr305:jar:2.0.1:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-clean-plugin:3.0.0
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-clean-plugin:3.0.0
+[DEBUG]   Imported:  < project>com.cerner.ccl:cclunit-framework-source:3.4-SNAPSHOT
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-clean-plugin:3.0.0
+[DEBUG]   Included: org.apache.maven.plugins:maven-clean-plugin:jar:3.0.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:2.0.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.5.5
+[DEBUG]   Included: org.sonatype.sisu:sisu-inject-bean:jar:1.4.2
+[DEBUG]   Included: org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.0.0
+[DEBUG]   Included: commons-io:commons-io:jar:2.4
+[DEBUG]   Included: com.google.code.findbugs:jsr305:jar:2.0.1
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-clean-plugin:3.0.0:clean from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-clean-plugin:3.0.0, parent: sun.misc.Launcher$AppClassLoader@4e25154f]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-clean-plugin:3.0.0:clean' with basic configurator -->
+[DEBUG]   (f) directory = Q:\development\ccl-unit\cclunit-framework\target
+[DEBUG]   (f) excludeDefaultDirectories = false
+[DEBUG]   (f) failOnError = true
+[DEBUG]   (f) followSymLinks = false
+[DEBUG]   (f) outputDirectory = Q:\development\ccl-unit\cclunit-framework\target\classes
+[DEBUG]   (f) reportDirectory = Q:\development\ccl-unit\cclunit-framework\target\classes
+[DEBUG]   (f) retryOnError = true
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) testOutputDirectory = Q:\development\ccl-unit\cclunit-framework\target\test-classes
+[DEBUG] -- end configuration --
+[DEBUG] Skipping non-existing directory Q:\development\ccl-unit\cclunit-framework\target
+[DEBUG] Skipping non-existing directory Q:\development\ccl-unit\cclunit-framework\target\classes
+[DEBUG] Skipping non-existing directory Q:\development\ccl-unit\cclunit-framework\target\test-classes
+[DEBUG] Skipping non-existing directory Q:\development\ccl-unit\cclunit-framework\target\classes
+[INFO] 
+[INFO] --- ccl-maven-plugin:3.2:process-resources (default-process-resources) @ cclunit-framework-source ---
+[DEBUG] Configuring mojo com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources from plugin realm ClassRealm[extension>com.cerner.ccl.testing:ccl-maven-plugin:3.2, parent: sun.misc.Launcher$AppClassLoader@4e25154f]
+[DEBUG] Configuring mojo 'com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources' with basic configurator -->
+[DEBUG]   (f) cclLoginFailurePromptPatterns = []
+[DEBUG]   (f) domain = s18vx
+[DEBUG]   (f) environment = s18vx
+[DEBUG]   (f) expectationTimeout = 20000
+[DEBUG]   (f) frontendCredentialsId = vdm-fe
+[DEBUG]   (f) host = vdm
+[DEBUG]   (f) hostCredentialsId = vdm
+[DEBUG]   (f) logFile = Q:\development\ccl-unit\cclunit-framework\target\output.log
+[DEBUG]   (f) osPromptPattern = root@ips18vx01\:~[^\r\n]*(\r|\n)+[\d\s:]*#\s*
+[DEBUG]   (f) resources = [Resource {targetPath: null, filtering: false, FileSet {directory: Q:\development\ccl-unit\cclunit-framework\src\main\resources, PatternSet [includes: {}, excludes: {}]}}]
+[DEBUG]   (f) settings = org.apache.maven.execution.SettingsAdapter@e93f3d5
+[DEBUG]   (f) skipEnvset = true
+[DEBUG]   (f) skipProcessing = false
+[DEBUG]   (f) specifyDebugCcl = true
+[DEBUG] -- end configuration --
+[DEBUG] Configuring ehcache from URL: jar:file:/q:/users/fe2417/.m2/repository/com/cerner/ftp/jsch-util/2.0.0/jsch-util-2.0.0.jar!/cache/cache.config.xml
+[DEBUG] Configuring ehcache from InputStream
+[DEBUG] Ignoring ehcache attribute xlmns
+[DEBUG] Ignoring ehcache attribute xsi:schemaLocation
+[DEBUG] Creating new CacheManager with config URL: jar:file:/q:/users/fe2417/.m2/repository/com/cerner/ftp/jsch-util/2.0.0/jsch-util-2.0.0.jar!/cache/cache.config.xml
+[DEBUG] propertiesString is null.
+[DEBUG] No CacheManagerEventListenerFactory class specified. Skipping...
+[DEBUG] No BootstrapCacheLoaderFactory class specified. Skipping...
+[DEBUG] CacheWriter factory not configured. Skipping...
+[DEBUG] No CacheExceptionHandlerFactory class specified. Skipping...
+[DEBUG] propertiesString is null.
+[DEBUG] No BootstrapCacheLoaderFactory class specified. Skipping...
+[DEBUG] CacheWriter factory not configured. Skipping...
+[DEBUG] No CacheExceptionHandlerFactory class specified. Skipping...
+[DEBUG] Initialized net.sf.ehcache.store.NotifyingMemoryStore for jsch-connection-cache
+[DEBUG] Initialised cache: jsch-connection-cache
+[DEBUG] CacheDecoratorFactory not configured. Skipping for 'jsch-connection-cache'.
+[DEBUG] CacheDecoratorFactory not configured for defaultCache. Skipping for 'jsch-connection-cache'.
+[DEBUG] entering JSchSshTerminal.executeCommandGroups
+[DEBUG] commandExpectationGroup: [echo 'ENV CAPTURE START'][[^']ENV CAPTURE START[^']];
+[DEBUG] commandExpectationGroup: [echo '||cer_proc='$cer_proc'||'][[^']||cer_proc=[^\|]*||[^']];
+[DEBUG] commandExpectationGroup: [echo '||cer_temp='$cer_temp'||'][[^']||cer_temp=[^\|]*||[^']];
+[DEBUG] commandExpectationGroup: [echo '||cer_install='$cer_install'||'][[^']||cer_install=[^\|]*||[^']];
+[DEBUG] commandExpectationGroup: [echo '||CCLSOURCE='$CCLSOURCE'||'][[^']||CCLSOURCE=[^\|]*||[^']];
+[DEBUG] commandExpectationGroup: [echo '||CCLUSERDIR='$CCLUSERDIR'||'][[^']||CCLUSERDIR=[^\|]*||[^']];
+[DEBUG] commandExpectationGroup: [echo 'ENV CAPTURE END'][[^']ENV CAPTURE END[^']];
+[ERROR] Some environment logical retrieval commamds failed.
+[ERROR] 
+---------raw output start---------
+Error
+---------raw output end---------
+[ERROR] 
+---------envData start---------
+
+---------envData end---------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.729 s
+[INFO] Finished at: 2019-08-02T12:13:40-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources (default-process-resources) on project cclunit-framework-source: Execution default-process-resources of goal com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources failed: A server-side environment logical could not be determined. Verify that the given environment name exists: s18vx: Can't find resource for bundle java.util.PropertyResourceBundle, key CCLUSERDIR -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources (default-process-resources) on project cclunit-framework-source: Execution default-process-resources of goal com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources failed: A server-side environment logical could not be determined. Verify that the given environment name exists: s18vx
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+Caused by: org.apache.maven.plugin.PluginExecutionException: Execution default-process-resources of goal com.cerner.ccl.testing:ccl-maven-plugin:3.2:process-resources failed: A server-side environment logical could not be determined. Verify that the given environment name exists: s18vx
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:148)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+Caused by: java.lang.IllegalStateException: A server-side environment logical could not be determined. Verify that the given environment name exists: s18vx
+    at com.cerner.ccl.j4ccl.impl.data.Environment.<init> (Environment.java:108)
+    at com.cerner.ccl.j4ccl.impl.data.Environment.getEnvironment (Environment.java:66)
+    at com.cerner.ccl.j4ccl.impl.util.FileAssistant.createRemotePath (FileAssistant.java:37)
+    at com.cerner.ccl.j4ccl.impl.CclResourceUploaderImpl.upload (CclResourceUploaderImpl.java:52)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo$1.run (BaseCclResourceMojo.java:57)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo$1.run (BaseCclResourceMojo.java:55)
+    at java.security.AccessController.doPrivileged (Native Method)
+    at javax.security.auth.Subject.doAs (Subject.java:422)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo.upload (BaseCclResourceMojo.java:55)
+    at com.cerner.ccl.testing.maven.ccl.mojo.ResourcesMojo.execute (ResourcesMojo.java:40)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+Caused by: java.util.MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key CCLUSERDIR
+    at java.util.ResourceBundle.getObject (ResourceBundle.java:450)
+    at java.util.ResourceBundle.getString (ResourceBundle.java:407)
+    at com.cerner.ccl.j4ccl.impl.data.Environment.<init> (Environment.java:94)
+    at com.cerner.ccl.j4ccl.impl.data.Environment.getEnvironment (Environment.java:66)
+    at com.cerner.ccl.j4ccl.impl.util.FileAssistant.createRemotePath (FileAssistant.java:37)
+    at com.cerner.ccl.j4ccl.impl.CclResourceUploaderImpl.upload (CclResourceUploaderImpl.java:52)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo$1.run (BaseCclResourceMojo.java:57)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo$1.run (BaseCclResourceMojo.java:55)
+    at java.security.AccessController.doPrivileged (Native Method)
+    at javax.security.auth.Subject.doAs (Subject.java:422)
+    at com.cerner.ccl.testing.maven.ccl.mojo.BaseCclResourceMojo.upload (BaseCclResourceMojo.java:55)
+    at com.cerner.ccl.testing.maven.ccl.mojo.ResourcesMojo.execute (ResourcesMojo.java:40)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+[ERROR] 
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException

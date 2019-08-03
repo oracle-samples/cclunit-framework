@@ -42,6 +42,26 @@ subroutine test_cclutDefineMockTable_happy(null)
     call cclutAsserti4Equal(CURREF, "test_cclutDefineMockTable_happy 013", cclut_mockTables->tables[1].isFinalized, FALSE)
 end ;test_cclutDefineMockTable_happy
 
+
+/**
+  Confirms that mock table names are not reused during a single session, even after a call to remove all mocks.
+*/
+subroutine test_cclutDefineMockTable_unique_names(null)
+  declare mockNameOne = vc with protect, noconstant("")
+  declare mockNameTwo = vc with protect, noconstant("")
+
+	set mockNameOne = cclutDefineMockTable("person", "person_id", "f8")
+	call cclutCreateMockTable("person")
+	call cclutAddMockData("person", "1.0")
+
+	call cclutRemoveAllMocks(null)
+
+	set mockNameTwo = cclutDefineMockTable("person", "person_id", "f8")
+	call cclutCreateMockTable("person")
+
+	call cclutAssertVcNotEqual(CURREF, "expect different mock table names", mockNameOne, mockNameTwo)
+end ;test_cclutDefineMockTable_unique_names
+
 /* test_cclutDefineMockTable_different_cases ****************************************************************
 *  Scenario: Defines a table with columns of various types that has different cases within each word        *
 ************************************************************************************************************/
@@ -453,6 +473,69 @@ subroutine test_cclutCreateMockTable_happy(null)
     call cclutAssertvcEqual(CURREF, "test_cclutCreateMockTable_happy 002", mockText, "test text")
     call cclutAssertf8Equal(CURREF, "test_cclutCreateMockTable_happy 003", mockDate, cnvtdatetime("27-NOV-2018 08:00"))
 end ;test_cclutCreateMockTable_happy
+
+/**
+  Confirms that an authenticated session is required for non-dba users to call createMockTable.
+*/
+subroutine test_cclutCreateMockTable_authenticated_session(null)
+    record compileRequest (
+        1 testCaseDirectory = vc
+        1 testCaseFileName = vc
+    ) with protect
+
+    record compileReply (
+      1 testCaseObjectName = vc
+%i cclsource:status_block.inc
+    ) with protect
+
+    set compileRequest->testCaseDirectory = "cclsource"
+    set compileRequest->testCaseFileName = "ut_ut_cclut_emh"
+    execute cclut_compile_test_case_file with replace("CCLUTREQUEST", compileRequest), replace("CCLUTREPLY", compileReply)
+
+    record cclutTestCaseRequest (1 testNamePattern = vc 1 failFast = i2) with protect
+    record cclutTestCaseResults (
+        1 resultInd = i2
+            1 tests[*]
+                2 name = vc
+                2 asserts[*]
+                    3 lineNumber = i4
+                    3 context = vc
+                    3 resultInd = i2 ;TRUE = PASS, FALSE = FAIL
+                    3 condition = vc
+                2 errors[*]
+                    3 lineNumber = i4
+                    3 errorText = vc
+%i cclsource:status_block.inc
+    ) with protect
+
+    declare cclut::testCaseFileName = vc with protect, constant("ut_ut_cclut_emh.inc")
+    declare executeParams = vc with protect, constant("")
+    declare executeNamespace = vc with protect, constant("")
+
+    declare previousUpdtId = f8 with protect, constant(reqinfo->updt_id)
+    set reqinfo->updt_id = 0.0
+
+    call cclutAddMockImplementation("CCLUTREQUEST", "cclutTestCaseRequest")
+    call cclutAddMockImplementation("CCLUTREPLY", "cclutTestCaseResults")
+    call cclutExecuteProgramWithMocks(compileReply->testCaseObjectName, "", "ccmtAuthenticatedSession")
+
+    call cclutAssertVCEqual(CURREF, "expect a successful run", cclutTestCaseResults->status_data.status, "S")
+    call cclutAssertI4Equal(CURREF, "expect the test case to fail", cclutTestCaseResults->resultInd, 0)
+    ;note that this would be more convincing if the test case actually contained more than one test
+    call cclutAssertI4Equal(CURREF, "expect exactly one test", size(cclutTestCaseResults->tests, 5), 1)
+    call cclutAssertVCEqual(CURREF, "expected test", cclutTestCaseResults->tests[1].name, "TEST_UT_CCLUT_EXECTE_MOCKS_HAPPY_BASIC")
+    call cclutAssertI4Equal(CURREF, "expect exactly one error", size(cclutTestCaseResults->tests[1]->errors, 5), 1)
+    call cclutAssertVCEqual(CURREF, "expected error", cclutTestCaseResults->tests[1].errors[1].errortext, 
+        "The CCL session must be authenticated to execute this test")
+    ;because the error occurs before any asserts and the test case exits at that point.
+    call cclutAssertI4Equal(CURREF, "expect no asserts", size(cclutTestCaseResults->tests[1]->asserts, 5), 0)
+
+    set reqinfo->updt_id = previousUpdtId
+    call parser(concat("drop program ", compileReply->testCaseObjectName, " go"))
+end ;test_cclutCreateMockTable_authenticated_session
+subroutine ccmtAuthenticatedSession::cclutGetCurrentGroup(null)
+    return(1)
+end ;ccmtAuthenticatedSession::cclutGetCurrentGroup
 
 /* test_cclutCreateMockTable_missing_tableName **************************************************************
 *  Scenario: Throws an error when an empty tableName is supplied to the function (after trimming)           *
