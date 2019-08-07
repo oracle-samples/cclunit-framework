@@ -450,7 +450,7 @@ subroutine cclut::retrieveListingData(cclutDirectory, cclutProgramName)
   declare listingDateStart = i4 with protect, noconstant(0)
   declare listingDateEnd = i4 with protect, noconstant(0)
   declare listingDateSring = vc with protect, noconstant("")
-  declare listingDate = dq8 with protect, noconstant(0)
+  declare listingDate = dq8 with protect, noconstant(cnvtdatetime(0.0))
   declare compileDate = dq8 with protect, noconstant(cnvtdatetime(curdate, curtime3))
   
   set listingData = trim(cclut::getFileAsString(concat(cclutDirectory, "/", cclutProgramName, ".listing.xml")))

@@ -8,14 +8,21 @@ declare testCompileTestCaseFileGen(null) = null with protect
 declare testCompileTestCaseFileDefaultsCerTemp(null) = null with protect
 
 declare testCompileTestCaseFile(null) = null with protect
+declare testCompileTestCaseFileDictionaryFailure(null) = null with protect
 declare testCompileTestCaseDefaultsCclsource(null) = null with protect
 declare testCompileTestCaseGen(null) = null with protect
+declare testTestCaseFileDoesNotExist(null) = null with protect
+declare testTestCaseFileNotProvided(null) = null with protect
+declare testMemooryReplyStringNotProvided(null) = null with protect
+
 
 declare testCompileTestCaseFile::genTCP(
     dirLogical = vc, fileName = vc, listingLogical = vc, listingName = vc, progName = vc, errMessage = vc(ref)) = i2
 declare testCompileTestCaseFileDefaultsCerTemp::genTCP(
     dirLogical = vc, fileName = vc, listingLogical = vc, listingName = vc, progName = vc, errMessage = vc(ref)) = i2
-declare mockCheckPrg(progName = vc) = i2
+declare mockCheckPrgTrue(programName = vc) = i2
+declare mockCheckPrgFalse(programName = vc) = i2
+declare mockEcho(msg = vc) = null
 
 declare testObjectName = vc with protect
 declare stat = i4 with protect
@@ -36,9 +43,13 @@ subroutine setup(null)
   set stat = initrec(compileReply)
 end ;setup
 
-subroutine mockCheckPrg(progaName)
+subroutine mockCheckPrgTrue(progamName)
   return(1)
-end ;mockCheckPrg
+end ;mockCheckPrgTrue
+
+subroutine mockCheckPrgFalse(progamName)
+  return(0)
+end ;mockCheckPrgFalse
 
 
 /**
@@ -53,13 +64,42 @@ subroutine testCompileTestCaseFile(null)
   set compileRequest->testCaseFileName = "some_file"
   execute cclut_compile_test_case_file with 
     replace("CCLUTREQUEST", compileRequest), replace("CCLUTREPLY", compileReply),
-    replace("CCLUTGENERATETESTCASEPROGRAM", genTCP), replace("CHECKPRG", mockCheckPrg),
+    replace("CCLUTGENERATETESTCASEPROGRAM", genTCP), replace("CHECKPRG", mockCheckPrgTrue),
     curnamespace = "testCompileTestCaseFile"
   call cclutAssertI2Equal(CURREF, "genTCP called A", genTCPCalledA, TRUE)
   call cclutAssertVcEqual(CURREF, "expect success A", compileReply->status_data->status, "S")
   call cclutAssertVcEqual(CURREF, "generated object name A", compileReply->testCaseObjectName, concat("prg_", testCaseId))
 end ;testCompileTestCaseFile
 subroutine testCompileTestCaseFile::genTCP(dirLogical, fileName, listingLogical, listingName, progName , errMessage)
+  set genTCPCalledA = TRUE
+  call cclutAssertVcEqual(CURREF, "expect dirLogical A", dirLogical, "test_dir")
+  call cclutAssertVcEqual(CURREF, "expect fileName A", fileName, "some_file")
+  call cclutAssertVcEqual(CURREF, "expect listingLogical A", listingLogical, "CCLUSERDIR")
+  call cclutAssertStartsWith(CURREF, "expect progName A", "prg_", progName)
+  set testCaseId substring(5, textlen(progName)-4, progName)
+  call cclutAssertVcEqual(CURREF, "expect listingName A", listingName, concat("prg_", testCaseId, ".lis"))
+end ;genTCP
+
+
+/**
+  Confirms the behavior of cclut_compile_test_case_file when the object compiles but
+  fails to land in the dictionary.
+*/
+subroutine testCompileTestCaseFileDictionaryFailure(null)
+  declare genTCPCalledA = i2 with protect, noconstant(FALSE)
+  declare testCaseId = vc with protect
+
+  set compileRequest->testCaseDirectory = "test_dir"
+  set compileRequest->testCaseFileName = "some_file"
+  execute cclut_compile_test_case_file with
+    replace("CCLUTREQUEST", compileRequest), replace("CCLUTREPLY", compileReply),
+    replace("CCLUTGENERATETESTCASEPROGRAM", genTCP), replace("CHECKPRG", mockCheckPrgFalse),
+    curnamespace = "DictionaryFailure"
+  call cclutAssertI2Equal(CURREF, "genTCP called B", genTCPCalledA, TRUE)
+  call cclutAssertVcEqual(CURREF, "expect failure B", compileReply->status_data->status, "F")
+  call cclutAssertVcEqual(CURREF, "expect no generated object name", compileReply->testCaseObjectName, " ")
+end ;testCompileTestCaseFileDictionaryFailure
+subroutine DictionaryFailure::genTCP(dirLogical, fileName, listingLogical, listingName, progName , errMessage)
   set genTCPCalledA = TRUE
   call cclutAssertVcEqual(CURREF, "expect dirLogical A", dirLogical, "test_dir")
   call cclutAssertVcEqual(CURREF, "expect fileName A", fileName, "some_file")
@@ -80,7 +120,7 @@ subroutine testCompileTestCaseFileDefaultsCerTemp(null)
   set compileRequest->testCaseFileName = "some_file"
   execute cclut_compile_test_case_file with 
     replace("CCLUTREQUEST", compileRequest), replace("CCLUTREPLY", compileReply),
-    replace("CCLUTGENERATETESTCASEPROGRAM", genTCP), replace("CHECKPRG", mockCheckPrg),
+    replace("CCLUTGENERATETESTCASEPROGRAM", genTCP), replace("CHECKPRG", mockCheckPrgTrue),
     curnamespace = "testCompileTestCaseFileDefaultsCerTemp"
   call cclutAssertI2Equal(CURREF, "genTCP called B", genTCPCalledB, TRUE)
   call cclutAssertVcEqual(CURREF, "expect success B", compileReply->status_data->status, "S")
@@ -233,3 +273,45 @@ subroutine testCompileTestCaseGen(null)
 
   call parser(concat("drop program ", tctcgReply->testCaseObjectName, " go"))
 end ;testCompileTestCaseFileGen
+
+
+
+/**
+  Confirms that cclut_compile_test_case reports a failure if the test case file does not exist.
+*/
+subroutine testTestCaseFileDoesNotExist(null)
+  declare _memory_reply_string = vc with protect
+  declare stat = i4 with protect
+  execute cclut_compile_test_case "", "", "i.am.not.a.file" with
+      replace("CCLUTREQUEST", tctcgRequest), replace("CCLUTREPLY", tctcgReply)
+
+  set stat = cnvtjsontorec(_memory_reply_string)
+  call cclutAssertVCEqual(CURREF, "expect no object name", tctcgReply->testCaseObjectName, " ")
+  call cclutAssertVCEqual(CURREF, "expect a failure", tctcgReply->status_data.status, "F")
+  call cclutAssertVCEqual(CURREF, "expect a failure messsage a", tctcgReply->status_data.subeventstatus[1].operationName,
+      "generateTestCaseProgram")
+  call cclutAssertVCEqual(CURREF, "expect a failure messsage b", tctcgReply->status_data.subeventstatus[1].operationStatus, "F")
+  call cclutAssertVCEqual(CURREF, "expect a failure messsage a", tctcgReply->status_data.subeventstatus[1].targetObjectName,
+      "i.am.not.a.file")
+  call cclutAssertVCEqual(CURREF, "expect a failure messsage a", tctcgReply->status_data.subeventstatus[1].targetObjectValue,
+      "i.am.not.a.file.inc not found in CCLSOURCE")
+end ;testTestCaseFileDoesNotExist
+
+/**
+  Confirms that cclut_compile_test_case reports a failure if a test case file is not provided.
+*/
+subroutine testTestCaseFileNotProvided(null)
+  declare _memory_reply_string = vc with protect
+  execute cclut_compile_test_case "", "", ""
+  call cclutAssertVCEqual(CURREF, "expect error message", _memory_reply_string, "A test case file name must be provided")
+end ;testTestCaseFileNotProvided
+
+/**
+  Confirms that cclut_compile_test_case does not fail if _memory_reply_string is not provided.
+*/
+subroutine testMemooryReplyStringNotProvided(null)
+  execute cclut_compile_test_case "", "", "" with replace("ECHO", mockEcho)
+end ;testMemooryReplyStringNotProvided
+subroutine mockEcho(msg)
+  call cclutAssertVCEqual(CURREF, "expect error message", msg, "A test case file name must be provided")
+end ;mockEcho

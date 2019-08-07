@@ -15,8 +15,9 @@ declare CCLUT_PIPE = vc with protect, constant("|")
 declare CCLUT_ESCAPED_PIPE = vc with protect, constant("\|")
 declare CCLUT_ESCAPED_NULL = vc with protect, constant("\null")
 
-declare cclutMockTableNumber = i4 with persist, noconstant(0)
-
+if (validate(cclutMockTableNumber) = FALSE)
+    declare cclutMockTableNumber = i4 with persist, noconstant(0)
+endif
 declare public::cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames = vc(val),
     cclutFieldTypes = vc(val), cclutIsAccessedViaRdbCommands= i2(val, FALSE)) = vc with protect
 declare public::cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
