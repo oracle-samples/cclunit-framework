@@ -51,7 +51,7 @@ declare cclut::stat                     = i4 with protect, noconstant(0)
 %i cclsource:cclut_compile_subs.inc
 
 ;create a test program object from the test case file that executes the tests in the test case when it is executed.
-set cclut::testCaseId = concat(trim(cnvtstring(currdbhandle), 3), "_", trim(cnvtstring(cnvtint(curtime3)), 3))
+set cclut::testCaseId = concat(trim(cnvtstring(currdbhandle, 11), 3), "_", trim(cnvtstring(cnvtint(curtime3), 11), 3))
 set cclut::testCaseObjectName = concat("prg_", cclut::testCaseId)
 set cclut::testCaseListingName = concat(cclut::testCaseObjectName, ".lis")
 set cclut::testCaseFileName = trim(cnvtlower(cclutRequest->testCaseFileName), 3)

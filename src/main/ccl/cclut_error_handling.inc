@@ -41,7 +41,6 @@ record cclutErrorStash(
 */
 subroutine cclut::getErrorList(cclutPPErrorList)
   declare cclutStashedErrorCount = i4 with protect, constant(size(cclutErrorStash->error, 5))
-  declare cclutTotalErrorCount = i4 with protect, noconstant(0)
   declare cclutStat = i4 with protect, noconstant(0)
   if (cclutStashedErrorCount > 0)
     set cclutStat = moveRecList(
