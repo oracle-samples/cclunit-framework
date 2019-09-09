@@ -11,5 +11,5 @@ source file.
 %INCLUDE CCLUSERDIR:TEST_INCLUDE6.INC
               %i this_should_not_work_since_the_percentage_is_not_flush_left.inc
 
-call echo("non-include line")
+call echo("non-include line") ;intentional
 ;%i this_should_also_not_work.inc

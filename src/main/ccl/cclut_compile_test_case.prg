@@ -26,7 +26,7 @@ with outdev, testCaseDirectoryLogical, testCaseFileName
 
     if (textlen(trim(cclutRequest->testCaseFileName)) = 0)
         set _memory_reply_string = "A test case file name must be provided"
-        call echo(_memory_reply_string)
+        call echo(_memory_reply_string) ;intentional
         go to exit_script
     endif
 

@@ -1515,11 +1515,11 @@ call main(null)
 call echorecord(templateReply) ;intentional
 declare messageIndex = i4 with protect, noconstant(0)
 for (messageIndex = 1 to size(templateRec->messages, 5))
-    call echo(templateRec->messages[messageIndex].message)
+    call echo(templateRec->messages[messageIndex].message) ;intentional
 endfor
 declare warningIndex = i4 with protect, noconstant(0)
 for (warningIndex = 1 to size(templateRec->warnings, 5))
-    call echo(templateRec->warnings[warningIndex].warning)
+    call echo(templateRec->warnings[warningIndex].warning) ;intentional
 endfor
 
 end go
