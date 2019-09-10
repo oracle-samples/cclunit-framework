@@ -15,6 +15,9 @@ declare CCLUT_PIPE = vc with protect, constant("|")
 declare CCLUT_ESCAPED_PIPE = vc with protect, constant("\|")
 declare CCLUT_ESCAPED_NULL = vc with protect, constant("\null")
 
+if (validate(cclutMockTableNumber) = FALSE)
+    declare cclutMockTableNumber = i4 with persist, noconstant(0)
+endif
 declare public::cclutDefineMockTable(cclutTableName = vc(val), cclutFieldNames = vc(val),
     cclutFieldTypes = vc(val), cclutIsAccessedViaRdbCommands= i2(val, FALSE)) = vc with protect
 declare public::cclutAddMockIndex(cclutTableName = vc(val), cclutColumnNames = vc(val),
@@ -118,8 +121,9 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
         cclutDoArraySplit(cclutTypeRec, CCLUT_COLUMN_TYPES, CCLUT_PIPE)
 
     if (cclutColumnCount != cclutTypeCount)
-        call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME, ") - Size mismatch. ",
-            trim(cnvtstring(cclutColumnCount, 25)), " columnNames vs. ", trim(cnvtstring(cclutTypeCount)), " columnTypes"))
+        call cclut::addStashedError(392,
+            concat("cclutDefineMockTable(", CCLUT_TABLE_NAME, ") - Size mismatch. ", trim(cnvtstring(cclutColumnCount, 25)),
+                " columnNames vs. ", trim(cnvtstring(cclutTypeCount)), " columnTypes."), CURREF)
         return("")
     endif
 
@@ -127,21 +131,24 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
     for (cclutColumnIndex = 1 to cclutColumnCount)
         set cclutColumnName = cclutColumnRec->qual[cclutColumnIndex].str
         if (cclutIsEmpty(cclutColumnName))
-            call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME,
-                ") - Empty columnName found in columnNames. columnNames: ", CCLUT_COLUMN_NAMES))
+            call cclut::addStashedError(392,
+                concat("cclutDefineMockTable(",
+                    CCLUT_TABLE_NAME, ") - Empty columnName found in columnNames. columnNames: ", CCLUT_COLUMN_NAMES, "."), CURREF)
             return("")
         endif
         if (cclutIsEmpty(cclutTypeRec->qual[cclutColumnIndex].str))
-            call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME,
-                ") - Empty columnType found in columnTypes. columnTypes: ", CCLUT_COLUMN_TYPES))
+            call cclut::addStashedError(392,
+                concat("cclutDefineMockTable(", CCLUT_TABLE_NAME,
+                    ") - Empty columnType found in columnTypes. columnTypes: ", CCLUT_COLUMN_TYPES, "."), CURREF)
             return("")
         endif
         if (findstring(concat(CCLUT_PIPE, cclutColumnName, CCLUT_PIPE),
                 concat(CCLUT_PIPE, CCLUT_COLUMN_NAMES, CCLUT_PIPE), 1, 0) !=
             findstring(concat(CCLUT_PIPE, cclutColumnName, CCLUT_PIPE),
                 concat(CCLUT_PIPE, CCLUT_COLUMN_NAMES, CCLUT_PIPE), 1, 1))
-                    call cclexception(100, "E", concat("cclutDefineMockTable(", CCLUT_TABLE_NAME,
-                        ") - Duplicate columnName found. columnName: ", cclutColumnName))
+                    call cclut::addStashedError(392,
+                        concat("cclutDefineMockTable(", CCLUT_TABLE_NAME,
+                            ") - Duplicate columnName found. columnName: ", cclutColumnName, "."), CURREF)
                     return("")
         endif
     endfor
@@ -152,9 +159,15 @@ subroutine public::cclutDefineMockTable(cclutTableName, cclutColumnNames, cclutC
     set cclutStat = alterlist(cclut_mockTables->tables, cclutMockTablePos)
 
     ;Create the mock name and fill out the columns
+    if (mod(cclutMockTableNumber, 10000) = 0)
+        set cclutMockTableNumber = 1
+    else
+        set cclutMockTableNumber = cclutMockTableNumber + 1
+    endif
+
     set cclut_mockTables->tables[cclutMockTablePos].originalName = CCLUT_TABLE_NAME
     set cclut_mockTables->tables[cclutMockTablePos].replaceName = cnvtupper(trim(substring(1, 30, concat("CUST_CCLUT_",
-        trim(cnvtstring(cclutMockTablePos, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
+        trim(cnvtstring(cclutMockTableNumber, 25), 3), trim(cnvtstring(cclut_mockTables->markerTime, 25), 3), curuser)), 3))
     set cclut_mockTables->tables[cclutMockTablePos].isFinalized = FALSE
 
     set cclutStat = alterlist(cclut_mockTables->tables[cclutMockTablePos].columns, cclutColumnCount)
@@ -181,8 +194,8 @@ Asserts that a specified string variable is non-empty, raising an error if it is
 */
 subroutine public::cclutAssertStringIsNonEmpty(cclutValue, cclutValueName)
     if (cclutIsEmpty(cclutValue))
-        call cclexception(100, "E", concat("cclutAssertStringIsNonEmpty() - ", cclutValueName,
-            " is a required field"))
+        call cclut::addStashedError(392,
+            concat("cclutAssertStringIsNonEmpty() - ", cclutValueName, " is a required field."), CURREF)
         return(FALSE)
     endif
     return(TRUE)
@@ -201,8 +214,8 @@ subroutine public::cclutAssertMockDefinedForTable(cclutTableName)
 
     set cclutMockTablePos = cclutGetMockTableIndex(cclutTableName)
     if (cclutMockTablePos < 1)
-        call cclexception(100, "E", concat("cclutAssertMockDefinedForTable(", cclutTableName,
-            ") - Table has not been mocked."))
+        call cclut::addStashedError(392,
+            concat("cclutAssertMockDefinedForTable(", cclutTableName,") - Table has not been mocked."), CURREF)
         return(0)
     endif
     return(cclutMockTablePos)
@@ -225,8 +238,8 @@ subroutine public::cclutAssertMockTableIsCreated(cclutTableName)
             return(TRUE)
         endif
     endif
-    call cclexception(100, "E", concat("cclutAssertMockTableIsCreated(", cclutTableName,
-        ") - Table has not been created."))
+    call cclut::addStashedError(392,
+        concat("cclutAssertMockTableIsCreated(", cclutTableName, ") - Table has not been created."), CURREF)
     return(FALSE)
 end ;cclutAssertMockTableIsCreated
 
@@ -244,8 +257,8 @@ subroutine public::cclutAssertMockTableIsNotCreated(cclutTableName)
     set cclutMockTablePos = cclutGetMockTableIndex(cclutTableName)
     if (cclutMockTablePos > 0)
         if (cclut_mockTables->tables[cclutMockTablePos].isFinalized = TRUE)
-            call cclexception(100, "E", concat("cclutAssertMockTableIsNotCreated(", cclutTableName,
-                ") - Table has already been created."))
+            call cclut::addStashedError(392,
+                concat("cclutAssertMockTableIsNotCreated(", cclutTableName, ") - Table has already been created."), CURREF)
             return(FALSE)
         endif
     endif
@@ -345,16 +358,17 @@ subroutine public::cclutAddMockIndex(cclutTableName, cclutColumnNames, cclutIsUn
             set cclutColumnName = cclutColumnRec->qual[cclutColumnIndex].str
             set cclutMockColumnPos = cclutGetMockColumnIndex(CCLUT_TABLE_NAME, cclutColumnName)
             if (cclutMockColumnPos < 1)
-                call cclexception(100, "E", concat("cclutAddMockIndex(", CCLUT_TABLE_NAME,
-                    ") - ", cclutColumnName, " is not mocked on table."))
+                call cclut::addStashedError(392,
+                    concat("cclutAddMockIndex(", CCLUT_TABLE_NAME, ") - ", cclutColumnName, " is not mocked on table."), CURREF)
                 return
             endif
             if (findstring(concat(CCLUT_PIPE, cclutColumnName, CCLUT_PIPE),
                     concat(CCLUT_PIPE, CCLUT_COLUMN_NAMES, CCLUT_PIPE), 1, 0) !=
                 findstring(concat(CCLUT_PIPE, cclutColumnName, CCLUT_PIPE),
                     concat(CCLUT_PIPE, CCLUT_COLUMN_NAMES, CCLUT_PIPE), 1, 1))
-                        call cclexception(100, "E", concat("cclutAddMockIndex(", CCLUT_TABLE_NAME,
-                            ") - Duplicate columnName found. columnName: ", cclutColumnName))
+                        call cclut::addStashedError(392,
+                            concat("cclutAddMockIndex(", CCLUT_TABLE_NAME,
+                                ") - Duplicate columnName found. columnName: ", cclutColumnName, "."), CURREF)
                         return
             endif
         endfor
@@ -391,6 +405,12 @@ subroutine public::cclutCreateMockTable(cclutTableName)
     declare cclutMockIndexIndex = i4 with protect, noconstant(0)
     declare cclutParserText = vc with protect, noconstant("")
     declare cclutColumnName = vc with protect, noconstant("")
+
+    ;Verify uesr is DBA or the session is authenticated
+    if (cclutGetCurrentGroup(null) != 0 and reqinfo->updt_id = 0.0)
+        call cclut::addStashedError(392, "The CCL session must be authenticated to execute this test", CURREF)
+        go to exit_script
+    endif
 
     ;Validate inbound parameter
     if (cclutAssertStringIsNonEmpty(CCLUT_TABLE_NAME, "tableName") = FALSE)
@@ -481,22 +501,23 @@ subroutine public::cclutRemoveMockTable(cclutTableName)
                     tdbexecute(3202004, 3202004, 3050002, "REC", cclut_drop_table_request, "REC", cclut_drop_table_reply)
                 if (cclutStat = 0)
                     if (cclut_drop_table_reply->status_data.status = "F")
-                        call cclexception(100, "E", "VCCL_RUN_PROGRAM failure.")
+                        call cclut::addStashedError(392, "VCCL_RUN_PROGRAM failure.", CURREF)
                     else
                         set cclutStat = cnvtjsontorec(cclut_drop_table_reply->document)
                         if(cclutDropMockTableReply->status = "S")
                             set dropSuccess = TRUE
                         else
-                            call cclexception(100, "E", cclutDropMockTableReply->message)
+                            call cclut::addStashedError(392, cclutDropMockTableReply->message, CURREF)
                         endif
                     endif
                 else
-                    call cclexception(100, "E", concat("TDBEXECUTE error (status = ", build(cclutStat), ")"))
+                    call cclut::addStashedError(392, concat("TDBEXECUTE error (status = ", build(cclutStat), ")."), CURREF)
                 endif
                 if (dropSuccess = FALSE)
-                    call cclexception(100, "E", concat("cclutRemoveMockTable(", CCLUT_TABLE_NAME,
-                        ") - Unable to drop table.  Manual cleanup may be required.  Mock table name is ",
-                        cclutMockTableName))
+                    call cclut::addStashedError(392,
+                        concat("cclutRemoveMockTable(", CCLUT_TABLE_NAME,
+                            ") - Unable to drop table.  Manual cleanup may be required.  Mock table name is ",
+                            cclutMockTableName, "."), CURREF)
                 endif
             endif
             set cclutParserText = concat(" rdb drop table ", cclutMockTableName, " end go")
@@ -599,8 +620,8 @@ subroutine public::cclutAddMockData(cclutTableName, cclutRowData)
     endwhile
 
     if (cclutMockColumnIndex < cclutMockColumnLength)
-        call cclexception(100, "E",
-            concat("cclutAddMockData(", CCLUT_TABLE_NAME,") - Too few columns of data. rowData: ", cclutRowData))
+        call cclut::addStashedError(392,
+            concat("cclutAddMockData(", CCLUT_TABLE_NAME,") - Too few columns of data. rowData: ", cclutRowData, "."), CURREF)
         call parser(" reset")
         call parser("execute null go")
         return(null)
@@ -631,8 +652,8 @@ is any substring beginning with a backslash ('\') and the only valid escape sequ
 subroutine public::cclutAssertNoInvalidEscapes(cclutValue)
     if (findstring(CCLUT_BACKSLASH, replace(replace(replace(cclutValue, CCLUT_ESCAPED_BACKSLASH, ""),
         CCLUT_ESCAPED_PIPE, ""), CCLUT_ESCAPED_NULL, "")) > 0)
-            call cclexception(100, "E",
-                concat("cclutAssertNoInvalidEscapes() - Invalid escape sequence. rowData: ", cclutValue))
+            call cclut::addStashedError(392,
+                concat("cclutAssertNoInvalidEscapes() - Invalid escape sequence. rowData: ", cclutValue, "."), CURREF)
             return(FALSE)
     endif
     return(TRUE)
@@ -649,8 +670,8 @@ the preceding backslash is not escaped to represent an actual backslash characte
 */
 subroutine public::cclutAssertNoEscapedNulls(cclutValue)
     if (findstring(CCLUT_ESCAPED_NULL, replace(replace(cclutValue, CCLUT_ESCAPED_BACKSLASH, ""), CCLUT_ESCAPED_PIPE, "")) > 0)
-        call cclexception(100, "E",
-            concat("cclutValidateNotNulls() - \null column must have no other characters. rowData: ", cclutValue))
+        call cclut::addStashedError(392,
+            concat("cclutValidateNotNulls() - \null column must have no other characters. rowData: ", cclutValue, "."), CURREF)
         call parser(" reset")
         call parser("execute null go")
         return(FALSE)
@@ -724,8 +745,9 @@ subroutine public::cclutConstructDBSetStatement(cclutTableIndex, cclutColumnInde
     if (cclutColumnIndex > CCLUT_COLUMN_COUNT)
         call parser(" reset")
         call parser("execute null go")
-        call cclexception(100, "E", concat("cclutConstructDBSetStatement(",
-            cclut_mockTables->tables[cclutTableIndex].originalName, ") - Too many columns of data added to table."))
+        call cclut::addStashedError(392,
+            concat("cclutConstructDBSetStatement(", cclut_mockTables->tables[cclutTableIndex].originalName,
+                ") - Too many columns of data added to table."), CURREF)
         return("")
     endif
 

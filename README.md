@@ -6,7 +6,7 @@ It must be installed into a Cerner Millennium environment before it can be used.
 
 ## Current Version
 
-3.1
+3.4
 
 ## Usage
 

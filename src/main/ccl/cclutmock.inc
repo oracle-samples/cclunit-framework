@@ -48,12 +48,12 @@ subroutine public::cclutAddMockImplementation(cclutOriginalName, cclutReplaceNam
 
     ;Validate inbound parameters
     if (cclutIsEmpty(CCLUT_ORIGINAL_NAME))
-        call cclexception(100, "E", "cclutAddMockImplementation() - originalName is a required field")
+        call cclut::addStashedError(392, "cclutAddMockImplementation() - originalName is a required field.", CURREF)
         return
     endif
     if (cclutIsEmpty(CCLUT_REPLACE_NAME))
-        call cclexception(100, "E", concat("cclutAddMockImplementation(", CCLUT_ORIGINAL_NAME,
-            ") - replaceName is a required field"))
+        call cclut::addStashedError(392,
+            concat("cclutAddMockImplementation(", CCLUT_ORIGINAL_NAME, ") - replaceName is a required field."), CURREF)
         return
     endif
 
@@ -89,7 +89,7 @@ subroutine public::cclutRemoveMockImplementation(cclutOriginalName)
 
     ;Validate inbound parameters
     if (cclutIsEmpty(CCLUT_ORIGINAL_NAME))
-        call cclexception(100, "E", "cclutRemoveMockImplementation() - originalName is a required field")
+        call cclut::addStashedError(392, "cclutRemoveMockImplementation() - originalName is a required field.", CURREF)
         return
     endif
 
@@ -148,7 +148,7 @@ subroutine public::cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, c
 
     ;Validate inbound parameters
     if (cclutIsEmpty(CCLUT_PROGRAM_NAME))
-        call cclexception(100, "E", "cclutExecuteProgramWithMocks() - programName is a required field")
+        call cclut::addStashedError(392, "cclutExecuteProgramWithMocks() - programName is a required field.", CURREF)
         return
     endif
 
@@ -186,6 +186,7 @@ subroutine public::cclutExecuteProgramWithMocks(cclutProgramName, cclutParams, c
 
     ;Add namespace
     set cclutParserText = concat(cclutParserText, ^ curnamespace = "^, CCLUT_NAMESPACE, ^" go^)
+    call cclut::stashErrors(null)
     call cclutInvokeparser(cclutParserText)
 end ;cclutExecuteProgramWithMocks
 

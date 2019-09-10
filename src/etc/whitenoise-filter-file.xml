@@ -12,6 +12,12 @@
   </exclusion>
   <exclusion>
     <scriptName>cclut_execute_test_case_file</scriptName>
+    <iterator>cclutidx</iterator>
+    <violationId>CORE.UNREFERENCED_FOR_LOOP_ITERATOR</violationId>
+    <explanation>The for loop is used to execute a set of commands a fixed number of times</explanation>
+  </exclusion>
+  <exclusion>
+    <scriptName>cclut_execute_test_case_file</scriptName>
     <variableName>stat</variableName>
     <violationId>CORE.UNUSED_VARIABLE_DECLARATION</violationId>
     <explanation>Used to capture and often ignore return values from built in CCL functions</explanation>

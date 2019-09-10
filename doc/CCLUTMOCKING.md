@@ -46,9 +46,11 @@ Example:
 call cclutRemoveAllMocks(null)
 ```
 
-**cclutDefineMockTable(tableName = vc, fieldNames = vc, fieldTypes = vc, isAccessedViaRdbCommands = i2)**
+**cclutDefineMockTable(tableName = vc, columnNames = vc, columnTypes = vc, isAccessedViaRdbCommands = i2)**
 
-Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  isAccessedViaRdbCommands is optional and should be TRUE only if the script-under-test accesses the table using rdb commands. Table mocking will fail if there are both rdb and non-rdb queries against the table.
+Defines a mock table structure that can be created for use within a program.  This is the first function to be called in the process of mocking a table.  It must be called before cclutAddMockIndex() or cclutCreateMockTable() can be called.  The table will not be mocked in cclutExecuteProgramWithMocks() unless finalized by calling cclutCreateMockTable().  This function can be called for the same table after cclutCreateMockTable() in order to redefine it; however, the existing mocked table will be dropped and cclutCreateMockTable() will need to be called again to recreate it with the new defintion.  
+
+tableName, columnNames, and columnTypes are required.  columnNames and columnTypes are expected to be pipe-delimited strings.  The columnTypes should have the same count as columnNames and be in the same order.  The columnTypes should match CCL types (e.g. vc, i4, f8); however, for string data, if no count is specified, the default maximum number of characters for the column will be 100.  To specify a count, place it after vc (e.g. vc55 will have a maximum size of 55 characters).  isAccessedViaRdbCommands is optional and should be TRUE only if the script-under-test accesses the table using rdb commands. Table mocking will fail if there are both rdb and non-rdb queries against the table.
   
 @param tableName  
 &nbsp;&nbsp;&nbsp;&nbsp;The table to be mocked.  
@@ -56,12 +58,14 @@ Defines a mock table structure that can be created for use within a program.  Th
 &nbsp;&nbsp;&nbsp;&nbsp;A pipe-delimited list of columns to be mocked on the table  
 @param columnTypes  
 &nbsp;&nbsp;&nbsp;&nbsp;A pipe-delimited list of types for each column  
+@param isAccessedViaRdbCommands  
+&nbsp;&nbsp;&nbsp;&nbsp;An optional boolean parameter to set to TRUE if the script-under-test accesses the table using rdb commands  
 @returns  
 &nbsp;&nbsp;&nbsp;&nbsp;The name of the mock table (This can be used to select data for testing)  
   
 Example:  
 ```javascript
-call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8") 
+call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc500|vc500|dq8") 
 ```
 
 **cclutAddMockIndex(tableName = vc, columnNames = vc, isUnique = i4)**
@@ -131,7 +135,7 @@ Supported escape values
   
 Example:  
 ```javascript
-call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")  
+call cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc500|vc500|dq8")  
 call cclutCreateMockTable("person")  
 call cclutAddMockData("person", "1.0|Washington|George|01-JAN-1970 00:00") ;Will add George Washington  
 call cclutAddMockData("person", "2.0|A\|d\\ams|John|02-FEB-1971 11:11") ;Will add John A|d\ams  
@@ -267,7 +271,7 @@ subroutine testIt(null)
 
   ; Define a mock person table. The return value is the name of the mock table which can be useful to perform a select on the
   ; mock table after the script-under-test is complete to verify (among other things) that an insert or a delete worked correctly.
-  set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc|vc|dq8")
+  set mock_table_person = cclutDefineMockTable("person", "person_id|name_last|name_first|birth_dt_tm", "f8|vc500|vc500|dq8")
 
   ; Add a non-unique index to name_last
   call cclutAddMockIndex("person", "name_last", FALSE)
@@ -284,7 +288,7 @@ subroutine testIt(null)
 
   ; Perform similar steps to mock the prsnl table but pass TRUE into cclutDefineMockTable because the script-under-test
   ; uses an rdb command to read the prsnl table.
-  call cclutDefineMockTable("prsnl", "person_id|position_cd|username", "f8|f8|vc", TRUE)
+  call cclutDefineMockTable("prsnl", "person_id|position_cd|username", "f8|f8|vc30", TRUE)
   call cclutCreateMockTable("prsnl")
   call cclutAddMockData("prsnl", "1.0|441.0|CERNER")
   call cclutAddMockData("prsnl", "2.0|441.0|SYSTEM")

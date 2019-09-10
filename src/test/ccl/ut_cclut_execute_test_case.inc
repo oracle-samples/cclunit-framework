@@ -4,8 +4,9 @@
   Developers. 
   Please note that cclut_execute_test_case is just a pass through to cclut_execute_test_case_file.
   The only things that need to be tested are that 
-    - cclut_execute_test_case input values are properly set on the cclut_execute_test_case_file strucutre.
+    - cclut_execute_test_case input values are properly set on the cclut_execute_test_case_file structure.
     - cclut_execute_test_case_file output values are properly set on the cclut_execute_test_case ouput structure.
+  There are some additional tests only to improve code coverage.
 */
 
 %i cclsource:cclut_xml_functions.inc
@@ -36,3 +37,5 @@ record ucetc_reply (
 ) with protect
 
 declare testing::sut = vc with protect, constant("cclut_execute_test_case")
+declare cclut::debug = i2 with protect, constant(true)
+ 

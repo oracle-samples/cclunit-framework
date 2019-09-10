@@ -9,6 +9,9 @@ declare cclutEPWM_namespace::cclutExecuteProgramWithMocks(
     pgm = vc (val), params = vc(val ,""), ns = vc(val ,"")) = null
 declare cclutEPWM_mock_subroutine::cclutExecuteProgramWithMocks(
     pgm = vc (val), params = vc(val ,""), ns = vc(val ,"")) = null
+declare cclutEPWM_errors::cclutExecuteProgramWithMocks(
+    pgm = vc (val), params = vc(val ,""), ns = vc(val ,"")) = null
+
 
 declare tdbexecuteA(
     app = i4, task = i4, request = i4, reqType = vc, req = vc(ref), repType = vc, rep = vc(ref)) = i4
@@ -133,31 +136,28 @@ end ;test_cclutAddMockImplementation_happy
 *  Scenario: Throws an error when an empty originalName is supplied to the function (after trimming)        *
 ************************************************************************************************************/
 subroutine test_cclutAddMockImplementation_missing_originalName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockImplementation("     ", "mock_subroutine")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockImplementation_missing_originalName 001",
-        trim(errorMessage, 3), "regexplike",
-        concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockImplementation\(\) - originalName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName expect one error", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName error message", cclutErrorStash->error[1].errorMessage,
+        "cclutAddMockImplementation() - originalName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockImplementation_missing_originalName
 
 /* test_cclutAddMockImplementation_missing_replaceName ******************************************************
 *  Scenario: Throws an error when an empty replaceName is supplied to the function (after trimming)         *
 ************************************************************************************************************/
 subroutine test_cclutAddMockImplementation_missing_replaceName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutAddMockImplementation("sample_subroutine", "     ")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutAddMockImplementation_missing_replaceName 001", trim(errorMessage, 3),
-        "regexplike", concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutAddMockImplementation\(SAMPLE_SUBROUTINE\) - replaceName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName expect one error", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName error message", cclutErrorStash->error[1].errorMessage,
+        "cclutAddMockImplementation(SAMPLE_SUBROUTINE) - replaceName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutAddMockImplementation_missing_replaceName
 
 ;**********************************************************************************************************************************
@@ -216,16 +216,14 @@ end ;test_cclutRemoveMockImplementation_happy
 *  Scenario: Throws an error when an empty originalName is supplied to the function (after trimming)        *
 ************************************************************************************************************/
 subroutine test_cclutRemoveMockImplementation_missing_originalName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutRemoveMockImplementation("     ")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutRemoveMockImplementation_missing_originalName 001",
-        trim(errorMessage, 3), "regexplike",
-        concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutRemoveMockImplementation\(\) - originalName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName expect one error", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName error message", cclutErrorStash->error[1].errorMessage,
+        "cclutRemoveMockImplementation() - originalName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutRemoveMockImplementation_missing_originalName
 
 ;**********************************************************************************************************************************
@@ -308,7 +306,14 @@ subroutine common_test_cclutExecuteProgramWithMocks(null)
     endif
     ;uncomment the following echorecord if test results are confusing or doubted.
     ;call echorecord(ucetcf_testCaseResults)
-    call cclutAssertI2Equal(CURREF, "check resultInd", ucetcf_testCaseResults->resultInd, 1)
+    if (validate(expectTestFailure, FALSE) = TRUE)
+        call cclutAssertI2Equal(CURREF, "check resultInd", ucetcf_testCaseResults->resultInd, 0)
+    else
+        call cclutAssertI2Equal(CURREF, "check resultInd", ucetcf_testCaseResults->resultInd, 1)
+    endif
+    if (validate(callPostProcess, FALSE) = TRUE)
+        call parser(concat("call ", testNamespace, "::postProcess", "(null) go"))
+    endif
 end ;common_test_cclutExecuteProgramWithMocks
 
 
@@ -487,21 +492,6 @@ subroutine group1_mock_table_test(null)
     call group1_mock_table_cleanup(null)
 end ;group1_mock_table_cleanup
 
-
-/**
-    Common error collection code for group1 table drop exception tests.
-*/
-subroutine group1_collect_errors(null)
-    set errorCode = error(errorMessage, 0)
-    while(errorCode != 0)
-        set errorCount = errorCount + 1
-        set stat = alterlist(errors->item, errorCount)
-        set errors->item[errorCount].code = errorCode
-        set errors->item[errorCount].message = errorMessage
-        set errorCode = error(errorMessage, 0)
-    endwhile
-end
-
 /**
     Common table collection code for group1 table drop exception tests.
     This must occur in the context of the test's namespace since <namespace>::cclut_mockTables contains the data.
@@ -578,6 +568,8 @@ end ;execute_mocks_happy_validations
 */
 subroutine test_tdbexecute_error_during_group1_user_table_drop(null)
     declare testNamespace = vc with protect, constant("cclutEPWM_group1_tdb_error")
+    declare expectTestFailure = i2 with protect, constant(TRUE)
+    declare callPostProcess = i2 with protect, constant(TRUE)
     record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
     call group1_mock_table_test(null)
 end; test_group1_user_can_drop_mocked_table
@@ -601,18 +593,20 @@ end ;tdbexecuteB
 subroutine cclutEPWM_group1_tdb_error::execute_mocks_happy_validations(null)
     call group1_collect_tables(null)
 end ;execute_mocks_happy_validations
-subroutine cclutEPWM_group1_tdb_error::cclutRemoveMockTable(tableName)
-    call public::cclutRemoveMockTable(tableName)
-    call group1_collect_errors(null)
+subroutine cclutEPWM_group1_tdb_error::postProcess(null)
+    declare idx = i4 with protect, noconstant(0)
+    call cclutAssertI4Equal(CURREF, "cclutEPWM_group1_tdb_error error count", size(ucetcf_testCaseResults->tests[1]->errors, 5), 12)
 
-    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
-        call cclutAssertContains(CURREF, "remove table failure a1",
-            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
-        call cclutAssertContains(CURREF, "tdbexecute failure a", "TDBEXECUTE error (status =", errors->item[2].message)
-        call cclutAssertVcOperator(CURREF, "tdbexecute failure", errors->item[2].message, "regexplike",
-            "%CCL-E-392-PRG_[0-9_(),:]+\{CCLEXCEPTION\(\)\}Exception\(100\): TDBEXECUTE error \(status = [0-9]+\).")
-    endif
-end ;cclutRemoveMockTable
+    for (idx = 1 to 11 by 2)
+        call cclutAssertVcOperator(CURREF, "tdbexecute failure", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "regexplike", "TDBEXECUTE error \(status = [0-9]+\)")
+    endfor
+    for (idx = 2 to 12 by 2)
+        call cclutAssertVcOperator(CURREF, "tdbexecute failure message", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "regexplike", concat("cclutRemoveMockTable\([A-Z_]+\) - Unable to drop table.  ",
+            "Manual cleanup may be required.  Mock table name is CUST_CCLUT.[A-Z_0-9]+"))
+    endfor
+end ;postProcess
 
 
 /**
@@ -620,6 +614,8 @@ end ;cclutRemoveMockTable
 */
 subroutine test_run_program_fails_during_group1_user_table_drop(null)
     declare testNamespace = vc with protect, constant("cclutEPWM_group1_vrp_fail")
+    declare expectTestFailure = i2 with protect, constant(TRUE)
+    declare callPostProcess = i2 with protect, constant(TRUE)
     record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
     set cclut_drop_table_reply->status_data.status = "F"
     call group1_mock_table_test(null)
@@ -641,16 +637,21 @@ end ;tdbexecuteC
 subroutine cclutEPWM_group1_vrp_fail::execute_mocks_happy_validations(null)
     call group1_collect_tables(null)
 end ;execute_mocks_happy_validations
-subroutine cclutEPWM_group1_vrp_fail::cclutRemoveMockTable(tableName)
-    call public::cclutRemoveMockTable(tableName)
-    call group1_collect_errors(null)
+subroutine cclutEPWM_group1_vrp_fail::postProcess(null)
+    declare idx = i4 with protect, noconstant(0)
+    call cclutAssertI4Equal(CURREF,
+        "test_run_program_fails_during_group1_user_table_drop", size(ucetcf_testCaseResults->tests[1]->errors, 5), 12)
 
-    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
-        call cclutAssertContains(CURREF, "tdbexecute failure",
-            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
-        call cclutAssertContains(CURREF, "tdbexecute failure", "VCCL_RUN_PROGRAM failure.", errors->item[2].message)
-    endif
-end ;cclutRemoveMockTable
+    for (idx = 1 to 11 by 2)
+        call cclutAssertVcEqual(CURREF, "vrp failure", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "VCCL_RUN_PROGRAM failure.")
+    endfor
+    for (idx = 2 to 12 by 2)
+        call cclutAssertVcOperator(CURREF, "tdbexecute failure message", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "regexplike", concat("cclutRemoveMockTable\([A-Z_]+\) - Unable to drop table.  ",
+            "Manual cleanup may be required.  Mock table name is CUST_CCLUT.[A-Z_0-9]+"))
+    endfor
+end ;postProcess
 
 
 /**
@@ -658,6 +659,8 @@ end ;cclutRemoveMockTable
 */
 subroutine test_script_fails_during_group1_user_table_drop(null)
     declare testNamespace = vc with protect, constant("cclutEPWM_group1_script_fail")
+    declare expectTestFailure = i2 with protect, constant(TRUE)
+    declare callPostProcess = i2 with protect, constant(TRUE)
     record cclut_drop_table_reply(1 document = gvc 1 status_data 2 status = c1)
     set cclut_drop_table_reply->status_data.status = "Z"
     set cclut_drop_table_reply->document = ^{"CCLUTDROPMOCKTABLEREPLY": {"STATUS": "F", "MESSAGE": "table not found" }}^
@@ -680,16 +683,21 @@ end ;tdbexecuteD
 subroutine cclutEPWM_group1_script_fail::execute_mocks_happy_validations(null)
     call group1_collect_tables(null)
 end ;execute_mocks_happy_validations
-subroutine cclutEPWM_group1_script_fail::cclutRemoveMockTable(tableName)
-    call public::cclutRemoveMockTable(tableName)
-    call group1_collect_errors(null)
+subroutine cclutEPWM_group1_script_fail::postProcess(null)
+    declare idx = i4 with protect, noconstant(0)
+    call cclutAssertI4Equal(CURREF,
+        "test_script_fails_during_group1_user_table_drop", size(ucetcf_testCaseResults->tests[1]->errors, 5), 12)
 
-    if (errorCount > 0) ;no errors are generated when cclutAddMockTable calls cclutRemoveMockTable b/c the table isn't there yet.
-        call cclutAssertContains(CURREF, "tdbexecute failure",
-            "Unable to drop table.  Manual cleanup may be required.  Mock table name is", errors->item[1].message)
-        call cclutAssertContains(CURREF, "tdbexecute failure", "table not found", errors->item[2].message)
-    endif
-end ;cclutRemoveMockTable
+    for (idx = 1 to 11 by 2)
+        call cclutAssertVcEqual(CURREF, "script failure", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "table not found")
+    endfor
+    for (idx = 2 to 12 by 2)
+        call cclutAssertVcOperator(CURREF, "tdbexecute failure message", ucetcf_testCaseResults->tests[1]->errors[idx].errorText,
+            "regexplike", concat("cclutRemoveMockTable\([A-Z_]+\) - Unable to drop table.  ",
+            "Manual cleanup may be required.  Mock table name is CUST_CCLUT.[A-Z_0-9]+"))
+    endfor
+end ;postProcess
 
 
 /**
@@ -888,16 +896,14 @@ end ;table_replace_version
     Confirms that a CCL exception is raised if the program name passed to cclutExecuteProgramWithMocks trims to empty.
 */
 subroutine test_cclutExecuteProgramWithMocks_missing_programName(null)
-    declare errorMessage = vc with protect, noconstant("")
-    declare errorCode = i4 with protect, noconstant(0)
+    declare stat = i4 with protect, noconstant(0)
     call cclutExecuteProgramWithMocks("     ", "")
-
-    set errorCode = error(errorMessage, 0)
-
-    call cclutAssertVcOperator(CURREF, "test_cclutExecuteProgramWithMocks_missing_programName 001",
-        trim(errorMessage, 3), "regexplike",
-        concat("%CCL-E-392-PRG_[0-9]+_[0-9]+\([^)]+\)[0-9]+:[0-9]+\{CCLEXCEPTION\(\)\}Exception\(100\):",
-            " cclutExecuteProgramWithMocks\(\) - programName is a required field."))
+    call cclutAssertI4Equal(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName expect one error", size(cclutErrorStash->error, 5), 1)
+    call cclutAssertVcEqual(CURREF,
+        "test_cclutAddMockImplementation_missing_originalName error message", cclutErrorStash->error[1].errorMessage,
+        "cclutExecuteProgramWithMocks() - programName is a required field.")
+    set stat = alterlist(cclutErrorStash->error, 0)
 end ;test_cclutExecuteProgramWithMocks_missing_programName
 
 
@@ -928,3 +934,34 @@ subroutine test_cclutRemoveAllMocks_happy(null)
     call cclutAsserti4Equal(CURREF, "test_cclutRemoveAllMocks_happy 004",
         size(cclut_mockImplementations->implementations, 5), 0)
 end ;test_cclutRemoveAllMocks_happy
+
+/**
+    Verifies that errors generated by cclutExecuteProgramWithMocks get incorporated in the test results.
+*/
+subroutine test_cclutExecuteProgramWithMocks_errors(null)
+    declare executeParams = vc with protect, constant("10,^test param^")
+    declare executeNamespace = vc with protect, constant("")
+    declare testNameSpace = vc with protect, constant("cclutEPWM_errors")
+    declare expectTestFailure = i2 with protect, constant(TRUE)
+    declare callPostProcess = i2 with protect, constant(TRUE)
+    call common_test_cclutExecuteProgramWithMocks(null)
+end ;testExecuteProgramWithMocksErrors
+subroutine cclutEPWM_errors::cclutExecuteProgramWithMocks(pgm, params, ns)
+    call cclexception(555, "E", "forced CCL error")
+    call cclexception(556, "E", "forced CCL error")
+    call cclexception(557, "E", "forced CCL error")
+    call public::cclutExecuteProgramWithMocks(pgm, params)
+end ;testExecuteProgramWithMocksErrors::cclutExecuteProgramWithMocks
+subroutine cclutEPWM_errors::execute_mocks_happy_validations(null)
+  null
+end ;execute_mocks_happy_validations
+subroutine cclutEPWM_errors::postProcess(null)
+    call cclutAssertI4Equal(CURREF, "test count", size(ucetcf_testCaseResults->tests, 5), 1)
+    call cclutAssertI4Equal(CURREF, "error count", size(ucetcf_testCaseResults->tests[1]->errors, 5), 3)
+    call cclutAssertContains(
+        CURREF, "error message one", "Exception(557): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[1].errorText)
+    call cclutAssertContains(
+        CURREF, "error message two", "Exception(556): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[2].errorText)
+    call cclutAssertContains(
+        CURREF, "error message three", "Exception(555): forced CCL error.", ucetcf_testCaseResults->tests[1]->errors[3].errorText)
+end ;test_cclutExecuteProgramWithMocks_happy::unitTestSpecificValidations

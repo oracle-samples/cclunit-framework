@@ -1,4 +1,9 @@
 # cclunit-framework Change Log
+## 3.4 - 2019.03.21
+
+* Fix [#20](https://github.com/cerner/cclunit-framework/issues/20): Fix error handling in the mocking framework.
+* Provide the ablity to compile a test case object independent of executing it.
+* Create cclut_generate_test_case providing the ability to generate a test case from a compiled program.
 
 ## 3.3 - 2019.03.21
 * Fix [#17](https://github.com/cerner/cclunit-framework/issues/17): Table mocking fails if some field shares the same name as the table being mocked.
