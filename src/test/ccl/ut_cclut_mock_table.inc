@@ -523,14 +523,15 @@ subroutine test_cclutCreateMockTable_authenticated_session(null)
     call cclutAssertI4Equal(CURREF, "expect the test case to fail", cclutTestCaseResults->resultInd, 0)
     ;note that this would be more convincing if the test case actually contained more than one test
     call cclutAssertI4Equal(CURREF, "expect exactly one test", size(cclutTestCaseResults->tests, 5), 1)
-    call cclutAssertVCEqual(CURREF, "expected test", cclutTestCaseResults->tests[1].name, "TEST_UT_CCLUT_EXECTE_MOCKS_HAPPY_BASIC")
+    call cclutAssertVCEqual(CURREF,
+        "expected test", cclutTestCaseResults->tests[1].name, "TEST_UT_CCLUT_EXECUTE_MOCKS_HAPPY_BASIC")
     call cclutAssertI4Equal(CURREF, "expect exactly one error", size(cclutTestCaseResults->tests[1]->errors, 5), 1)
     call cclutAssertVCEqual(CURREF, "expected error", cclutTestCaseResults->tests[1].errors[1].errortext, 
         "The CCL session must be authenticated to execute this test")
     ;because the error occurs before any asserts and the test case exits at that point.
     call cclutAssertI4Equal(CURREF, "expect no asserts", size(cclutTestCaseResults->tests[1]->asserts, 5), 0)
-
     set reqinfo->updt_id = previousUpdtId
+
     call parser(concat("drop program ", compileReply->testCaseObjectName, " go"))
 end ;test_cclutCreateMockTable_authenticated_session
 subroutine ccmtAuthenticatedSession::cclutGetCurrentGroup(null)
