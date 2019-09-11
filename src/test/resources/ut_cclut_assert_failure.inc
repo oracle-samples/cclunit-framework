@@ -1,5 +1,5 @@
 /**
-  Unit Tests with failed cclutAssert* calls for confirming that each assert function fails when as expected.
+  Unit Tests with failed cclutAssert* calls for confirming that each assert function fails when expected.
 */
 
 declare testFailureOfF8EqualAssert(null) = null
@@ -50,6 +50,7 @@ declare testFailureOfVcOperatorAssert(null) = null
 declare testFailureOfVcNotOperatorAssert(null) = null
 declare testFailureOfDateTimeOperatorAssert(null) = null
 declare testFailureOfDateTimeNotOperatorAssert(null) = null
+declare testFailureOfVCAssertsWithoutStringLogic(null) = null
 
 ;**********************************************************************************************************************************
 ;** Equal
@@ -95,6 +96,20 @@ subroutine testFailureOfVCEqualAssert(null)
   set expected = "Fantastic"
   set actual = "Terrible"
   set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 4", expected, actual)
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 4a", "", " ")
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 4b", "", notrim(" "))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 4c", "", trim(" "))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set expected = "hw"
+  set actual = notrim("hw ")
+  set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 4d", expected, notrim(actual))
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfVCEqualAssert
  
@@ -246,6 +261,11 @@ subroutine testFailureOfVCLessThanAssert(null)
   set value2 = "Terrible"
   set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert Failure 16", value1, value2)
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set value1 = "hw "
+  set value2 = "hw"
+  set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert Failure 16a", value1, value2)
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfVCLessThanAssert
 
 subroutine testFailureOfDateTimeLessThanAssert(null)
@@ -304,6 +324,11 @@ subroutine testFailureOfVCNotLessThanAssert(null)
   set value1 = "Fantastic"
   set value2 = "Terrible"
   set assertReturn = cclutAssertVCNotLessThan(CURREF, "Test Assert Failure 21", value1, value2)
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set value1 = "hw"
+  set value2 = notrim("hw ")
+  set assertReturn = cclutAssertVCNotLessThan(CURREF, "Test Assert Failure 21a", value1, notrim(value2))
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfVCNotLessThanAssert
 
@@ -364,6 +389,11 @@ subroutine testFailureOfVCGreaterThanAssert(null)
   set value2 = "Terrible"
   set assertReturn = cclutAssertVCGreaterThan(CURREF, "Test Assert Failure 26", value1, value2)
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set value1 = "hw"
+  set value2 = "hw "
+  set assertReturn = cclutAssertVCGreaterThan(CURREF, "Test Assert Failure 26a", value1, value2)
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfVCGreaterThanAssert
 
 subroutine testFailureOfDateTimeGreaterThanAssert(null)
@@ -422,6 +452,11 @@ subroutine testFailureOfVCNotGreaterThanAssert(null)
   set value1 = "Wave"
   set value2 = "Terrible"
   set assertReturn = cclutAssertVCNotGreaterThan(CURREF, "Test Assert Failure 31", value1, value2)
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set value1 = notrim("hw ")
+  set value2 = "hw"
+  set assertReturn = cclutAssertVCNotGreaterThan(CURREF, "Test Assert Failure 31a", notrim(value1), value2)
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfVCNotGreaterThanAssert
 
@@ -605,3 +640,29 @@ subroutine testFailureOfDateTimeNotOperatorAssert(null)
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfDateTimeNotOperatorAssert
 
+subroutine testFailureOfVCAssertsWithoutStringLogic(null)
+  declare cclut::ignoreCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare assertReturn = i2 with protect, noconstant(99)
+
+  set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 49a", concat("hw", char(32)), concat("hw", char(0)))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert Failure 49b", "hw", concat("hw", char(0)))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert Failure 49c", "hw", concat("hw", char(32)))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCGreaterThan(CURREF, "Test Assert Failure 49d", concat("hw", char(0)), "hw")
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCGreaterThan(CURREF, "Test Assert Failure 49e", concat("hw", char(32)), "hw")
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCNotEqual(CURREF, "Test Assert Failure 50a", "hw", concat("hw", char(0)))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+  set assertReturn = cclutAssertVCNotEqual(CURREF, "Test Assert Failure 50b", "hw", concat("hw", char(32)))
+  call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
+
+end ;testFailureOfVCAssertsWithoutStringLogic

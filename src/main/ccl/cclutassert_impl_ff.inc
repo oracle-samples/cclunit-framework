@@ -145,7 +145,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) < textlen(cclutVal2) or cclut::ignoreCclStringLogic))
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) < textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -153,7 +153,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or not cclut::ignoreCclStringLogic))
+         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::ignoreCclStringLogic))
        )
       set cclutReturnValue = TRUE
     endif
