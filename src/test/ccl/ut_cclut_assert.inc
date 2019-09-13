@@ -316,7 +316,6 @@ subroutine testSuccessOfVCLessThanAssert(null)
   set value1 = "hw"
   set value2 = notrim("hw ")
   set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert 16a", value1, notrim(value2))
-  set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert 16a1", value1, "hw ")
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value 16a", TRUE, assertReturn)
 
   set assertReturn = cclutAssertVCLessThan(CURREF, "Test Assert 16b", trim(""), "")
@@ -1257,7 +1256,7 @@ subroutine testAssertFailures(null)
   set testing::outputLines->line[273].text =
     ^ ^
   set testing::outputLines->line[274].text =
-    ^TESTFAILUREOFVCASSERTSWITHOUTSTRINGLOGIC^
+    ^TESTFAILUREOFVCASSERTSWITHCCLSTRINGLOGIC^
   set testing::outputLines->line[275].text = dashes
   set testing::outputLines->line[276].text =
     concat(^    Assert Failure: "hw " = "hw^, NULL_MARKER, ^"^)
@@ -1296,6 +1295,18 @@ subroutine testAssertFailures(null)
   set testing::outputLines->line[296].text =
     ^ ^
   set testing::outputLines->line[297].text = stars
+
+record ut_cclut_cclut1TestCaseRequest (
+  1 testCaseDirectory = vc
+  1 testCaseFileName = vc
+  1 testNamePattern = vc
+  1 programs[*]
+    2 programName = vc
+    2 compile = i2
+  1 optimizerMode = vc
+  1 deprecatedFlag = vc
+  1 failFast = i2
+) with protect
     
 record ut_cclut_testCaseResults (
   1 resultInd = i2
@@ -1313,6 +1324,7 @@ record ut_cclut_testCaseResults (
 ) with protect
 
   execute cclut "ut_cclut_output", "cclsource", "ut_cclut_assert_failure", "", "", "", FALSE with
+      replace("CCLUT1TESTCASEREQUEST", ut_cclut_testCaseRequest),
       replace("CCLUT1TESTCASERESULTS", ut_cclut_testCaseResults)
   call testing::checkLines(testing::outputLines)
 end ;;;testAssertFailures
@@ -1352,12 +1364,12 @@ end ;;;testParameterNameConflicts
 
 
 /**
-  Confirms that a cclut::ignoreStringLogic will cause trailing nulls and spaces to be ignored with respect to asserts.
-  Note that 1, 1a, 6a and 7a fail with or without cclut::ignoreCclStringLogic, further support for the extra string logic.
+  Confirms that a cclut::useCclStringLogic will cause trailing nulls and spaces to be ignored with respect to asserts.
+  Note that 1, 1a, 6a and 7a fail with or without cclut::useCclStringLogic, further support for the extra string logic.
   If vcNull equals vcEmpty and vcEmpty equals vcSpace (2/2a and 3/3a), why doesn't vcNull equal vcSpace (1/1a)?
 */
 subroutine testStringLogicOverride(null)
-  declare cclut::ignoreCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
 
   declare vcNull = vc with protect, constant("")
   declare vcEmpty = vc with protect, constant(trim(""))

@@ -614,10 +614,6 @@ end ;test_cclutRemoveMockTable_happy
 *  Scenario: Removes a mock table that has been created and drops it from the RDBMS                     *
 ************************************************************************************************************/
 subroutine test_cclutRemoveMockTable_created_table(null)
-    if (cclutGetCurrentGroup(null) = 1 and reqinfo->updt_id = 0.0)
-        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
-        return(null)
-    endif
     declare mockTable = vc with protect, noconstant("")
     set mockTable =
         cclutDefineMockTable("sample_table", "sample_table_id|sample_table_text|sample_table_date", "f8|vc|dq8")

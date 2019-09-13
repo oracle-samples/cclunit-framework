@@ -1,3 +1,6 @@
+/**
+  A program that demonstrates several oddities in the way CCL decides that strings are equal.
+*/
 drop program cclut_ccl_string_oddities go
 create program cclut_ccl_string_oddities
   subroutine (doOutput(equal = i2) = null with protect)

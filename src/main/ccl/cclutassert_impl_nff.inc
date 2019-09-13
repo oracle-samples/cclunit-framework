@@ -100,7 +100,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = cclutVal2
          and
-         (textlen(cclutVal1) = textlen(cclutVal2) or cclut::ignoreCclStringLogic)
+         (textlen(cclutVal1) = textlen(cclutVal2) or cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -108,7 +108,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 > cclutVal2
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -116,7 +116,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 > cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) >= textlen(cclutVal2) or cclut::ignoreCclStringLogic))
+         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) >= textlen(cclutVal2) or cclut::useCclStringLogic))
        )
       set cclutReturnValue = TRUE
     endif
@@ -124,7 +124,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) < textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) < textlen(cclutVal2) and not cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -132,7 +132,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::ignoreCclStringLogic))
+         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic))
        )
       set cclutReturnValue = TRUE
     endif
@@ -140,7 +140,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != cclutVal2
          or
-         (textlen(cclutVal1) != textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
+         (textlen(cclutVal1) != textlen(cclutVal2) and not cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -159,7 +159,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = substring(1, textlen(cclutVal1), cclutVal2)
          and
-         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::ignoreCclStringLogic)
+         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -168,7 +168,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != substring(1, textlen(cclutVal1), cclutVal2)
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -177,7 +177,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2)
          and
-         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::ignoreCclStringLogic)
+         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -186,7 +186,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2)
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::ignoreCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
        )
       set cclutReturnValue = TRUE
     endif

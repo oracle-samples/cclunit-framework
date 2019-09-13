@@ -50,7 +50,7 @@ declare testFailureOfVcOperatorAssert(null) = null
 declare testFailureOfVcNotOperatorAssert(null) = null
 declare testFailureOfDateTimeOperatorAssert(null) = null
 declare testFailureOfDateTimeNotOperatorAssert(null) = null
-declare testFailureOfVCAssertsWithoutStringLogic(null) = null
+declare testFailureOfVCAssertsWithCclStringLogic(null) = null
 
 ;**********************************************************************************************************************************
 ;** Equal
@@ -195,7 +195,7 @@ subroutine testFailureOfVCNotEqualAssert(null)
   declare value1 = vc with protect, noconstant("")
   declare value2 = vc with protect, noconstant("")
   declare assertReturn = i2 with protect, noconstant(99)
-  declare cclut::ignoreCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
   
   set value1 = notrim("Fantastic   ")
   set value2 = "Fantastic"
@@ -640,8 +640,8 @@ subroutine testFailureOfDateTimeNotOperatorAssert(null)
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
 end ;testFailureOfDateTimeNotOperatorAssert
 
-subroutine testFailureOfVCAssertsWithoutStringLogic(null)
-  declare cclut::ignoreCclStringLogic = i2 with protect, noconstant(TRUE)
+subroutine testFailureOfVCAssertsWithCclStringLogic(null)
+  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
   declare assertReturn = i2 with protect, noconstant(99)
 
   set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 49a", concat("hw", char(32)), concat("hw", char(0)))
@@ -664,5 +664,4 @@ subroutine testFailureOfVCAssertsWithoutStringLogic(null)
 
   set assertReturn = cclutAssertVCNotEqual(CURREF, "Test Assert Failure 50b", "hw", concat("hw", char(32)))
   call cclutAssertI2Equal(CURREF, "Test Assert Return Value", FALSE, assertReturn)
-
-end ;testFailureOfVCAssertsWithoutStringLogic
+end ;testFailureOfVCAssertsWithCclStringLogic
