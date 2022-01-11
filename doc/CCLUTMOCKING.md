@@ -237,22 +237,26 @@ Script-under-test:
 ```javascript
 drop program abc_mo_get_persons:dba go
 create program abc_mo_get_persons:dba
-  declare newSize = i4 with protect, noconstant(0)
+  subroutine (public::main(null) = null)
+    declare newSize = i4 with protect, noconstant(0)
 
-  select into "nl:" from person p
-  plan p
-  order by p.person_id
-  detail
-    newSize = newSize + 1
-    stat = alterlist(reply->persons, newSize)
-    reply->persons[newSize].person_id = p.person_id
-    reply->persons[newSize].name_last = p.name_last
-    reply->persons[newSize].name_first = p.name_first
-    reply->persons[newSize].birth_dt_tm = p.birth_dt_tm
-  with nocounter
+    select into "nl:" from person p
+    plan p
+    order by p.person_id
+    detail
+      newSize = newSize + 1
+      stat = alterlist(reply->persons, newSize)
+      reply->persons[newSize].person_id = p.person_id
+      reply->persons[newSize].name_last = p.name_last
+      reply->persons[newSize].name_first = p.name_first
+      reply->persons[newSize].birth_dt_tm = p.birth_dt_tm
+    with nocounter
 
-  rdb set output "ccluserdir:rdb_output.dat" end
-  rdb select p.person_id, p.position_cd, p.username from prsnl p where p.username = 'CCLUNIT' end
+    rdb set output "ccluserdir:rdb_output.dat" end
+    rdb select p.person_id, p.position_cd, p.username from prsnl p where p.username = 'CCLUNIT' end
+  end ;main
+
+  call main(null)
 end go
 ```
 
