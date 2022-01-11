@@ -16,6 +16,10 @@ The key point here is that the script does not contain a lot of loose code that 
 
 An illustration of the concept can be seen [here](./examples/basic_example.inc). 
 
+## Caution
+
+A unit test can pass for the wrong reason. The usual cause is that an assert was expected to execute but did not or that an assert has a typo. This is a risk with any unit testing framework, but CCL Unit provides two unique opportunities for skipping asserts: (1) executing the wrong override for the main subroutine because of a typo in the override specification and (2) breaking out of the main override early when a runtime error gets handled by the program under test. One way to mitigate both problems is to have a unit test define variables for the number of times the main override is entered and exited, have the main override increment those variables appropriately, and have the unit test assert that the counts are correct after the tested program completes. This mitigation only protects from running the wrong main override if unique counter names are used for each unique override.
+
 ## Mocking Things
 
 In general, there are two ways to mock objects in CCL unit tests.  Generally speaking, use "with replace" to mock things that are defined outside the script or called directly by the script (CCL subroutines, UARs, other scripts), and use "with curnamespace" to mock subroutines executed by the subroutine being tested.  When using "with curnamespace", add the PUBLIC namespace to the real thing and use an alternate namespace to define an override.  Execute the script using the option `with curnamespace = "<alternate namespace>".`  In practice, it is convenient to use the name of the test for the alternate namespace. Beware, however, that there is a forty chararcter limit on namespaces.

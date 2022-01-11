@@ -1,4 +1,4 @@
-;; this is the test
+;; this is the test case
 
 /**
 * Confirms that subroutineB returns "subroutineBTest" when it is passed "Test"
