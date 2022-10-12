@@ -597,7 +597,7 @@ subroutine public::cclutAddMockData(cclutTableName, cclutRowData)
     endif
 
     ;Initialize insert statement
-    call parser(concat(" insert into ", cclut_mockTables->tables[cclutMockTablePos].replaceName, " set"))
+    call parser(concat(" insert into ", cclut_mockTables->tables[cclutMockTablePos].replaceName, " t set"))
 
     while (textlen(cclutMockValues) > 0)
         set cclutMockColumnIndex = cclutMockColumnIndex + 1
@@ -610,7 +610,7 @@ subroutine public::cclutAddMockData(cclutTableName, cclutRowData)
             set cclutMockValue = notrim(cclutConstructDBSetStatement(cclutMockTablePos, cclutMockColumnIndex,
                 notrim(cclutMockValue)))
             if (cclutIsEmpty(cclutMockValue) = FALSE)
-                call parser(concat(evaluate(cclutNeedsAComma, TRUE, ", ", " "), cclutMockValue))
+                call parser(concat(evaluate(cclutNeedsAComma, TRUE, ", ", " "), "t.", cclutMockValue))
                 set cclutNeedsAComma = TRUE
             else
                 ;Error occurred in cclutConstructDBSetStatement, return
