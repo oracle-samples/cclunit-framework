@@ -43,7 +43,7 @@ Equal
 - cclutAssertI4Equal
 - cclutAssertI2Equal
 - cclutAssertVCEqual
-- cclutAssertDatetTimeEqual
+- cclutAssertDateTimeEqual
 
 Not Equal
 - cclutAssertF8NotEqual
@@ -85,13 +85,13 @@ Operator
 - cclutAssertI4Operator
 - cclutAssertI2Operator
 - cclutAssertVCOperator
-- cclutAssertDatetTimeOperator
+- cclutAssertDateTimeOperator
 
 Not Operator
 - cclutAssertF8NotOperator
 - cclutAssertI4NotOperator
 - cclutAssertI2NotOperator
 - cclutAssertVCNotOperator
-- cclutAssertDatetTimeNotOperator
+- cclutAssertDateTimeNotOperator
 
 [cerreal-maven-plugin]: https://engineering.cerner.com/ccl-testing
