@@ -121,6 +121,9 @@ call cclutRemoveAllMockTables(null)
 
 **cclutAddMockData(tableName = vc, rowData = vc)**
 
+WARNING (v3.4):  
+This can fail to set the value for a table attribute if there is a variable in scope having the same name as the attribute.
+
 Add a row of mock data to a table.  tableName and rowData are required.  tableName must have already been created through `cclutCreateMockTable` or an error will be thrown.  rowData is a pipe-delimited string for each column in the same order that was used in cclutDefineMockTable().  For character fields, the backslash (\\) will serve as an escape character.  For date fields, the value in rowData will be supplied to the cnvtdatetime() function.  All other values will be passed as-is.  
   
 Supported escape values  
