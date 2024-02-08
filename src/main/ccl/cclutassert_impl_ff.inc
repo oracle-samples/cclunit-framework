@@ -121,7 +121,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = cclutVal2
          and
-         (textlen(cclutVal1) = textlen(cclutVal2) or cclut::useCclStringLogic)
+         (textlen(cclutVal1) = textlen(cclutVal2) or cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -129,7 +129,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 > cclutVal2
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -137,7 +137,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 > cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) >= textlen(cclutVal2) or cclut::useCclStringLogic))
+         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) >= textlen(cclutVal2) or cclut::useLaxStringLogic))
        )
       set cclutReturnValue = TRUE
     endif
@@ -145,7 +145,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) < textlen(cclutVal2) and not cclut::useCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) < textlen(cclutVal2) and not cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -153,7 +153,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 < cclutVal2
          or
-         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic))
+         (cclutVal1 = cclutVal2 and (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useLaxStringLogic))
        )
       set cclutReturnValue = TRUE
     endif
@@ -161,7 +161,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != cclutVal2
          or
-         (textlen(cclutVal1) != textlen(cclutVal2) and not cclut::useCclStringLogic)
+         (textlen(cclutVal1) != textlen(cclutVal2) and not cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -180,7 +180,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = substring(1, textlen(cclutVal1), cclutVal2)
          and
-         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic)
+         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -189,7 +189,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != substring(1, textlen(cclutVal1), cclutVal2)
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -198,7 +198,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 = substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2)
          and
-         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useCclStringLogic)
+         (textlen(cclutVal1) <= textlen(cclutVal2) or cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif
@@ -207,7 +207,7 @@ subroutine cclut::evaluateComparison(cclutLineNum, cclutCtx, cclutComparison, cc
     if (
          cclutVal1 != substring(1+textlen(cclutVal2)-textlen(cclutVal1), textlen(cclutVal1), cclutVal2)
          or
-         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useCclStringLogic)
+         (cclutVal1 = cclutVal2 and textlen(cclutVal1) > textlen(cclutVal2) and not cclut::useLaxStringLogic)
        )
       set cclutReturnValue = TRUE
     endif

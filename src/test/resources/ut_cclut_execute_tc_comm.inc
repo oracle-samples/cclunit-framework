@@ -134,7 +134,7 @@ end ;;;testNoIssuesLegacy
 
 
 /**
-  Validates that an environmentXml matches the expected enviromentXml. 
+  Validates that an environmentXml matches the expected environmentXml. 
 */
 subroutine validateEnvironmentXml(xml)
   declare xmlItem = vc with protect, noconstant("")
@@ -297,7 +297,7 @@ lTest)]]></TEXT></LINE><LINE><NBR>2213</NBR><TEXT><![CDATA[    call cclutAssertI
 EXT></LINE></LINES></LISTING>~
 
 ;The next assert is a maintenance hastle when the cclut_execute_test_case_file code changes.
-;Uncomment the echo statment to get the real value and update expectedListing accordingly.
+;Uncomment the echo statement to get the real value and update expectedListing accordingly.
 ;call echo(build2("listingXml = ", xml))
   call cclutAssertEndsWith(CURREF, "validate listingXml", expectedListing, xml)
 end ;;;validateListingXml

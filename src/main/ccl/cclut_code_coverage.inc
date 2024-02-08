@@ -402,7 +402,7 @@ end ;;;getCoverageExclusions
 
 /**
   Identifies the line number of the next code coverage exclusion toggle for a CCL program 
-  and the location to begin seaching for any subsequent ones.
+  and the location to begin searching for any subsequent ones.
   
   @param cclutListingXml
     The listing xml for the program
@@ -415,7 +415,7 @@ end ;;;getCoverageExclusions
     @value ON
       A toggle that turns code coverage on.
   @param cclutNextStart
-    The position from which to start seaching for subsequent code coverage exclusion toggles within the listing.
+    The position from which to start searching for subsequent code coverage exclusion toggles within the listing.
 */
 subroutine cclut::getNextCoverageToggleLineNumber(cclutListingXml, cclutSearchStart, cclutToggleType, cclutNextStart)
   declare position = i4 with protect, noconstant(0)

@@ -30,7 +30,7 @@ declare cclut_test_runner::teardownOnceFinished = i2 with protect, noconstant(FA
   Checks for CCL errors.
   @param cclutLocation 
     The name of the unit test that caused the error.
-  @parm
+  @param
     Boolean flag indicating whether to route execution to exit_script if an error does occur.
 */
 subroutine cclut_test_runner::checkForCclErrors(cclutLocation, cclutDoExit)

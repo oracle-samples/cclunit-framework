@@ -22,7 +22,7 @@ record cclut_timerList
   
 /**
   A timer is created with a specified name and its startTime is set to cnvtdatetime(curdate, curtime3). 
-  Timer names must be uniquue. If a timer already exists with that name, then a CCL exception is thrown.  
+  Timer names must be unique. If a timer already exists with that name, then a CCL exception is thrown.  
   @param cclutTimerName 
     The name of the timer to start.
   @param cclutLineNumber 
@@ -68,7 +68,7 @@ end ;;;startTimer
     The maximum number of seconds allowed for the timer.
   @return
     A boolean flag indicating if the endTime was set for the timer.
-    @vlaue TRUE 
+    @value TRUE 
       The endTime was set for the timer.
     @value FALSE 
       The endTime was not set for the timer.
@@ -103,7 +103,7 @@ end ;;;endTimer
     The number of seconds elapsed between the timers startTime and endTime or -1 if the timer is not found.
 */
 subroutine cclutGetTimerElapse(cclutTimerName)
-  declare CCULT_DD_UNIT_HSEC = i4 with protect, constant(6)
+  declare CCLUT_DD_UNIT_HSEC = i4 with protect, constant(6)
   declare cclutTimerCount = i4 with protect, noconstant(size(cclut_timerList->timer, 5))
   declare cclutTimerIndex = i4 with protect, noconstant(0)
   declare cclutTimerPosition = i4 with protect, noconstant(0)
@@ -125,7 +125,7 @@ subroutine cclutGetTimerElapse(cclutTimerName)
  
     if (cclutValidTimer)
       set cclutElapsedTime = round((datetimediff(cclut_timerList->timer[cclutTimerPosition].endTime, 
-          cclut_timerList->timer[cclutTimerPosition].startTime, CCULT_DD_UNIT_HSEC)/100.0), 2)
+          cclut_timerList->timer[cclutTimerPosition].startTime, CCLUT_DD_UNIT_HSEC)/100.0), 2)
     else
       set cclutElapsedTime = -1.0
     endif

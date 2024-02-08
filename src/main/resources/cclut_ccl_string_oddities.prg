@@ -1,8 +1,8 @@
+drop program   go
+create program cclut_ccl_string_oddities
 /**
   A program that demonstrates several oddities in the way CCL decides that strings are equal.
 */
-drop program cclut_ccl_string_oddities go
-create program cclut_ccl_string_oddities
   subroutine (doOutput(equal = i2) = null with protect)
     if (equal)
       call echo('they are equal')
@@ -16,8 +16,13 @@ create program cclut_ccl_string_oddities
   declare vcEmpty = vc with protect, constant(" ")
   declare vcSpace = vc with protect, constant(notrim(" "))
   declare vcDoubleSpace = vc with protect, constant(notrim("  "))
-
-  call echo("")  
+  
+  call echo("")
+  call echo(~declare vcNull = vc with protect, constant("")~)
+  call echo(~declare vcEmpty = vc with protect, constant(" ")~)
+  call echo(~declare vcSpace = vc with protect, constant(notrim(" "))~)
+  call echo(~declare vcDoubleSpace = vc with protect, constant(notrim("  "))~)
+  call echo("")
 
   call echo("empty/null")
   call doOutput(parser(^notrim(vcEmpty) = notrim(vcNull)^))

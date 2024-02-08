@@ -19,7 +19,7 @@ create program cclut:dba
     @default FALSE
 */
 prompt 
-  "Ouput Destination [MINE]: " = "MINE",
+  "Output Destination [MINE]: " = "MINE",
   "Test Case Directory [cclsource]: " = "cclsource",
   "Test Case File Name: " = "",
   "Test Name Pattern [.*]: " = ".*",

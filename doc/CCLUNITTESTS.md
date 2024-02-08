@@ -12,7 +12,7 @@ Unit tests for CCL written in CCL.
 
 ## Anatomy of CCL Unit
 A ***unit test*** is a null parameter subroutine whose name begins with "test".  
-A ***test case*** is an include file with a ***.inc*** extension which contains unit tests and optionally setup and teardown routines.  
+A ***test case*** is an include file with a ***.inc*** extension which contains unit tests and optionally setupOnce, setup, teardown and teardownOnce routines.  
 
 CCL Unit generates a \[temporary\] program from a test case file and then executes the unit tests defined within that file.
 
@@ -29,7 +29,7 @@ A ***teardownOnce*** is a null parameter subroutine named teardownOnce.
 &nbsp; &bull; If a test case contains a teardownOnce, CCL Unit will execute it after all of the tests in the test case have finished executing.  
 &nbsp; &bull; Use a teardownOnce to perform any final cleanup steps that need performed one time after all the tests have completed.  
 An ***assert*** is a statement asserting a particular condition is true.  
-&nbsp; &bull; [**Look here**][cclutAsserts] for details about asserts and a list of all the avaiable asserts.  
+&nbsp; &bull; [**Look here**][cclutAsserts] for details about asserts and a list of all the available asserts.  
 &nbsp; &bull; Example:  `call cclutAssertVcEqual(CURREF, "expected hello world", some_str, "hello world")`  
 A ***timer*** asserts the elapse between two execution points does not exceed a specified threshold.  
 &nbsp; &bull; Start a timer named "timer name" by invoking `call cclutStartTimer("timer name", CURREF)`  
@@ -45,7 +45,7 @@ See [CCL Unit Mocking][ccl-unit-mocking] for instructions on mocking database da
 
 
 ## Manual Execution
-During devlopment it is desirable to perform the test phase of the modify/test/repeat cycle as swiftly as possible. 
+During development it is desirable to perform the test phase of the modify/test/repeat cycle as swiftly as possible. 
 Manually executing a single test provides for this and avoids the time overhead of the maven execution described farther down.
 
 ---

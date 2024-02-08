@@ -23,7 +23,12 @@ record cclutDropMockTableReply (1 status = c1 1 message = vc) with protect
 if (validate(_memory_reply_string) = FALSE)
     declare _memory_reply_string = vc with protect, noconstant("")
 endif
-    
+
+/**
+  Drops a specified table.
+  @param programName
+      The table to drop.
+*/    
 subroutine public::dropTable(cclutTableName)
     declare cclutErrorCode = i4 with protect, noconstant(0)
     declare cclutErrorMessage = vc with protect, noconstant("")

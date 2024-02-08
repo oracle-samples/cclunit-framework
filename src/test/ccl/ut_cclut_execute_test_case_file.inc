@@ -1053,7 +1053,7 @@ end ;;;testErrorThenExitScript
 
 
 /**
-  Confirms that code coverage exclusion works as exepcted.
+  Confirms that code coverage exclusion works as expected.
 */
 subroutine testCoverageExcludes(null)
   declare stat = i4 with protect, noconstant(0)

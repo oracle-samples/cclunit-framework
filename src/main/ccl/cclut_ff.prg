@@ -17,7 +17,7 @@ create program cclut_ff:dba
     @default E
 */
 prompt 
-  "Ouput Destination [MINE]: " = "MINE",
+  "Output Destination [MINE]: " = "MINE",
   "Test Case Directory [cclsource]: " = "cclsource",
   "Test Case File Name: " = "",
   "Test Name Pattern [.*]: " = "",
@@ -61,13 +61,13 @@ with outdev, testCaseDirectory, testCaseFileName, testNamePattern, optimizerMode
   end ;;;doOutput
 
   /**
-    Checks if a CCL error has occured and echoes the error message if one has
+    Checks if a CCL error has occurred and echoes the error message if one has
     @param cclutErrorOption
       The value to be passed into the error function indicating whether it should pull the first error or the last.
     @param cclutDoExit
       A boolean flag indicating whether or not to route control to exit_script if an error has occurred.
     @returns
-      A boolean flag indicating whether or not an error has occured. TRUE: there was an error; FALSE there was not an error.
+      A boolean flag indicating whether or not an error has occurred. TRUE: there was an error; FALSE there was not an error.
   */
   subroutine cclut_ff::errorCheck(cclutErrorOption, cclutDoExit)
     declare cclutffErrorMessage = vc with protect, noconstant("")

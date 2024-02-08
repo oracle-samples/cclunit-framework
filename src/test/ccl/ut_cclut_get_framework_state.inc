@@ -1,5 +1,5 @@
 /**
-  Unit Tests for ccut_get_framework_state.
+  Unit Tests for cclut_get_framework_state.
 */
 
 %i cclsource:cclut_framework_version.inc
@@ -106,7 +106,7 @@ end ;;;setup
 
 
 /**
-  Test ccut_get_framework_state as it will be called by the framework.
+  Test cclut_get_framework_state as it will be called by the framework.
 */
 subroutine testIt(null)
   record reply (
@@ -123,7 +123,7 @@ subroutine testIt(null)
 end ;;;testIt
 
 /**
-  Test ccut_get_framework_state as it will be called in a CCL session to check the current framework version.
+  Test cclut_get_framework_state as it will be called in a CCL session to check the current framework version.
 */
 subroutine testItWithoutReplyWithoutMRS(null)
   execute cclut_get_framework_state with replace ("ECHO", captureEcho)
@@ -132,7 +132,7 @@ subroutine testItWithoutReplyWithoutMRS(null)
 end ;;;testItWithoutReplyWithoutMRS
 
 /**
-  Test ccut_get_framework_state as it will be called from DvDev to check the current framework version.
+  Test cclut_get_framework_state as it will be called from DvDev to check the current framework version.
 */
 subroutine testItWithoutReplyWithMRS(null)
   declare _memory_reply_string = vc with protect, noconstant("")
@@ -145,7 +145,7 @@ end ;;;testItWithoutReply
 
 
 /**
-  Test ccut_get_framework_state as it might be called by a custom program to check the current framework version.
+  Test cclut_get_framework_state as it might be called by a custom program to check the current framework version.
 */
 subroutine testItWithReplyWithMRS(null)
   declare _memory_reply_string = vc with protect, noconstant("")

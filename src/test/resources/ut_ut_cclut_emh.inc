@@ -1,23 +1,24 @@
 /**
     Unit tests for ut_cclut_execute_mocks_happy used for unit testing the mocking framework.
 */
+declare setuponce(null) = null
+declare setup(null) = null
 declare teardown(null) = null
 declare test_ut_cclut_execute_mocks_happy_basic(null) = null with protect
 declare public::execute_mocks_happy_validations(null) = null with protect
 
-subroutine teardown(null)
+subroutine setupOnce(null)
     if (cclutGetCurrentGroup(null) != 0 and reqinfo->updt_id = 0.0)
         call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
         return(null)
     endif
+end
+
+subroutine teardown(null)
     call cclutRemoveAllMocks(null)
 end
 
 subroutine test_ut_cclut_execute_mocks_happy_basic(null)
-;    if (cclutGetCurrentGroup(null) = 1 and reqinfo->updt_id = 0.0)
-;        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
-;        return(null)
-;    endif
     declare mock_sample_person = vc with protect, noconstant("")
     declare mock_sample_encounter = vc with protect, noconstant("")
     declare mock_sample_encounter_alias = vc with protect, noconstant("")
@@ -86,10 +87,6 @@ subroutine test_ut_cclut_execute_mocks_happy_basic(null)
     call execute_mocks_happy_validations(null)
 end ;test_ut_cclut_execute_mocks_happy_basic
 subroutine public::execute_mocks_happy_validations(null)
-    if (cclutGetCurrentGroup(null) = 1 and reqinfo->updt_id = 0.0)
-        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
-        return(null)
-    endif
     call cclutAsserti4Equal(CURREF, "check public::persistRecord->item", public::persistRecord->item, 1)
 
     if (executeParams != "")

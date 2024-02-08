@@ -58,7 +58,7 @@ end ;cclutGetCurrentGroup
 
 /**
     Parses a delimited string placing the (right trimmed) parts into the qual[*].str member of a provided record structure.
-    If the minimum requied CCL version is bumped above 8.13.2 / 9.1.2, arraySplit can be used and this can be removed.
+    If the minimum required CCL version is bumped above 8.13.2 / 9.1.2, arraySplit can be used and this can be removed.
 */
 subroutine public::cclutDoArraySplit(cclutRec, cclutSource, cclutDelimiter)
     declare cclutStat = i4 with protect, noconstant(0)

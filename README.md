@@ -6,7 +6,7 @@ It must be installed into a Cerner Millennium environment before it can be used.
 
 ## Current Version
 
-3.4
+3.5
 
 ## Usage
 
@@ -27,7 +27,7 @@ See the [change log](CHANGELOG.md) for the contents of previous releases. Visit 
 ## Contribute
 
 You are welcomed to contribute documentation improvements as well as code corrections and enhancements.  
-Please read our [Contribution Guidelines][contibution_guidelines].
+Please read our [Contribution Guidelines][contribution_guidelines].
 
 ## Release
 
@@ -56,7 +56,7 @@ limitations under the License.
 [ccl-maven-plugin]:https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin
 [cclunit-framework-installation]:./doc/FRAMEWORKINSTALL.md
 [ccl-unit-tests]:./doc/CCLUNITTESTS.md
-[contibution_guidelines]: CONTRIBUTING.md#contributing
+[contribution_guidelines]: CONTRIBUTING.md#contributing
 [release_guidelines]: RELEASING.md
 [mavenized CCL projects]: https://github.com/cerner/ccl-testing/tree/master/ccl-maven-plugin
 [step-by-step-installation-instructions]: ./doc/FRAMEWORKINSTALL.md
