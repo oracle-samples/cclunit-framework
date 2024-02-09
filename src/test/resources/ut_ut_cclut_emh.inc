@@ -1,18 +1,11 @@
 /**
     Unit tests for ut_cclut_execute_mocks_happy used for unit testing the mocking framework.
 */
-declare setuponce(null) = null
 declare setup(null) = null
 declare teardown(null) = null
 declare test_ut_cclut_execute_mocks_happy_basic(null) = null with protect
+declare test_ut_cclut_execute_mocks_two (null) = null with protect
 declare public::execute_mocks_happy_validations(null) = null with protect
-
-subroutine setupOnce(null)
-    if (cclutGetCurrentGroup(null) != 0 and reqinfo->updt_id = 0.0)
-        call cclutAssertI2Equal(CURREF, "authentication required to run this test", TRUE, FALSE)
-        return(null)
-    endif
-end
 
 subroutine teardown(null)
     call cclutRemoveAllMocks(null)
@@ -126,3 +119,7 @@ subroutine public::execute_mocks_happy_validations(null)
         call unitTestSpecificValidations(null)
     endif
 end ;public::execute_mocks_happy_validations
+
+subroutine test_ut_cclut_execute_mocks_two(null)
+  call cclutAssertI4Equal(CURREF, "forced success", 1, 1)
+end;

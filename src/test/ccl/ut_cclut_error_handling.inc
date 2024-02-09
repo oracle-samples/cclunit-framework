@@ -185,13 +185,13 @@ subroutine testGetErrorListNonEmptyErrorStash(null)
     call cclutAssertI4Equal(CURREF, "error code", errorList->error[idx].errorCode, 392)
   endfor
   call cclutAssertContains(CURREF, "errorList->error four", 
-        "Exception(308): error four", errorList->error[4].errorMessage)
+        "Exception(306): error four", errorList->error[4].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error five", 
-        "Exception(306): error three", errorList->error[5].errorMessage)
+        "Exception(305): error three", errorList->error[5].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error six", 
-        "Exception(305): error two", errorList->error[6].errorMessage)
+        "Exception(304): error two", errorList->error[6].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error seven", 
-        "Exception(304): error one", errorList->error[7].errorMessage)
+        "Exception(303): error one", errorList->error[7].errorMessage)
 
 end ;testGetErrorListNonEmptyErrorStash
 

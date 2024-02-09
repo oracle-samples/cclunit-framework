@@ -1364,12 +1364,12 @@ end ;;;testParameterNameConflicts
 
 
 /**
-  Confirms that a cclut::useCclStringLogic will cause trailing nulls and spaces to be ignored with respect to asserts.
-  Note that 1, 1a, 6a and 7a fail with or without cclut::useCclStringLogic, further support for the extra string logic.
+  Confirms that cclut::useLaxStringLogic will cause trailing nulls and spaces to be ignored with respect to asserts.
+  Note that 1, 1a, 6a and 7a fail with or without cclut::useLaxStringLogic, further support for the extra string logic.
   If vcNull equals vcEmpty and vcEmpty equals vcSpace (2/2a and 3/3a), why doesn't vcNull equal vcSpace (1/1a)?
 */
 subroutine testStringLogicOverride(null)
-  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare cclut::useLaxStringLogic = i2 with protect, noconstant(TRUE)
 
   declare vcNull = vc with protect, constant("")
   declare vcEmpty = vc with protect, constant(trim(""))

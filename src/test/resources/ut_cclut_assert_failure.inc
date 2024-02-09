@@ -195,7 +195,7 @@ subroutine testFailureOfVCNotEqualAssert(null)
   declare value1 = vc with protect, noconstant("")
   declare value2 = vc with protect, noconstant("")
   declare assertReturn = i2 with protect, noconstant(99)
-  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare cclut::useLaxStringLogic = i2 with protect, noconstant(TRUE)
   
   set value1 = notrim("Fantastic   ")
   set value2 = "Fantastic"
@@ -641,7 +641,7 @@ subroutine testFailureOfDateTimeNotOperatorAssert(null)
 end ;testFailureOfDateTimeNotOperatorAssert
 
 subroutine testFailureOfVCAssertsWithCclStringLogic(null)
-  declare cclut::useCclStringLogic = i2 with protect, noconstant(TRUE)
+  declare cclut::useLaxStringLogic = i2 with protect, noconstant(TRUE)
   declare assertReturn = i2 with protect, noconstant(99)
 
   set assertReturn = cclutAssertVCEqual(CURREF, "Test Assert Failure 49a", concat("hw", char(32)), concat("hw", char(0)))

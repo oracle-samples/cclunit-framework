@@ -959,7 +959,7 @@ subroutine cclutEPWM_errors::execute_mocks_happy_validations(null)
   null
 end ;execute_mocks_happy_validations
 subroutine cclutEPWM_errors::postProcess(null)
-    call cclutAssertI4Equal(CURREF, "test count", size(ucetcf_testCaseResults->tests, 5), 2)
+    call cclutAssertI4Equal(CURREF, "test count", size(ucetcf_testCaseResults->tests, 5), 3)
     call cclutAssertI4Equal(CURREF, "error count", size(ucetcf_testCaseResults->tests[2]->errors, 5), 3)
     call cclutAssertContains(
         CURREF, "error message one", "Exception(557): forced CCL error.", ucetcf_testCaseResults->tests[2]->errors[1].errorText)
