@@ -55,7 +55,8 @@ declare public::escapeCData(source = vc) = vc with protect
 subroutine public::escapeCData(source)
   declare cclutReturnVal = vc with protect, noconstant("")
 
-  set cclutReturnVal = replace(source, "<![CDATA[", "&lt;![CDATA[")
+  set cclutReturnVal = replace(source, ~"~, ~\"~)
+  set cclutReturnVal = replace(cclutReturnVal, "<![CDATA[", "&lt;![CDATA[")
   set cclutReturnVal = replace(cclutReturnVal, "]]>", "]]&gt;")
   return (cclutReturnVal)
 end ;;;escapeCData
