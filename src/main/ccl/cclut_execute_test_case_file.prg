@@ -394,7 +394,8 @@ end ;;;setOptimizerMode
 subroutine cclut::escapeCData(cclutSource)
   declare cclutRetVal = vc with protect, noconstant("")
 
-  set cclutRetVal = replace(cclutSource, "<![CDATA[", "&lt;![CDATA[")
+  set cclutRetVal = replace(cclutSource, ~"~, ~\"~)
+  set cclutRetVal = replace(cclutRetVal, "<![CDATA[", "&lt;![CDATA[")
   set cclutRetVal = replace(cclutRetVal, "]]>", "]]&gt;")
   return (cclutRetVal)
 end ;;;escapeCData
