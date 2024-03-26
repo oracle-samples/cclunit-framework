@@ -19,7 +19,7 @@ create program cclut:dba
     @default FALSE
 */
 prompt 
-  "Ouput Destination [MINE]: " = "MINE",
+  "Output Destination [MINE]: " = "MINE",
   "Test Case Directory [cclsource]: " = "cclsource",
   "Test Case File Name: " = "",
   "Test Name Pattern [.*]: " = ".*",
@@ -420,7 +420,7 @@ subroutine cclut1::generateResultsReport(cclutDestination, cclutReq, cclutResult
       endif
     foot report
       col 0 CCLUT_LINE_OF_ASTERISKS row+1
-    with nocounter, maxcol = 200, formfeed=none
+    with nocounter, maxrow = 3, maxcol = 200, formfeed=none
     return (TRUE)
   endif
   return (FALSE)
@@ -475,7 +475,7 @@ subroutine cclut1::generateErrorReport(cclutDestination, testCaseFileName, cclut
       endwhile
       
       col 0 CCLUT_LINE_OF_ASTERISKS row+1
-  with nocounter, maxcol = 200, formfeed=none
+  with nocounter, maxrow = 3, maxcol = 200, formfeed=none
  
   return (TRUE)
 end ;;;generateErrorReport

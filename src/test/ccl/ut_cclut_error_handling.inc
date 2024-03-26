@@ -28,20 +28,19 @@ subroutine testGetErrorStackErrors(null)
   call cclut::getErrorList(errorList)
   set errorCode = error(errorMessage, 0)
   
-  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 5)
-  for (idx = 1 to 5)
+  ;CCL was changed to stop producing errors after several instances of the same error code.
+  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 4)
+  for (idx = 1 to 4)
     call cclutAssertI4Equal(CURREF, "error code", errorList->error[idx].errorCode, 392)
   endfor
   call cclutAssertContains(CURREF, "errorList->error one", 
-        "Exception(308): error six", errorList->error[1].errorMessage)
+        "Exception(306): error four", errorList->error[1].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error two", 
-        "Exception(306): error four", errorList->error[2].errorMessage)
+        "Exception(305): error three", errorList->error[2].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error three", 
-        "Exception(305): error three", errorList->error[3].errorMessage)
+        "Exception(304): error two", errorList->error[3].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error four", 
-        "Exception(304): error two", errorList->error[4].errorMessage)
-  call cclutAssertContains(CURREF, "errorList->error five", 
-        "Exception(303): error one", errorList->error[5].errorMessage)
+        "Exception(303): error one", errorList->error[4].errorMessage)
             
   call cclutAssertI4Equal(CURREF, "error code", errorCode, 0)
 end ;testGetErrorStackErrors
@@ -113,20 +112,18 @@ subroutine testGetErrorListEmptyErrorStash(null)
 
   set errorCode = error(errorMessage, 0)
 
-  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 5)
-  for (idx = 1 to 5)
+  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 4)
+  for (idx = 1 to 4)
     call cclutAssertI4Equal(CURREF, "error code", errorList->error[idx].errorCode, 392)
   endfor
   call cclutAssertContains(CURREF, "errorList->error one", 
-        "Exception(308): error six", errorList->error[1].errorMessage)
+        "Exception(306): error four", errorList->error[1].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error two", 
-        "Exception(306): error four", errorList->error[2].errorMessage)
+        "Exception(305): error three", errorList->error[2].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error three", 
-        "Exception(305): error three", errorList->error[3].errorMessage)
+        "Exception(304): error two", errorList->error[3].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error four", 
-        "Exception(304): error two", errorList->error[4].errorMessage)
-  call cclutAssertContains(CURREF, "errorList->error five", 
-        "Exception(303): error one", errorList->error[5].errorMessage)
+        "Exception(303): error one", errorList->error[4].errorMessage)
             
   call cclutAssertI4Equal(CURREF, "error code", errorCode, 0)
 end ;testGetErrorListEmptyErrorStash
@@ -166,7 +163,7 @@ subroutine testGetErrorListNonEmptyErrorStash(null)
   set cclutErrorStash->error[3].lineNumber = 303
 
   call cclut::getErrorList(errorList)
-  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 8)
+  call cclutAssertI4Equal(CURREF, "error count", size(errorList->error, 5), 7)
   set errorCode = error(errorMessage, 0)
 
   call cclutAssertI4Equal(CURREF, "error code", errorCode, 0)
@@ -184,19 +181,17 @@ subroutine testGetErrorListNonEmptyErrorStash(null)
   call cclutAssertVcEqual(CURREF, "error three", errorList->error[3].errorMessage, "stashed error three")
   call cclutAssertI4Equal(CURREF, "error line three", errorList->error[3].lineNumber, 303)
 
-  for (idx = 4 to 8)
+  for (idx = 4 to 7)
     call cclutAssertI4Equal(CURREF, "error code", errorList->error[idx].errorCode, 392)
   endfor
   call cclutAssertContains(CURREF, "errorList->error four", 
-        "Exception(308): error six", errorList->error[4].errorMessage)
+        "Exception(306): error four", errorList->error[4].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error five", 
-        "Exception(306): error four", errorList->error[5].errorMessage)
+        "Exception(305): error three", errorList->error[5].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error six", 
-        "Exception(305): error three", errorList->error[6].errorMessage)
+        "Exception(304): error two", errorList->error[6].errorMessage)
   call cclutAssertContains(CURREF, "errorList->error seven", 
-        "Exception(304): error two", errorList->error[7].errorMessage)
-  call cclutAssertContains(CURREF, "errorList->error eight", 
-        "Exception(303): error one", errorList->error[8].errorMessage)
+        "Exception(303): error one", errorList->error[7].errorMessage)
 
 end ;testGetErrorListNonEmptyErrorStash
 

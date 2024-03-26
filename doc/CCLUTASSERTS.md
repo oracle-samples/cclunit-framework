@@ -24,6 +24,11 @@ operator [notoperator] function returns TRUE.
 
 The context can be any string but using unique contexts will help identify which assert failed if an assert failure occurs.
 
+The original string comparisons were rather lax behaving more like trim(A) vs. trim(B) rather than A vs. B. This was corrected in version 3.5. 
+To retain the original behavior for all tests in a test case, add `declare cclut::useLaxStringLogic = i2, with protect, noconstant(true)` to the test case. 
+To retain the original behavior only for specific tests within a test case, call `set cclut::useLaxStringLogic = true` at the beginning of those tests and restore 
+the value to false at the end of the tests or within a teardown method.
+
 ## List of Asserts
 
 String-Only

@@ -25,7 +25,7 @@ record cclutErrorStash(
 
 
 /**
-  Retrievs all errors from cclutErrorStash and the current error stack appending them to a provided buffer and clearing both.
+  Retrieves all errors from cclutErrorStash and the current error stack appending them to a provided buffer and clearing both.
   @param errorList
     A return buffer for the error list
     <pre>
@@ -51,7 +51,7 @@ subroutine cclut::getErrorList(cclutPPErrorList)
 end ;getErrorList
 
 /**
-  Retrievs all errors from the current error stack clearing it and appending the errors to a provided buffer.
+  Retrieves all errors from the current error stack clearing it and appending the errors to a provided buffer.
   @param errorList
     A return buffer for the error list
     <pre>
@@ -110,7 +110,7 @@ end ;getErrorList
     @param cclutErrorMessage
         The message for the error.
     @param cclutLineNumber
-        The line number where the error occured, usually CURREF.
+        The line number where the error occurred, usually CURREF.
 */
 subroutine cclut::addStashedError(cclutErrorCode, cclutErrorMessage, cclutLineNumber)
   declare cclutErrorCount = i4 with protect, noconstant(1 + size(cclutErrorStash->error, 5))
@@ -147,7 +147,7 @@ end ;errorOccurred
 
 /**
   Parse a CCL error message to determine the line number on which the error message says the error occurred.
-  The CCL program in which the error occured  must have been compiled in debug mode for a non-zero value to be returned.
+  The CCL program in which the error occurred  must have been compiled in debug mode for a non-zero value to be returned.
   @param cclutPErrorMessage
     The CCL error message.
   @returns

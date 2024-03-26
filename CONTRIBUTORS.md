@@ -1,5 +1,5 @@
 * Cerner Corporation
-* Fred Ecketson [@feckerston][fred-eckertson]
+* Fred Eckertson [@feckerston][fred-eckertson]
 * Bill Pennington [@bpennington][bill-pennington]
 * Trevor Rials [@cernertrevor][trevor-rials]
 

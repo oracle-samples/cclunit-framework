@@ -1,15 +1,17 @@
 /**
     Unit tests for ut_cclut_execute_mocks_happy used for unit testing the mocking framework.
 */
+declare setup(null) = null
 declare teardown(null) = null
-declare test_ut_cclut_execte_mocks_happy_basic(null) = null with protect
+declare test_ut_cclut_execute_mocks_happy_basic(null) = null with protect
+declare test_ut_cclut_execute_mocks_two (null) = null with protect
 declare public::execute_mocks_happy_validations(null) = null with protect
 
 subroutine teardown(null)
     call cclutRemoveAllMocks(null)
 end
 
-subroutine test_ut_cclut_execte_mocks_happy_basic(null)
+subroutine test_ut_cclut_execute_mocks_happy_basic(null)
     declare mock_sample_person = vc with protect, noconstant("")
     declare mock_sample_encounter = vc with protect, noconstant("")
     declare mock_sample_encounter_alias = vc with protect, noconstant("")
@@ -76,7 +78,7 @@ subroutine test_ut_cclut_execte_mocks_happy_basic(null)
     endif
 
     call execute_mocks_happy_validations(null)
-end ;test_ut_cclut_execte_mocks_happy_basic
+end ;test_ut_cclut_execute_mocks_happy_basic
 subroutine public::execute_mocks_happy_validations(null)
     call cclutAsserti4Equal(CURREF, "check public::persistRecord->item", public::persistRecord->item, 1)
 
@@ -85,7 +87,7 @@ subroutine public::execute_mocks_happy_validations(null)
         call cclutAssertvcEqual(CURREF, "check executeReply->string_parameter", executeReply->string_parameter, "test param")
     else
         call cclutAsserti4Equal(CURREF, "check executeReply->number_parameter", executeReply->number_parameter, 0)
-        call cclutAssertvcEqual(CURREF, "check executeReply->string_parameter", executeReply->string_parameter, "")
+        call cclutAssertvcEqual(CURREF, "check executeReply->string_parameter", executeReply->string_parameter, trim(""))
     endif
     call cclutAsserti4Equal(CURREF, "size executeReply->regular_join", size(executeReply->regular_join, 5), 1)
     call cclutAssertf8Equal(CURREF, "value regular_join person_id 1", executeReply->regular_join[1].person_id, 1.0)
@@ -101,11 +103,11 @@ subroutine public::execute_mocks_happy_validations(null)
 
     call cclutAssertf8Equal(CURREF, "value left_join person_id 2", executeReply->left_join[2].person_id, 2.0)
     call cclutAssertf8Equal(CURREF, "value left_join encounter_id 2", executeReply->left_join[2].encounter_id, 5.0)
-    call cclutAssertvcEqual(CURREF, "value left_join encounter_alias 2", executeReply->left_join[2].encounter_alias, " ")
+    call cclutAssertvcEqual(CURREF, "value left_join encounter_alias 2", executeReply->left_join[2].encounter_alias, trim(""))
 
     call cclutAssertf8Equal(CURREF, "value left_join person_id 3", executeReply->left_join[3].person_id, 3.0)
     call cclutAssertf8Equal(CURREF, "value left_join encounter_id 3", executeReply->left_join[3].encounter_id, 0.0)
-    call cclutAssertvcEqual(CURREF, "value left_join encounter_alias 3", executeReply->left_join[3].encounter_alias, " ")
+    call cclutAssertvcEqual(CURREF, "value left_join encounter_alias 3", executeReply->left_join[3].encounter_alias, trim(""))
 
     ;The program ut_cclut_execute_mocks_happy performs an rdb inner join and writes the data to the file cclut_happy.dat.
 
@@ -117,3 +119,7 @@ subroutine public::execute_mocks_happy_validations(null)
         call unitTestSpecificValidations(null)
     endif
 end ;public::execute_mocks_happy_validations
+
+subroutine test_ut_cclut_execute_mocks_two(null)
+  call cclutAssertI4Equal(CURREF, "forced success", 1, 1)
+end;

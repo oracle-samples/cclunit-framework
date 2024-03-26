@@ -5,8 +5,8 @@
 ; Contains the necessary logic to find and execute the tests in a program compiled from a test case file and to evaluate 
 ; the results. If a non-empty testNamePattern is provied in the testing program's request, then only the matching tests are 
 ; executed. If the testing program contains a setup subroutine, it is executed before each test. If the testing program contains 
-; a teardown subroutinem, it is executed after each test. If the testing program contains a setupOnce subroutine, it is 
-; executed before any test is executed. If the testing program contains a teardownOnce subroutinem, it is executed after 
+; a teardown subroutine, it is executed after each test. If the testing program contains a setupOnce subroutine, it is 
+; executed before any test is executed. If the testing program contains a teardownOnce subroutine, it is executed after 
 ; all test have completed.
 ;
 ; Note that this file is intended to be included in the testing program. 
@@ -30,7 +30,7 @@ declare cclut::executeTestLogic(null) = null with protect
   @param cclutPPAssertStruct 
     The record structure that contains all the asserts that were executed. 
     This structure will be reinitialized by this subroutine.
-  @retutns
+  @returns
     A boolean flag indicating that all the asserts passed and no errors occurred.
     @value TRUE
       All that asserts passed. 
@@ -139,10 +139,10 @@ end ;;;evaluateTimers
   @param cclutPAssertStruct 
     A record structure that contains all the asserts that were executed. 
     The structure will be reinitialized when this subroutine returns.
-  @parm cclutPTimerStruct
+  @param cclutPTimerStruct
     The list of timers to check.
     The structure will be reinitialized when this subroutine returns.
-  @retutns
+  @returns
     A boolean flag indicating that all asserts passed, all timer limits were met and no errors occurred.
     @value TRUE
       All asserts and timer limits passed without error. 
@@ -204,7 +204,7 @@ subroutine cclut::executeTestLogic(null)
   declare cclutRegistryTestCount      = i4 with protect, noconstant(0)
   declare cclutReplyTestCount         = i4 with protect, noconstant(0)
   declare cclutErrorCount             = i4 with protect, noconstant(0)
-  declare ccutTestNamePattern         = vc with protect, noconstant("")
+  declare cclutTestNamePattern         = vc with protect, noconstant("")
   declare cclut::testName             = vc with protect, noconstant("")
   declare cclutStat                   = i4 with protect, noconstant(0)
   
@@ -227,7 +227,7 @@ subroutine cclut::executeTestLogic(null)
   call cclut::exitOnError("pre-executeTestLogic-1", cclut::testCaseFileName, cclutReply)
   execute cclut_find_unit_tests with replace("CCLUTREQUEST", cclut_testRegistryRequest), 
       replace("CCLUTREPLY", cclut_testRegistryReply)
-  set ccutTestNamePattern = trim(cnvtupper(cclutRequest->testNamePattern), 3)
+  set cclutTestNamePattern = trim(cnvtupper(cclutRequest->testNamePattern), 3)
   set cclutRegistryTestCount = size(cclut_testRegistryReply->tests, 5)
    
   if (cclutRegistryTestCount > 0)
@@ -249,8 +249,8 @@ subroutine cclut::executeTestLogic(null)
   
     for (cclutRegistryTestIndex = 1 to cclutRegistryTestCount)
       set cclut::testName = cclut_testRegistryReply->tests[cclutRegistryTestIndex].testName
-      if (textlen(trim(ccutTestNamePattern)) = 0 
-            or operator(cnvtlower(cclut::testName), "regexplike", cnvtlower(ccutTestNamePattern)))
+      if (textlen(trim(cclutTestNamePattern)) = 0 
+            or operator(cnvtlower(cclut::testName), "regexplike", cnvtlower(cclutTestNamePattern)))
         set cclutReplyTestCount = cclutReplyTestCount + 1
         set cclutStat = alterlist(cclutReply->tests, cclutReplyTestCount)
         set cclutReply->tests[cclutReplyTestCount].name = cclut::testName

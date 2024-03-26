@@ -1,4 +1,10 @@
 # cclunit-framework Change Log
+## 3.5 - ????
+
+* (non-passive) Use lax string logic only if an i2 variable cclut::useLaxStringLogic with value true is declared by the test case or if that variable (which is 
+declare by theframe framework with value false is not declared by the test case) is set equal to true. 
+
+
 ## 3.4 - 2019.03.21
 
 * Fix [#20](https://github.com/cerner/cclunit-framework/issues/20): Fix error handling in the mocking framework.

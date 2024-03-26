@@ -31,13 +31,13 @@ set modify maxvarlen 10000000
     @field test
       The cclutCnd that was evaluated by the assert statement.
     @field errorCodeBefore
-      The error code in the error code before the assert statment was evaluated.
+      The error code in the error code before the assert statement was evaluated.
     @field errorMessageBefore 
-      The error message in the error code before the assert statment was evaluated.
+      The error message in the error code before the assert statement was evaluated.
     @field  errorCode
-      The error code generated while evaluating the assert statment.
+      The error code generated while evaluating the assert statement.
     @field errorMessageBefore 
-       The error message generated while evaluating the assert statment.
+       The error message generated while evaluating the assert statement.
 */
 record cclut_runResult (
   1 line[*]
@@ -79,10 +79,10 @@ subroutine cclutAssertVCEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateComparison(cclutLineNum, cclutCtx, "=", cclutVal, cclutCompVal))
 end; cclutAssertVCEqual
  
-subroutine cclutAssertdatetimeEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
+subroutine cclutAssertDateTimeEqual(cclutLineNum, cclutCtx, cclutVal, cclutCompVal)
   return (cclut::evaluateCondition(cclutLineNum, cclutCtx, 
       build2("'", format(cclutVal, "yyyy-mm-dd hh:mm:ss;;d"), "' = '", format(cclutCompVal, "yyyy-mm-dd hh:mm:ss;;d"), "'")))
-end; cclutAssertdatetimeEqual
+end; cclutAssertDateTimeEqual
  
 ;**********************************************************************************************************************************
 ;** AlmostEqual

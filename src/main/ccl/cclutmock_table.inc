@@ -406,7 +406,7 @@ subroutine public::cclutCreateMockTable(cclutTableName)
     declare cclutParserText = vc with protect, noconstant("")
     declare cclutColumnName = vc with protect, noconstant("")
 
-    ;Verify uesr is DBA or the session is authenticated
+    ;Verify user is DBA or the session is authenticated
     if (cclutGetCurrentGroup(null) != 0 and reqinfo->updt_id = 0.0)
         call cclut::addStashedError(392, "The CCL session must be authenticated to execute this test", CURREF)
         go to exit_script

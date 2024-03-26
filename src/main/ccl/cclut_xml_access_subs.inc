@@ -159,7 +159,7 @@ end ;;;cclut::getXmlChildNodeValue
   @param cclutPAttrName
     The name of the attribute.
   @returns
-    The attribue value if found; "" otherwise.
+    The attribute value if found; "" otherwise.
 */
 subroutine cclut::getXmlAttributeValue(cclutPElementHandle, cclutPAttrName)
   declare cclutTmpString = vc with protect, noconstant("")
